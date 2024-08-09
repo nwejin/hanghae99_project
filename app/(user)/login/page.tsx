@@ -1,7 +1,9 @@
+import LoginTemplates from '../../../components/login/templates/loginTemplates';
+
 export default function LoginPage() {
   return (
     <div>
-      <p>로그인</p>
+      <LoginTemplates />
     </div>
   );
 }

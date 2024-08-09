@@ -1,3 +1,5 @@
+import app from '../config/firebase';
+
 export default function MainPage() {
   return (
     <div>
