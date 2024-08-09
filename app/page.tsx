@@ -1,7 +1,7 @@
-export default function Home() {
+export default function MainPage() {
   return (
-   <div>
-    <p>Start</p>
-   </div>
+    <div>
+      <p>메인화면</p>
+    </div>
   );
 }
