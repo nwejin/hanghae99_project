@@ -1,14 +1,10 @@
-interface TextInputProps {
-  type: string;
-  name: string;
-  id: string;
-  placeholder?: string;
-}
+import { Input } from '@ui';
+import { TextInputProps } from '@type';
 
 export default function TextInput({ type, name, id, placeholder }: TextInputProps) {
   return (
     <>
-      <input
+      <Input
         type={type}
         name={name}
         id={id}

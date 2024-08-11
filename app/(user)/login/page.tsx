@@ -1,8 +1,8 @@
-import LoginTemplates from '../../../components/login/templates/loginTemplates';
+import LoginTemplates from '../../../components/_login/templates/loginTemplates';
 
 export default function LoginPage() {
   return (
-    <div>
+    <div className="flex h-screen w-screen items-center justify-center">
       <LoginTemplates />
     </div>
   );
