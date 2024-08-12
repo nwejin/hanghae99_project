@@ -1,9 +1,10 @@
 import app from '../config/firebase';
+import { ContentLayout } from '@/components/common/contentLayout';
 
 export default function MainPage() {
   return (
-    <div>
-      <p>메인화면</p>
-    </div>
+    <ContentLayout>
+      <div> zz</div>
+    </ContentLayout>
   );
 }
