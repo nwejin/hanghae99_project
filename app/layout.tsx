@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import '../styles/globals.css';
+import MainPageLayout from '@/components/common/mainPageLayout';
 
 import '@/config/firebase';
 
@@ -15,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <MainPageLayout>{children}</MainPageLayout>
+      </body>
     </html>
   );
 }
