@@ -1,13 +1,13 @@
 'use client';
 
 import { useForm, FormProvider } from 'react-hook-form';
-import TextInput from '../atoms/textInput';
-import InputLabel from '../atoms/inputLabel';
-import LoginBtn from '../atoms/signUpBtn';
+import TextInput from '../_ui/textInput';
+import InputLabel from '../_ui/inputLabel';
+import SignUpBtn from '../_ui/signUpBtn';
 
 // 유효성 검사
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { userSchema } from '@/schemas/user';
 import { auth } from '@/config/firebase';
@@ -59,7 +59,7 @@ export default function SignUpForm() {
 
           {error && <p className="text-red-500">{error}</p>}
           {success && <p className="text-green-500">{success}</p>}
-          <LoginBtn />
+          <SignUpBtn />
         </form>
       </FormProvider>
     </>

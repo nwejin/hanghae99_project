@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Ellipsis, LogOut } from 'lucide-react';
+import { Ellipsis, LogOut, LogIn } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
@@ -77,15 +77,17 @@ export function Menu({ isOpen }: MenuProps) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button onClick={() => {}} variant="outline" className="mt-5 h-10 w-full justify-center">
-                    <span className={cn(isOpen === false ? '' : 'mr-4')}>
-                      <LogOut size={18} />
-                    </span>
-                    <p className={cn('whitespace-nowrap', isOpen === false ? 'hidden opacity-0' : 'opacity-100')}>
-                      Sign out
-                    </p>
+                    <Link href="/login" className="flex w-full justify-center">
+                      <span className={cn(isOpen === false ? '' : 'mr-4')}>
+                        <LogIn size={18} />
+                      </span>
+                      <p className={cn('whitespace-nowrap', isOpen === false ? 'hidden opacity-0' : 'opacity-100')}>
+                        로그인
+                      </p>
+                    </Link>
                   </Button>
                 </TooltipTrigger>
-                {isOpen === false && <TooltipContent side="right">Sign out</TooltipContent>}
+                {isOpen === false && <TooltipContent side="right">Lgodin</TooltipContent>}
               </Tooltip>
             </TooltipProvider>
           </li>

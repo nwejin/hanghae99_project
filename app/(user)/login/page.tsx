@@ -1,4 +1,4 @@
-import LoginTemplates from '../../../components/_login/templates/loginTemplates';
+import LoginTemplates from '../../../components/_login/_layouts/loginTemplates';
 
 export default function LoginPage() {
   return (

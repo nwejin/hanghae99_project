@@ -1,13 +1,8 @@
 import { Card } from '@ui';
 import Link from 'next/link';
 
-import Header from '../atoms/header';
-import TextInput from '../atoms/textInput';
-
-import InputLabel from '../atoms/inputLabel';
-import SignUpForm from '../molecules/signUpForm';
-
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../../ui/form';
+import Header from '../_ui/header';
+import SignUpForm from '../_elements/signUpForm';
 
 export default function SignUpTemplates() {
   return (
@@ -16,7 +11,6 @@ export default function SignUpTemplates() {
       <Card.CardContent className="flex flex-col gap-y-2 pb-4">
         <SignUpForm />
       </Card.CardContent>
-
       <Card.CardFooter className="flex flex-col gap-y-2 pb-4">
         <div className="mt-4 text-center text-sm">
           계정이 있으신가요?{' '}
