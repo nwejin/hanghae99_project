@@ -1,9 +1,11 @@
 'use client';
 
 import { useForm, FormProvider } from 'react-hook-form';
-import TextInput from '../_ui/textInput';
-import InputLabel from '../_ui/inputLabel';
 import SignUpBtn from '../_ui/signUpBtn';
+import SignUpStepStart from './signUpStepStart';
+import SignUpStepMid from './signUpStepMid';
+import SignUpStepEnd from './signUpStepEnd';
+import ProgressBar from '../_ui/progressBar';
 
 // 유효성 검사
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,49 +19,64 @@ export default function SignUpForm() {
     resolver: zodResolver(userSchema),
   });
 
+  const {
+    formState: { isValid },
+  } = resolveForm;
+
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const [isStep, setIsStep] = useState(1);
+
+  const nextStep = () => setIsStep((prev) => prev + 1);
+  const backStep = () => setIsStep((prev) => (prev > 1 ? prev - 1 : 1));
+
   const userSubmit = async (data: any) => {
-    const { email, password } = data;
+    if (isStep === 3) {
+      const { email, password } = data;
 
-    try {
-      const userRegister = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userRegister.user;
-      setSuccess('회원가입이 완료되었습니다.');
+      try {
+        const userRegister = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userRegister.user;
+        setSuccess('회원가입이 완료되었습니다.');
 
-      setError(null);
-    } catch (error: any) {
-      setError(error.message);
-      setSuccess(null);
-      console.log(error);
+        setError(null);
+      } catch (error: any) {
+        setError(error.message);
+        setSuccess(null);
+        console.log(error);
+      }
+    } else {
+      nextStep();
     }
   };
 
   return (
     <>
+      <ProgressBar step={isStep} />
       <FormProvider {...resolveForm}>
-        <form onSubmit={resolveForm.handleSubmit(userSubmit)} className="grid gap-4">
-          <div className="grid gap-2">
-            <InputLabel name="userId" text="아이디" />
-            <TextInput type="text" name="userId" id="userId" placeholder="아이디" />
-          </div>
-          <div className="grid gap-2">
-            <InputLabel name="email" text="이메일" />
-            <TextInput type="text" name="email" id="email" placeholder="pet@example.com" />
-          </div>
-          <div className="grid gap-2">
-            <InputLabel name="password" text="비밀번호" />
-            <TextInput type="password" name="password" id="password" placeholder="비밀번호" />
-          </div>
-          <div className="grid gap-2">
-            <InputLabel name="password_verify" text="비밀번호 확인" />
-            <TextInput type="password" name="password_verify" id="password_verify" placeholder="비밀번호 확인" />
-          </div>
+        <form onSubmit={resolveForm.handleSubmit(userSubmit)} className="">
+          {isStep == 1 && <SignUpStepStart />}
+          {isStep == 2 && <SignUpStepMid />}
+          {isStep == 3 && <SignUpStepEnd />}
 
           {error && <p className="text-red-500">{error}</p>}
           {success && <p className="text-green-500">{success}</p>}
-          <SignUpBtn />
+          <div className="flex justify-end">
+            {isStep == 1 && <SignUpBtn text="다음" />}
+            {isStep == 2 && (
+              <>
+                <SignUpBtn text="이전" onClick={backStep} />
+                <SignUpBtn text="다음" disabled={!isValid} />
+              </>
+            )}
+            {isStep == 3 && (
+              <>
+                <SignUpBtn text="이전" onClick={backStep} />
+                <SignUpBtn text="회원가입" disabled={!isValid} />
+              </>
+            )}
+          </div>
         </form>
       </FormProvider>
     </>

@@ -6,7 +6,7 @@ import SignUpForm from '../_elements/signUpForm';
 
 export default function SignUpTemplates() {
   return (
-    <Card.Card className="h-[35rem] w-[25rem] items-center justify-center shadow-md">
+    <Card.Card className="h-[35rem] w-[30rem] items-center justify-center shadow-md">
       <Header />
       <Card.CardContent className="flex flex-col gap-y-2 pb-4">
         <SignUpForm />
