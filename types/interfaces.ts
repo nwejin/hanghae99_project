@@ -3,4 +3,5 @@ export interface TextInputProps {
   name: string;
   id: string;
   placeholder?: string;
+  text: string;
 }
