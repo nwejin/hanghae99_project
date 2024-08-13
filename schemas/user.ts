@@ -33,3 +33,8 @@ export const userSchema = z
     message: '비밀번호가 일치하지 않습니다.',
     path: ['password_verify'],
   });
+
+export const loginSchema = z.object({
+  email: z.string().email({ message: '유효한 이메일 주소를 입력해 주세요' }),
+  password: z.string().min(8, { message: '비밀번호는 8자 이상입니다.' }),
+});

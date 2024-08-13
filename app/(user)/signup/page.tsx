@@ -1,4 +1,4 @@
-import SignUpTemplates from '../../../components/_signup/templates/signUpTemplates';
+import SignUpTemplates from '../../../components/_signup/_layouts/signUpTemplates';
 import app from '@/config/firebase';
 
 export default function SignUpPage() {

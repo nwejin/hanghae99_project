@@ -26,7 +26,7 @@ export default function SideBar() {
       <div className="relative flex h-full flex-col overflow-y-auto px-3 py-4 shadow-md dark:shadow-zinc-800">
         <Button
           className={cn(
-            'mb-1 flex items-center transition-transform duration-300 ease-in-out',
+            'mb-1 flex h-[5rem] items-center transition-transform duration-300 ease-in-out',
             isOpen === false ? 'translate-x-1' : 'translate-x-0'
           )}
           variant="link"
