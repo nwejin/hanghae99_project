@@ -8,15 +8,19 @@ import SignUpStepEnd from './signUpStepEnd';
 import ProgressBar from '../_ui/progressBar';
 
 // 유효성 검사
+import { number, ZodSchema } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
-import { userSchema } from '@/schemas/user';
+import { userSchema, midSchema, endSchema } from '@/schemas/user';
 import { auth } from '@/config/firebase';
 
 export default function SignUpForm() {
+  const [isStep, setIsStep] = useState(1);
+
   const resolveForm = useForm({
     resolver: zodResolver(userSchema),
+    // mode: 'onChange',
   });
 
   const {
@@ -26,9 +30,10 @@ export default function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  const [isStep, setIsStep] = useState(1);
-
-  const nextStep = () => setIsStep((prev) => prev + 1);
+  const nextStep = () => {
+    console.log('다음');
+    setIsStep((prev) => prev + 1);
+  };
   const backStep = () => setIsStep((prev) => (prev > 1 ? prev - 1 : 1));
 
   const userSubmit = async (data: any) => {
@@ -60,20 +65,20 @@ export default function SignUpForm() {
           {isStep == 2 && <SignUpStepMid />}
           {isStep == 3 && <SignUpStepEnd />}
 
-          {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">{success}</p>}
+          {/* {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">{success}</p>} */}
           <div className="flex justify-end">
             {isStep == 1 && <SignUpBtn text="다음" />}
             {isStep == 2 && (
               <>
                 <SignUpBtn text="이전" onClick={backStep} />
-                <SignUpBtn text="다음" disabled={!isValid} />
+                <SignUpBtn text="다음" />
               </>
             )}
             {isStep == 3 && (
               <>
                 <SignUpBtn text="이전" onClick={backStep} />
-                <SignUpBtn text="회원가입" disabled={!isValid} />
+                <SignUpBtn text="회원가입" onClick={resolveForm.handleSubmit(userSubmit)} />
               </>
             )}
           </div>
