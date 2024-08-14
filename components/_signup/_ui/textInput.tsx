@@ -21,6 +21,7 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
     if (files && files.length > 0) {
       // console.log(files[0]);
       const file = files[0];
+      // 에러가 터질 수 있음
       const reader = new FileReader();
       // 파일을 읽은 후 호출되는 이벤트 핸들러
       reader.onloadend = () => {
@@ -33,7 +34,7 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
     }
   };
 
-  const defaultImg = '/default.png';
+  const defaultImg = '/dog.png';
 
   return (
     <>
@@ -54,7 +55,7 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
             className="mb-2 mr-10 w-80"
             onChange={prevImg}
           />
-          <Avatar className="border-gray-400 md:border">
+          <Avatar className="w-100 border-gray-400 shadow-sm">
             {imgPreview ? (
               <AvatarImage src={imgPreview} alt="Image preview" />
             ) : (

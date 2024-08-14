@@ -18,6 +18,7 @@ const verifyPassword = (password: string) => {
 
 export const userSchema = z
   .object({
+    // start
     userId: z
       .string()
       .min(2, { message: '아이디는 2자리 이상으로 입력해주세요' })
@@ -33,6 +34,22 @@ export const userSchema = z
     message: '비밀번호가 일치하지 않습니다.',
     path: ['password_verify'],
   });
+
+const defaultImg = '/dog.png';
+
+export const midSchema = z.object({
+  // mid
+  // profile_image: z.string().optional(),
+  name: z.string().min(1, { message: '이름을 입력해주세요' }),
+  bio: z.string().max(30, { message: '자기소개는 30자 이하로 입력해주세요' }).optional(),
+});
+
+export const endSchema = z.object({
+  //end
+  // pet_image: z.string().optional(),
+  petName: z.string().min(1, { message: '반려동물 이름을 입력해주세요' }),
+  petSpecies: z.string().min(1, { message: '반려동물의 종을 입력해주세요' }),
+});
 
 export const loginSchema = z.object({
   email: z.string().email({ message: '유효한 이메일 주소를 입력해 주세요' }),

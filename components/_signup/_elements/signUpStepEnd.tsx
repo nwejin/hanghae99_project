@@ -21,7 +21,7 @@ export default function SignUpStepEnd() {
             type="text"
             name="petSpecies"
             id="petSpecies"
-            placeholder="친구의 종을 알려주세요!"
+            placeholder="친구는 어떤 종인가요?"
             text="반려동물 종"
           />
         </div>
