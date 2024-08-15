@@ -21,7 +21,7 @@ import { userSchema, midSchema, endSchema } from '@/schemas/user';
 
 interface FormData {
   email: string;
-  password: string;
+  user_pw: string;
   password_verify: string;
   profile_image?: FileList;
   nickname: string;
@@ -50,12 +50,12 @@ export default function SignUpForm() {
 
   const nextStep = (data: Partial<FormData>) => {
     setEmail(String(formData.email));
-    console.log('prew data', formData);
-    console.log('new Data', data);
+    // console.log('prew data', formData);
+    // console.log('new Data', data);
     setFormData((prev) => ({ ...prev, ...data }));
     setIsStep((prev) => prev + 1);
     const mergedData = { ...formData, ...data };
-    console.log('Merged data:', mergedData);
+    // console.log('Merged data:', mergedData);
     reset();
   };
 
@@ -65,13 +65,13 @@ export default function SignUpForm() {
 
   const userSubmit = async (data: Partial<FormData>) => {
     const userData = { ...formData, ...data };
-    console.log(userData);
-    if (!userData.email || !userData.password) {
+    // console.log(userData);
+    if (!userData.email || !userData.user_pw) {
       setError('이메일과 비밀번호는 필수 항목입니다.');
       return;
     }
     try {
-      const userRegister = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+      const userRegister = await createUserWithEmailAndPassword(auth, userData.email, userData.user_pw);
       const user = userRegister.user;
 
       const userRef = doc(firestore, 'users', user.uid);
@@ -96,9 +96,9 @@ export default function SignUpForm() {
     }
   };
 
-  useEffect(() => {
-    console.log('Updated formData:', formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log('Updated formData:', formData);
+  // }, [formData]);
 
   return (
     <>

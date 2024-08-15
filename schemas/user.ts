@@ -20,13 +20,13 @@ export const userSchema = z
   .object({
     // start
     email: z.string().email({ message: '유효한 형식으로 입력해주세요' }).min(1, { message: '이메일을 입력해주세요' }),
-    password: z
+    user_pw: z
       .string()
       .min(8, { message: '비밀번호는 8자리 이상이어야합니다' })
       .refine(verifyPassword, { message: '대문자, 소문자, 숫자, 특수문자 중 3종류 이상을 포함해야 합니다' }),
     password_verify: z.string().min(8, { message: '동일한 비밀번호를 입력해주세요' }),
   })
-  .refine((data) => data.password === data.password_verify, {
+  .refine((data) => data.user_pw === data.password_verify, {
     message: '비밀번호가 일치하지 않습니다.',
     path: ['password_verify'],
   });
