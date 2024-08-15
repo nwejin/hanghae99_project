@@ -12,7 +12,7 @@ interface FormProps {
 
 interface StepData {
   email: string;
-  password: string;
+  user_pw: string;
   password_verify: string;
 }
 
@@ -57,7 +57,7 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
         <TextInput type="text" name="email" id="email" placeholder="pet@example.com" text="이메일" />
       </div>
       <div className="grid gap-2">
-        <TextInput type="password" name="password" id="password" placeholder="비밀번호" text="비밀번호" />
+        <TextInput type="password" name="user_pw" id="user_pw" placeholder="비밀번호" text="비밀번호" />
       </div>
       <div className="grid gap-2">
         <TextInput
