@@ -19,10 +19,6 @@ const verifyPassword = (password: string) => {
 export const userSchema = z
   .object({
     // start
-    userId: z
-      .string()
-      .min(2, { message: '아이디는 2자리 이상으로 입력해주세요' })
-      .max(10, { message: '아이디는 10자리 이하로 입력해주세요' }),
     email: z.string().email({ message: '유효한 형식으로 입력해주세요' }).min(1, { message: '이메일을 입력해주세요' }),
     password: z
       .string()
@@ -40,7 +36,10 @@ const defaultImg = '/dog.png';
 export const midSchema = z.object({
   // mid
   // profile_image: z.string().optional(),
-  name: z.string().min(1, { message: '이름을 입력해주세요' }),
+  nickame: z
+    .string()
+    .min(2, { message: '아이디는 2자리 이상으로 입력해주세요' })
+    .max(10, { message: '아이디는 10자리 이하로 입력해주세요' }),
   bio: z.string().max(30, { message: '자기소개는 30자 이하로 입력해주세요' }).optional(),
 });
 

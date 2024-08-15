@@ -2,39 +2,67 @@
 import { Input } from '@ui';
 import { Label } from '@ui';
 import { TextInputProps } from '@type';
+//
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { RotateCcw } from 'lucide-react';
+import { ref, uploadBytes, getDownloadURL, getStorage } from 'firebase/storage';
 
-import { useState } from 'react';
+import { storage } from '@/config/firebase';
+
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+
+import useEmailStore from '@/store/emailStore';
 
 export default function TextInput({ type, name, id, placeholder, text }: TextInputProps) {
   const {
     register,
     formState: { errors },
+    getValues,
+    watch,
   } = useFormContext();
 
-  const [imgPreview, setImgPreview] = useState<string | null>(null);
+  // 이미지 미리보기
+  const [imgPreview, setImgPreview] = useState<File | null>(null);
+  const [imgUrl, setImgUrl] = useState('');
+  const [uploadedImgUrl, setUploadedImgUrl] = useState<string | null>(null);
 
-  const prevImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target.files);
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      // console.log(files[0]);
-      const file = files[0];
-      // 에러가 터질 수 있음
-      const reader = new FileReader();
-      // 파일을 읽은 후 호출되는 이벤트 핸들러
-      reader.onloadend = () => {
-        if (reader.result) {
-          setImgPreview(reader.result as string); // 미리보기 URL 설정
-        }
-      };
+  const prevImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files === null) return;
+    const file = e.target.files[0];
+    setImgUrl(URL.createObjectURL(file));
+    setImgPreview(file);
 
-      reader.readAsDataURL(file); // 파일을 데이터 URL로 읽기
+    const path = await uploadImg(file);
+    setUploadedImgUrl(path);
+  };
+
+  const email = useEmailStore((state) => state.email);
+  // console.log(email);
+
+  const uploadImg = async (file: File) => {
+    const values = getValues();
+    let fileName = email;
+
+    if (id == 'nickname') {
+      fileName = `${email}_profile`;
+    } else if (id === 'petName') {
+      fileName = `${email}_pet`;
     }
+    const storageRef = ref(storage, `profile/${fileName}`);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    console.log(downloadURL);
+    return downloadURL;
   };
 
   const defaultImg = '/dog.png';
+
+  const resetImg = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setImgUrl('');
+    setImgPreview(null);
+  };
 
   return (
     <>
@@ -47,21 +75,21 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
 
       {type == 'file' ? (
         <div className="flex">
-          <Input
-            type={type}
-            id={id}
-            placeholder={placeholder}
-            {...register(name)}
-            className="mb-2 mr-10 w-80"
-            onChange={prevImg}
-          />
-          <Avatar className="w-100 border-gray-400 shadow-sm">
+          <Input type={type} id={id} placeholder={placeholder} className="mb-2 mr-6 w-80" onChange={prevImg} />
+          <Avatar className="border-gray-400 shadow-sm">
             {imgPreview ? (
-              <AvatarImage src={imgPreview} alt="Image preview" />
+              <AvatarImage src={imgUrl} alt="Image preview" />
             ) : (
               <AvatarImage src={defaultImg} alt="Default avatar" />
             )}
           </Avatar>
+          {imgPreview ? (
+            <button onClick={resetImg}>
+              <RotateCcw className="white ml-3 h-4" size={18} color={'#333'} />
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       ) : (
         <Input type={type} id={id} placeholder={placeholder} {...register(name)} className="mb-2" />
