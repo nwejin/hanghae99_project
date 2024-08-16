@@ -20,7 +20,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
   const { handleSubmit } = useFormContext<StepData>();
 
   const finalSubmit = (data: StepData) => {
-    console.log('Final Step Data:', data);
+    // console.log('Final Step Data:', data);
     onSubmit(data);
   };
   return (
