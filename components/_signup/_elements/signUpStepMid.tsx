@@ -19,7 +19,7 @@ interface StepData {
 export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
   const { handleSubmit } = useFormContext<StepData>();
   const onSubmit = (data: StepData) => {
-    console.log('Step 2 Data:', data);
+    // console.log('Step 2 Data:', data);
     nextStep(data);
   };
 

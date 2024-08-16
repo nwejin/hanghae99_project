@@ -52,7 +52,7 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
     const storageRef = ref(storage, `profile/${fileName}`);
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
-    console.log(downloadURL);
+    // console.log(downloadURL);
     return downloadURL;
   };
 

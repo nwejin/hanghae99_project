@@ -1,4 +1,14 @@
-import { Tag, Users, Settings, Bookmark, SquarePen, LayoutGrid, LucideIcon } from 'lucide-react';
+import {
+  Tag,
+  Users,
+  Settings,
+  Bookmark,
+  SquarePen,
+  LayoutGrid,
+  LucideIcon,
+  PawPrint,
+  MessageSquareHeart,
+} from 'lucide-react';
 
 type Submenu = {
   href: string;
@@ -20,17 +30,17 @@ type Group = {
 
 export function getMenuList(pathname: string): Group[] {
   return [
-    {
-      groupLabel: '',
-      menus: [
-        {
-          href: '/',
-          label: '새 게시글',
-          active: pathname.includes('/'),
-          icon: LayoutGrid,
-        },
-      ],
-    },
+    // {
+    //   groupLabel: '',
+    //   menus: [
+    //     {
+    //       href: '/',
+    //       label: '새 게시글',
+    //       active: pathname.includes('/'),
+    //       icon: LayoutGrid,
+    //     },
+    //   ],
+    // },
     {
       groupLabel: 'Contents',
       menus: [
@@ -38,19 +48,19 @@ export function getMenuList(pathname: string): Group[] {
           href: '/pets',
           label: '반려동물 정보',
           active: pathname.includes('/pets'),
-          icon: SquarePen,
+          icon: PawPrint,
         },
-        {
-          href: '/pets',
-          label: '반려동물 공간',
-          active: pathname.includes('/pets'),
-          icon: Bookmark,
-        },
+        // {
+        //   href: '/pets',
+        //   label: '반려동물 공간',
+        //   active: pathname.includes('/pets'),
+        //   icon: Bookmark,
+        // },
         {
           href: '/direct',
           label: '메시지',
           active: pathname.includes('/direct'),
-          icon: Tag,
+          icon: MessageSquareHeart,
         },
       ],
     },
