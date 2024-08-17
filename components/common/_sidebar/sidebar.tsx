@@ -10,7 +10,7 @@ import { useSidebarToggle } from '@/store/sidebarStore';
 import { SidebarToggle } from './sidebarToggle';
 import { Menu } from './menu';
 
-import Navbar from './navbar';
+import Navbar from './navBar';
 
 export default function SideBar() {
   const isOpen = useSidebarToggle((state) => state.isOpen);

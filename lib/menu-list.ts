@@ -29,6 +29,7 @@ type Group = {
 };
 
 export function getMenuList(pathname: string): Group[] {
+  const id = 123;
   return [
     // {
     //   groupLabel: '',
@@ -68,7 +69,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: 'Settings',
       menus: [
         {
-          href: '/user',
+          href: `/user/${id}`,
           label: '프로필',
           active: pathname.includes('/user'),
           icon: Users,

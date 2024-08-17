@@ -29,6 +29,7 @@ interface FormData {
   pet_image?: FileList;
   petName: string;
   petSpecies: string;
+  user_uid: string;
 }
 
 export default function SignUpForm() {
@@ -55,7 +56,7 @@ export default function SignUpForm() {
     setFormData((prev) => ({ ...prev, ...data }));
     setIsStep((prev) => prev + 1);
     const mergedData = { ...formData, ...data };
-    // console.log('Merged data:', mergedData);
+    console.log('Merged data:', mergedData);
     reset();
   };
 
@@ -65,22 +66,19 @@ export default function SignUpForm() {
 
   const userSubmit = async (data: Partial<FormData>) => {
     const userData = { ...formData, ...data };
-    // console.log(userData);
-    if (!userData.email || !userData.user_pw) {
-      setError('이메일과 비밀번호는 필수 항목입니다.');
-      return;
-    }
-    try {
-      const userRegister = await createUserWithEmailAndPassword(auth, userData.email, userData.user_pw);
-      const user = userRegister.user;
+    // console.log(userData.user_uid);
 
-      const userRef = doc(firestore, 'users', user.uid);
+    const userKey = userData.user_uid;
+
+    try {
+      const userRef = doc(firestore, 'users', String(userKey));
       await setDoc(userRef, {
         email: userData.email,
         nickname: userData.nickname,
         bio: userData.bio || '',
         petName: userData.petName,
         petSpecies: userData.petSpecies,
+        password: userData.user_pw,
       });
 
       setSuccess('회원가입이 완료되었습니다.');
@@ -95,10 +93,6 @@ export default function SignUpForm() {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   console.log('Updated formData:', formData);
-  // }, [formData]);
 
   return (
     <>

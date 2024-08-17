@@ -10,7 +10,7 @@ interface MenuProps {
 
 export default function NewPostBtn({ isOpen }: MenuProps) {
   const { modal, openModal, closeModal } = useModalStore();
-  console.log(modal);
+  // console.log(modal);
 
   return (
     <>

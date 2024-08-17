@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import useEmailStore from '@/store/emailStore';
+import { date } from 'zod';
 
 export default function TextInput({ type, name, id, placeholder, text }: TextInputProps) {
   const {
@@ -43,6 +44,7 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
   const uploadImg = async (file: File) => {
     const values = getValues();
     let fileName = email;
+    const time = new Date();
 
     if (id == 'nickname') {
       fileName = `${email}_profile`;
