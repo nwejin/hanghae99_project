@@ -22,7 +22,7 @@ export function Menu({ isOpen }: MenuProps) {
   const menuList = getMenuList(pathname);
 
   const user = userStore((state) => state.user);
-  // console.log('user', typeof user);
+  console.log('user', user);
 
   return (
     <>
