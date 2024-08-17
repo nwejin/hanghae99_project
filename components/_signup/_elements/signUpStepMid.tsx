@@ -129,7 +129,6 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
             프로필 이미지
           </Label>
         </div>
-
         <div className="flex">
           <Input
             type="file"
