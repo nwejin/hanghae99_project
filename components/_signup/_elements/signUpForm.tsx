@@ -23,10 +23,10 @@ interface FormData {
   email: string;
   user_pw: string;
   password_verify: string;
-  profile_image?: FileList;
+  profile_image?: string;
   nickname: string;
   bio?: string;
-  pet_image?: FileList;
+  pet_image?: string;
   petName: string;
   petSpecies: string;
   user_uid: string;
@@ -36,8 +36,6 @@ export default function SignUpForm() {
   const [isStep, setIsStep] = useState(1);
   const [formData, setFormData] = useState<Partial<FormData>>({});
 
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   const methods = useForm<FormData>({
@@ -74,22 +72,22 @@ export default function SignUpForm() {
       const userRef = doc(firestore, 'users', String(userKey));
       await setDoc(userRef, {
         email: userData.email,
+        password: userData.user_pw,
+
+        profile_image: userData.profile_image,
         nickname: userData.nickname,
         bio: userData.bio || '',
+
+        per_image: userData.pet_image,
         petName: userData.petName,
         petSpecies: userData.petSpecies,
-        password: userData.user_pw,
       });
 
-      setSuccess('회원가입이 완료되었습니다.');
-      setError(null);
       router.push('/login');
       toast({
         title: '회원가입이 완료되었습니다.',
       });
     } catch (error: any) {
-      setError(error.message);
-      setSuccess(null);
       console.log(error);
     }
   };
@@ -102,9 +100,6 @@ export default function SignUpForm() {
         {isStep === 2 && <SignUpStepMid nextStep={nextStep} backStep={backStep} />}
         {isStep === 3 && <SignUpStepEnd backStep={backStep} onSubmit={userSubmit} />}
       </FormProvider>
-
-      {/* {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">{success}</p>} */}
     </>
   );
 }
