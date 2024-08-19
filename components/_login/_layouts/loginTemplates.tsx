@@ -8,14 +8,14 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 
 export default function SignUpTemplates() {
   return (
-    <Card.Card className="h-[35rem] w-[25rem] items-center justify-center shadow-md">
+    <Card.Card className="h-[35rem] w-[23rem] items-center justify-center shadow-md">
       <Header />
-      <Card.CardContent className="flex flex-col gap-y-2 pb-4">
+      <Card.CardContent className="flex h-[20rem] flex-col justify-evenly gap-y-2">
         <LoginForm />
       </Card.CardContent>
       <Card.CardFooter className="flex flex-col gap-y-2 pb-4">
         <div className="mt-4 text-center text-sm">
-          회원이 아니신가요??{' '}
+          아직 계정이 없으신가요?{' '}
           <Link href="/signup" className="underline">
             회원가입
           </Link>

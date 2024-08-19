@@ -9,9 +9,11 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/comp
 import { getMenuList } from '@/lib/menu-list';
 import { SignBtn } from './signBtn';
 import NewPostBtn from './newPostBtn';
+import { useEffect, useState } from 'react';
 
 // 로그인 정보 불러오기
 import { userStore } from '@/store/userStore';
+import { getUserNickname } from '@/lib/getNickName';
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -19,10 +21,24 @@ interface MenuProps {
 
 export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
-  const menuList = getMenuList(pathname);
+  // const menuList = getMenuList(pathname);
 
   const user = userStore((state) => state.user);
-  console.log('user', user);
+  // console.log('user', user);
+
+  const [nickname, setNickname] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.uid) {
+      console.log(nickname);
+      // 사용자의 uid로 닉네임을 가져옵니다.
+      getUserNickname(user.uid).then((fetchedNickname) => {
+        setNickname(fetchedNickname);
+      });
+    }
+  }, [user?.uid]);
+
+  const menuList = getMenuList(pathname, { nickname });
 
   return (
     <>
