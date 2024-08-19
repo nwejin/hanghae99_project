@@ -1,4 +1,3 @@
-import { app } from '../config/firebase';
 import { ContentLayout } from '@/components/common/contentLayout';
 import MainPageLayout from '@/components/common/mainPageLayout';
 import MainPageTemplates from '@/components/_main/_layouts/mainPageTemplates';
