@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 
 // 로그인 정보 불러오기
 import { userStore } from '@/store/userStore';
-import { getUserNickname } from '@/lib/getNickName';
+import { getUserNickname } from '@/lib/userAuth';
 
 interface MenuProps {
   isOpen: boolean | undefined;

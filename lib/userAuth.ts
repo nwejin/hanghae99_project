@@ -5,7 +5,9 @@ import { auth, firestore } from '@/config/firebase';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 
-async function getUserNickname(uid: string): Promise<string | null> {
+import { setCookie } from 'cookies-next';
+
+export async function getUserNickname(uid: string): Promise<string | null> {
   try {
     const userDoc = doc(firestore, 'users', uid);
     const docSnap = await getDoc(userDoc);
@@ -46,6 +48,9 @@ export function userAuth() {
         })
       );
 
+      // 쿠키에 저장
+      setCookie('auth', JSON.stringify({ email: user.email, nickname: nickname }), { path: '/' });
+
       setLoading(false);
       return userCredential;
     } catch (error: any) {
@@ -70,6 +75,7 @@ export function userAuth() {
   const logout = () => {
     auth.signOut();
     sessionStorage.removeItem('auth');
+    setCookie('auth', '', { path: '/', maxAge: -1 });
     router.push('/');
   };
 
