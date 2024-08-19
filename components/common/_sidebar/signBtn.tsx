@@ -26,7 +26,7 @@ export function SignBtn({ isOpen }: MenuProps) {
   useEffect(() => {
     const checkAuth = sessionStorage.getItem('auth');
     setIsAuth(!!checkAuth);
-  });
+  }, []);
 
   const signOut = () => {
     logout();
