@@ -7,7 +7,8 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/comp
 import { LogOut, LogIn } from 'lucide-react';
 import { auth } from '@/config/firebase';
 import { useToast } from '@/components/ui/use-toast';
-
+import { userAuth } from '@/lib/userAuth';
+import { useEffect, useState } from 'react';
 // 로그인 정보 불러오기
 import { userStore } from '@/store/userStore';
 
@@ -19,8 +20,17 @@ export function SignBtn({ isOpen }: MenuProps) {
   const user = userStore((state) => state.user);
   const { toast } = useToast();
 
+  const { logout } = userAuth();
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = sessionStorage.getItem('auth');
+    setIsAuth(!!checkAuth);
+  });
+
   const signOut = () => {
-    auth.signOut();
+    logout();
+    setIsAuth(false);
     toast({
       title: '로그아웃이 완료되었습니다.',
     });
@@ -32,7 +42,7 @@ export function SignBtn({ isOpen }: MenuProps) {
         <TooltipProvider disableHoverableContent>
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
-              {user ? (
+              {isAuth ? (
                 <Button onClick={signOut} variant="outline" className="mt-5 h-10 w-full justify-center">
                   <div className="flex w-full justify-center">
                     <span className={cn(isOpen === false ? '' : 'mr-4')}>

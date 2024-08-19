@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Ellipsis, LogOut, LogIn, SquarePen } from 'lucide-react';
 import { usePathname } from 'next/navigation';
@@ -29,14 +31,18 @@ export function Menu({ isOpen }: MenuProps) {
   const [nickname, setNickname] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user?.uid) {
-      console.log(nickname);
-      // 사용자의 uid로 닉네임을 가져옵니다.
-      getUserNickname(user.uid).then((fetchedNickname) => {
-        setNickname(fetchedNickname);
-      });
+    // 세션에서 사용자 데이터 가져오기
+    const sessionData = sessionStorage.getItem('auth');
+
+    if (sessionData) {
+      try {
+        const userData = JSON.parse(sessionData);
+        setNickname(userData.nickname || null);
+      } catch (error) {
+        console.error('세션 데이터 파싱 중 오류 발생:', error);
+      }
     }
-  }, [user?.uid]);
+  }, []);
 
   const menuList = getMenuList(pathname, { nickname });
 

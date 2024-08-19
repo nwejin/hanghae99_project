@@ -74,7 +74,7 @@ export function getMenuList(pathname: string, user?: { nickname?: string | null 
           icon: Users,
         },
         {
-          href: '/setting',
+          href: `/accounts/${user?.nickname}`,
           label: '계정 설정',
           active: pathname.includes('/setting'),
           icon: Settings,

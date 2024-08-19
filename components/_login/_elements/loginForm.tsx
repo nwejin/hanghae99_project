@@ -12,43 +12,30 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/config/firebase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { userAuth } from '@/lib/userAuth';
+
+interface userData {
+  email: string;
+  password: string;
+}
 
 export default function LoginForm() {
   const { toast } = useToast();
+  const { login, error, loading } = userAuth();
   const router = useRouter();
 
-  const resolveForm = useForm({
+  const resolveForm = useForm<userData>({
     resolver: zodResolver(loginSchema),
   });
 
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: userData) => {
     const { email, password } = data;
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      // console.log('로그인 성공', userCredential);
-      router.push('/');
+    const userLogin = await login(email, password);
+    if (userLogin) {
       toast({
         title: '로그인이 완료되었습니다.',
       });
-      setSuccess('로그인 완료되었습니다.');
-      setError(null);
-    } catch (error: any) {
-      // console.log(error.message);
-      switch (error.code) {
-        case 'auth/invalid-credential':
-        case 'auth/user-not-found':
-        case 'auth/wrong-password':
-          setError('이메일 또는 비밀번호를 확인해주세요');
-          break;
-        case 'auth/too-many-requests':
-          setError('잠시 후 다시 시도해주세요.');
-          break;
-        default:
-          setError('로그인에 실패했습니다. 다시 시도해주세요.');
-      }
+      router.push('/');
     }
   };
 
