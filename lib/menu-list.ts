@@ -28,8 +28,7 @@ type Group = {
   menus: Menu[];
 };
 
-export function getMenuList(pathname: string): Group[] {
-  const id = 123;
+export function getMenuList(pathname: string, user?: { nickname?: string | null }): Group[] {
   return [
     // {
     //   groupLabel: '',
@@ -69,7 +68,7 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: 'Settings',
       menus: [
         {
-          href: `/user/${id}`,
+          href: `/user/${user?.nickname}`,
           label: '프로필',
           active: pathname.includes('/user'),
           icon: Users,
