@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 
 import { setCookie } from 'cookies-next';
+import { userStore } from '@/store/userStore';
 
 export async function getUserNickname(uid: string): Promise<string | null> {
   try {
@@ -28,6 +29,7 @@ export function userAuth() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const { setUser } = userStore();
 
   const login = async (email: string, password: string): Promise<UserCredential | null> => {
     setLoading(true);
@@ -35,6 +37,8 @@ export function userAuth() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
       const user = userCredential.user;
+
+      setUser(user.uid);
 
       // Firestore에서 닉네임 가져오기
       const nickname = await getUserNickname(user.uid);

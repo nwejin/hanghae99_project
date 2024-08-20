@@ -1,136 +1,115 @@
 import { Card } from '@ui';
 import { Input } from '@ui';
 import { Button } from '@ui';
-import { Textarea } from '@/components/ui/textarea';
+
 import { useModalStore } from '@/store/modalStore';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+
 import { BadgePlus } from 'lucide-react';
 import Image from 'next/image';
 import testImg from '@/public/logo.png';
 import { useState } from 'react';
 
-import { Switch } from '@/components/ui/switch';
+import ImgCarousel from '../_ui/_carousel/imgCarousel';
+import Contents from '../_ui/contents';
+import Header from '../_ui/header';
+import SwitchBtn from '../_ui/switchBtn';
+import { userStore } from '@/store/userStore';
+import { useForm, FormProvider } from 'react-hook-form';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { addDoc, collection } from 'firebase/firestore';
+import { auth, firestore } from '@/config/firebase';
+
+interface PostFormData {
+  userId: string;
+  contents: string;
+  imgUrls: [];
+  created_at: string;
+  likes: [];
+  comments: [];
+  status: boolean;
+}
 
 export default function ModalForm() {
-  const [imgPreview, setImgPreview] = useState<File | null>(null);
-  const [imgUrl, setImgUrl] = useState('');
+  const { user, setUser } = userStore();
+  const [formData, setFormData] = useState<Partial<PostFormData>>({});
 
-  const prevImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files === null) return;
-    const file = e.target.files[0];
-    setImgUrl(URL.createObjectURL(file));
-    setImgPreview(file);
+  console.log(user);
+  const date = new Date();
+
+  const methods = useForm<PostFormData>({
+    defaultValues: {
+      userId: user,
+      contents: '',
+      imgUrls: [],
+      status: true,
+      created_at: new Date().toISOString(),
+      likes: [],
+      comments: [],
+    },
+  });
+
+  const { handleSubmit, setValue, getValues } = methods;
+
+  const [isPrivate, setIsPrivate] = useState(false);
+  const handleSwitchChange = (value: boolean) => {
+    setIsPrivate(value);
+    setValue('status', value);
+  };
+
+  const uploadImages = async (files: File[]): Promise<string[]> => {
+    const storage = getStorage();
+    const urls: string[] = [];
+
+    for (const file of files) {
+      const storageRef = ref(storage, `images/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      urls.push(downloadURL);
+    }
+
+    return urls;
+  };
+
+  const onSubmit = async (data: PostFormData) => {
+    try {
+      const imgUrls = await uploadImages(data.imgUrls as unknown as File[]);
+
+      const updatedData = {
+        ...data,
+        imgUrls,
+        created_at: new Date().toISOString(),
+        status: isPrivate,
+        userId: user,
+      };
+
+      // Firestore에 데이터 저장
+      const docRef = await addDoc(collection(firestore, 'posts'), updatedData);
+
+      console.log('Document written with ID: ', docRef.id);
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
   };
 
   return (
     <>
       <Card.Card className="relative z-10 h-[35rem] w-[50rem] items-center justify-center rounded-lg bg-white p-0 shadow-md">
-        <Card.CardHeader className="flex items-center p-3 pb-6">
-          <span className="text-lg font-bold">새 게시물</span>
-        </Card.CardHeader>
+        <Header />
         <Card.CardContent className="justify-betweenp-4 flex h-4/5 pt-6">
-          <div className="flex h-full w-4/5 items-center justify-center">
-            <Carousel className="w-4/5">
-              <CarouselContent className="">
-                <CarouselItem className="">
-                  <div className="">
-                    <Card.Card>
-                      <Card.CardContent className="flex aspect-square items-center justify-center p-6">
-                        {imgPreview ? (
-                          <Image
-                            src={imgUrl}
-                            alt="업로드된 이미지"
-                            layout="fill"
-                            objectFit="cover"
-                            className="left-0 top-0 h-full w-full object-cover"
-                          />
-                        ) : (
-                          ''
-                        )}
-                        <label htmlFor="">
-                          <BadgePlus color="grey" />
-                        </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={prevImg}
-                          className="absolute cursor-pointer opacity-0"
-                        />
-                      </Card.CardContent>
-                    </Card.Card>
-                  </div>
-                </CarouselItem>
-                <CarouselItem>
-                  <div>
-                    <Card.Card>
-                      <Card.CardContent className="flex aspect-square items-center justify-center p-6">
-                        {imgPreview ? (
-                          <Image
-                            src={imgUrl}
-                            alt="업로드된 이미지"
-                            layout="fill"
-                            objectFit="cover"
-                            className="absolute left-0 top-0 h-full w-full object-cover"
-                          />
-                        ) : (
-                          ''
-                        )}
-                        <label htmlFor="">
-                          <BadgePlus />
-                        </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={prevImg}
-                          className="absolute cursor-pointer opacity-0"
-                        />
-                      </Card.CardContent>
-                    </Card.Card>
-                  </div>
-                </CarouselItem>
-                <CarouselItem>
-                  <div>
-                    <Card.Card>
-                      <Card.CardContent className="flex aspect-square items-center justify-center p-6">
-                        {imgPreview ? (
-                          <Image
-                            src={imgUrl}
-                            alt="업로드된 이미지"
-                            layout="fill"
-                            objectFit="cover"
-                            className="absolute left-0 top-0 h-full w-full object-cover"
-                          />
-                        ) : (
-                          ''
-                        )}
-                        <label htmlFor="">
-                          <BadgePlus />
-                        </label>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={prevImg}
-                          className="absolute cursor-pointer opacity-0"
-                        />
-                      </Card.CardContent>
-                    </Card.Card>
-                  </div>
-                </CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious className="absolute left-2 top-1/2 z-10 -translate-y-1/2 transform" />
-              <CarouselNext className="absolute right-2 top-1/2 z-10 -translate-y-1/2 transform" />
-            </Carousel>
-          </div>
-          <div className="w-2/5 flex-row">
-            <Textarea placeholder="내용을 입력하세요" rows={5} className="h-3/5 w-full" />
-            <div className="mt-3 flex items-center">
-              <Switch />
-              <p className="ml-3">공개</p>
-            </div>
-            <div className="mt-20 flex items-center justify-end">
-              <Button>작성하기</Button>
-            </div>
-          </div>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="flex h-full w-full">
+              <div className="flex h-full w-3/4 justify-center">
+                <ImgCarousel />
+              </div>
+              <div className="mt-2 w-2/5 flex-row">
+                <Contents />
+                <SwitchBtn isPrivate={isPrivate} onToggle={handleSwitchChange} />
+                <div className="mt-16 flex items-center justify-end">
+                  <Button>작성하기</Button>
+                </div>
+              </div>
+            </form>
+          </FormProvider>
         </Card.CardContent>
       </Card.Card>
     </>

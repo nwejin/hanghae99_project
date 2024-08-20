@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { SquarePen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
+import { useEffect, useState } from 'react';
+import NewPostAlert from './newPostAlert';
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -10,7 +12,17 @@ interface MenuProps {
 
 export default function NewPostBtn({ isOpen }: MenuProps) {
   const { modal, openModal, closeModal } = useModalStore();
+  const [alertOpen, setAlertOpen] = useState(false);
   // console.log(modal);
+
+  const btnClick = () => {
+    const auth = sessionStorage.getItem('auth');
+    if (!auth) {
+      setAlertOpen(true);
+    } else {
+      openModal();
+    }
+  };
 
   return (
     <>
@@ -22,7 +34,7 @@ export default function NewPostBtn({ isOpen }: MenuProps) {
                 variant="ghost"
                 className="h-10 w-full justify-start"
                 onClick={() => {
-                  openModal();
+                  btnClick();
                 }}>
                 <span className={cn(isOpen === false ? '' : 'mr-4')}>
                   <SquarePen size={18} />
@@ -40,6 +52,7 @@ export default function NewPostBtn({ isOpen }: MenuProps) {
           </Tooltip>
         </TooltipProvider>
       </li>
+      <NewPostAlert open={alertOpen} onOpenChange={setAlertOpen} />
     </>
   );
 }
