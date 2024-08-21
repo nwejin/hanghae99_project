@@ -18,6 +18,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection } from 'firebase/firestore';
 import { auth, firestore } from '@/config/firebase';
+import { error } from 'console';
 
 interface PostFormData {
   userId: string;
@@ -52,32 +53,19 @@ export default function ModalForm() {
     },
   });
 
-  const { handleSubmit, setValue, getValues } = methods;
+  const {
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    setError,
+    clearErrors,
+  } = methods;
 
   const [isPrivate, setIsPrivate] = useState(false);
   const handleSwitchChange = (value: boolean) => {
     setIsPrivate(value);
     setValue('status', value);
   };
-
-  // 이미지 저장
-  // const uploadImages = async (files: File[]): Promise<string[]> => {
-  //   const storage = getStorage();
-  //   const urls: string[] = [];
-  //   const timestamp = new Date().getTime();
-
-  //   console.log(files);
-  //   for (const file of files) {
-  //     console.log(file);
-  //     console.log(file.name);
-  //     // const storageRef = ref(storage, `images/${timestamp}_`);
-  //     // await uploadBytes(storageRef, file);
-  //     // const downloadURL = await getDownloadURL(storageRef);
-  //     // urls.push(downloadURL);
-  //   }
-
-  //   return urls;
-  // };
 
   const uploadImages = async (urls: string[]): Promise<string[]> => {
     const storage = getStorage();
@@ -102,23 +90,35 @@ export default function ModalForm() {
   };
 
   const onSubmit = async (data: PostFormData) => {
-    try {
-      const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
+    if (data.imgUrls.length === 0) {
+      setError('imgUrls', { type: 'manual', message: '이미지를 최소 1개 이상 업로드해야 합니다.' });
+    }
+    if (!data.contents) {
+      setError('contents', { type: 'manual', message: '내용을 입력해주세요.' });
+    }
+    if (data.imgUrls.length > 0 && data.contents) {
+      try {
+        const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
 
-      const updatedData = {
-        ...data,
-        imgUrls,
-        created_at: new Date().toISOString(),
-        status: isPrivate,
-        userId: user,
-      };
+        if (user == '') {
+          alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요');
+        } else {
+          const updatedData = {
+            ...data,
+            imgUrls,
+            created_at: new Date().toISOString(),
+            status: isPrivate,
+            userId: user,
+          };
 
-      const docRef = await addDoc(collection(firestore, 'posts'), updatedData);
-      console.log('Document written with ID: ', docRef.id);
+          const docRef = await addDoc(collection(firestore, 'posts'), updatedData);
+          console.log('Document written with ID: ', docRef.id);
 
-      closeModal();
-    } catch (error) {
-      console.error('Error adding document: ', error);
+          closeModal();
+        }
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
     }
   };
 
@@ -135,7 +135,11 @@ export default function ModalForm() {
               <div className="mt-2 w-2/5 flex-row">
                 <Contents />
                 <SwitchBtn isPrivate={isPrivate} onToggle={handleSwitchChange} />
-                <div className="mt-16 flex items-center justify-end">
+                <div className="mt-2 h-10">
+                  {errors.contents && <p className="text-sm text-red-500">{errors.contents.message}</p>}
+                  {errors.imgUrls && <p className="text-sm text-red-500">{errors.imgUrls.message}</p>}
+                </div>
+                <div className="mt-4 flex items-center justify-end">
                   <Button>작성하기</Button>
                 </div>
               </div>
