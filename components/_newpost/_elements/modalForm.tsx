@@ -30,11 +30,15 @@ interface PostFormData {
 }
 
 export default function ModalForm() {
+  const { closeModal } = useModalStore();
   const { user, setUser } = userStore();
   const [formData, setFormData] = useState<Partial<PostFormData>>({});
 
   console.log(user);
   const date = new Date();
+
+  console.log(auth);
+  console.log(user);
 
   const methods = useForm<PostFormData>({
     defaultValues: {
@@ -56,23 +60,50 @@ export default function ModalForm() {
     setValue('status', value);
   };
 
-  const uploadImages = async (files: File[]): Promise<string[]> => {
-    const storage = getStorage();
-    const urls: string[] = [];
+  // 이미지 저장
+  // const uploadImages = async (files: File[]): Promise<string[]> => {
+  //   const storage = getStorage();
+  //   const urls: string[] = [];
+  //   const timestamp = new Date().getTime();
 
-    for (const file of files) {
-      const storageRef = ref(storage, `images/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      urls.push(downloadURL);
+  //   console.log(files);
+  //   for (const file of files) {
+  //     console.log(file);
+  //     console.log(file.name);
+  //     // const storageRef = ref(storage, `images/${timestamp}_`);
+  //     // await uploadBytes(storageRef, file);
+  //     // const downloadURL = await getDownloadURL(storageRef);
+  //     // urls.push(downloadURL);
+  //   }
+
+  //   return urls;
+  // };
+
+  const uploadImages = async (urls: string[]): Promise<string[]> => {
+    const storage = getStorage();
+    const uploadPromises: Promise<string>[] = [];
+
+    for (const url of urls) {
+      uploadPromises.push(
+        fetch(url)
+          .then((res) => res.blob()) // `blob` URL을 파일로 변환
+          .then((blob) => {
+            const timestamp = new Date().getTime();
+            const fileName = `${timestamp}_${url.split('/').pop()}`; // 고유한 파일 이름 생성
+            const storageRef = ref(storage, `images/${fileName}`);
+
+            return uploadBytes(storageRef, blob).then(() => getDownloadURL(storageRef));
+          })
+      );
     }
 
-    return urls;
+    const downloadURLs = await Promise.all(uploadPromises);
+    return downloadURLs;
   };
 
   const onSubmit = async (data: PostFormData) => {
     try {
-      const imgUrls = await uploadImages(data.imgUrls as unknown as File[]);
+      const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
 
       const updatedData = {
         ...data,
@@ -82,10 +113,10 @@ export default function ModalForm() {
         userId: user,
       };
 
-      // Firestore에 데이터 저장
       const docRef = await addDoc(collection(firestore, 'posts'), updatedData);
-
       console.log('Document written with ID: ', docRef.id);
+
+      closeModal();
     } catch (error) {
       console.error('Error adding document: ', error);
     }
