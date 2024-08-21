@@ -18,7 +18,7 @@ export default function ImgCarousel() {
   // };
 
   // const [imgPreview, setImgPreview] = useState<File | null>(null);
-  // const [imgUrl, setImgUrl] = useState('');
+  const [imgUrl, setImgUrl] = useState('');
 
   // const prevImg = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   if (e.target.files === null) return;
@@ -38,16 +38,21 @@ export default function ImgCarousel() {
       const urls = filesArray.map((file) => URL.createObjectURL(file));
 
       if (index !== undefined) {
+        // 기존 이미지를 업데이트
         const updatedPreviews = [...imgPreviews];
         updatedPreviews[index] = urls[0];
-        setImgPreviews(updatedPreviews);
-        setValue('imgUrls', updatedPreviews);
-      } else if (imgPreviews.length < 5) {
-        const updatedPreviews = [...imgPreviews, ...urls];
+
         setImgPreviews(updatedPreviews);
         setValue('imgUrls', updatedPreviews);
       } else {
-        alert('이미지는 최대 5개까지만 등록할 수 있습니다.');
+        // 새 이미지를 추가
+        if (imgPreviews.length + urls.length <= 5) {
+          const updatedPreviews = [...imgPreviews, ...urls];
+          setImgPreviews(updatedPreviews);
+          setValue('imgUrls', updatedPreviews);
+        } else {
+          alert('이미지는 최대 5개까지만 등록할 수 있습니다.');
+        }
       }
     }
   };

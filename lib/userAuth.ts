@@ -11,10 +11,10 @@ import { userStore } from '@/store/userStore';
 export async function getUserNickname(uid: string): Promise<string | null> {
   try {
     const userDoc = doc(firestore, 'users', uid);
-    const docSnap = await getDoc(userDoc);
+    const getUserDoc = await getDoc(userDoc);
 
-    if (docSnap.exists()) {
-      return docSnap.data().nickname || null;
+    if (getUserDoc.exists()) {
+      return getUserDoc.data().nickname || null;
     } else {
       console.error('사용자 문서가 존재하지 않습니다.');
       return null;
