@@ -78,7 +78,7 @@ export default function SignUpForm() {
         nickname: userData.nickname,
         bio: userData.bio || '',
 
-        per_image: userData.pet_image,
+        pet_image: userData.pet_image,
         petName: userData.petName,
         petSpecies: userData.petSpecies,
       });

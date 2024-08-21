@@ -5,7 +5,7 @@ import { auth, firestore } from '@/config/firebase';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 import { userStore } from '@/store/userStore';
 
 export async function getUserNickname(uid: string): Promise<string | null> {
@@ -30,6 +30,32 @@ export function userAuth() {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const { setUser } = userStore();
+
+  // 세션이 없으면 쿠키도 삭제
+  const checkSessionAndCookie = () => {
+    const session = sessionStorage.getItem('auth');
+    const cookieAuth = getCookie('auth');
+
+    if (!session && cookieAuth) {
+      // 세션이 없고 쿠키가 존재하면 쿠키 삭제
+      deleteCookie('auth');
+    }
+  };
+
+  useEffect(() => {
+    checkSessionAndCookie();
+
+    // 인증 상태 갱신
+    const checkUserStore = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user.uid);
+      } else {
+        setUser('');
+      }
+    });
+
+    return () => checkUserStore();
+  }, [setUser]);
 
   const login = async (email: string, password: string): Promise<UserCredential | null> => {
     setLoading(true);
@@ -62,9 +88,13 @@ export function userAuth() {
 
       switch (error.code) {
         case 'auth/invalid-credential':
+          setError('이메일을 확인해주세요');
+          break;
         case 'auth/user-not-found':
+          setError('가입 정보가 없습니다.');
+          break;
         case 'auth/wrong-password':
-          setError('이메일 또는 비밀번호를 확인해주세요');
+          setError('비밀번호를 확인해주세요');
           break;
         case 'auth/too-many-requests':
           setError('잠시 후 다시 시도해주세요.');
