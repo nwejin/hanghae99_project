@@ -15,6 +15,7 @@ import DetailBtn from '../_ui/_post/detailBtn';
 import ContentsBox from '../_ui/_post/contentsBox';
 
 import DetailPage from '../_elements/detailPage';
+import { userStore } from '@/store/userStore';
 
 interface UserPostProps {
   post: Post;
@@ -25,6 +26,8 @@ export default function UserPost({ post, user }: UserPostProps) {
   //   console.log(post.imgUrls);
   const [isOwner, setIsOwner] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+
+  const user_id = userStore((state) => state.user);
 
   useEffect(() => {
     const auth = getAuth();
@@ -51,7 +54,7 @@ export default function UserPost({ post, user }: UserPostProps) {
             <ImgCarousel imgUrls={post.imgUrls} />
           </CardContent>
           <CardFooter className="grid gap-2 p-2 pb-4">
-            <Buttons />
+            <Buttons postId={post.id} userId={user_id} />
             <div className="w-full px-2 text-sm">
               <span className="font-black">최진</span>님 외 <span className="font-black">20</span>명이 좋아합니다.
             </div>
@@ -62,7 +65,7 @@ export default function UserPost({ post, user }: UserPostProps) {
           </CardFooter>
         </Card>
       </Card>
-      {isOpen ? <DetailPage modal={modalControl} /> : ''}
+      {isOpen ? <DetailPage modal={modalControl} post={post} user={user} /> : ''}
     </>
   );
 }
