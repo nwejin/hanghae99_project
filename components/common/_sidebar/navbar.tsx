@@ -15,7 +15,7 @@ export default function Navbar() {
   const menuList = getMenuList(pathname);
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 flex justify-around bg-white p-4 shadow-md md:flex lg:hidden">
+      <nav className="z-1000 fixed bottom-0 left-0 right-0 z-20 flex justify-around bg-white p-4 shadow-md md:flex lg:hidden">
         <NavBarNewPostBtn />
         {menuList.flatMap(({ menus }) =>
           menus.map(({ href, label, icon: Icon, active }, index) => (
@@ -30,13 +30,6 @@ export default function Navbar() {
             </Button>
           ))
         )}
-        {/* {menuList.map(({groupLabel, menus}, index) => (
-         {menus.map(({ href, label, icon: Icon, active }, index) => (
-            <Button>
-
-            </Button>
-        ))}
-       ))} */}
       </nav>
     </>
   );

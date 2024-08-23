@@ -28,14 +28,14 @@ export default function MainPageSide() {
     };
     console.log(userData);
     fetchUserData();
-  }, []);
+  }, [userData]);
 
   return (
-    <div>
+    <div className="hidden md:block">
       <Input className="mb-5 ml-5 w-[20rem]" />
       <Card.Card className="ml-5 h-[20rem] w-[20rem] bg-slate-50">
         <Card.CardHeader>
-          <Card.Card className="flex p-3">
+          <Card.Card className="flex">
             <Avatar className="h-12 w-12">
               <AvatarImage src={userData?.profileImage} alt="img" />
               <AvatarFallback>{userData?.nickname}</AvatarFallback>
