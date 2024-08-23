@@ -22,7 +22,7 @@ export interface User {
 }
 
 export interface PostData {
-  post: Post & { id: string };
+  post: Post;
   user: User;
 }
 
