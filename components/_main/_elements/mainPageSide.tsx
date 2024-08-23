@@ -11,24 +11,24 @@ import { firestore } from '@/config/firebase';
 export default function MainPageSide() {
   const [userData, setUserData] = useState<{ nickname: string; profileImage: string } | null>(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const auth = getAuth();
+  //     const user = auth.currentUser;
 
-      if (user) {
-        const userDocRef = doc(firestore, 'users', user.uid);
-        const userDoc = await getDoc(userDocRef);
+  //     if (user) {
+  //       const userDocRef = doc(firestore, 'users', user.uid);
+  //       const userDoc = await getDoc(userDocRef);
 
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          setUserData({ nickname: data.nickname, profileImage: data.profile_image });
-        }
-      }
-    };
-    console.log(userData);
-    fetchUserData();
-  }, [userData]);
+  //       if (userDoc.exists()) {
+  //         const data = userDoc.data();
+  //         setUserData({ nickname: data.nickname, profileImage: data.profile_image });
+  //       }
+  //     }
+  //   };
+  //   console.log(userData);
+  //   fetchUserData();
+  // }, []);
 
   return (
     <div className="hidden md:block">
