@@ -7,7 +7,6 @@ export interface Post {
   contents: string;
   imgUrls: string[];
   created_at: string;
-  likes: string[];
   comments: string[];
   status: boolean;
 }

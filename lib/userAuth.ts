@@ -25,6 +25,29 @@ export async function getUserNickname(uid: string): Promise<string | null> {
   }
 }
 
+export interface UserProfileProps {
+  profileImage: string;
+  nickname: string;
+}
+
+export async function getUserProfile(userId: string): Promise<UserProfileProps | null> {
+  try {
+    const userRef = doc(firestore, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      return {
+        profileImage: userData.profile_image,
+        nickname: userData.nickname,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('유저 불러오기 오류', error);
+    return null;
+  }
+}
+
 export function userAuth() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);

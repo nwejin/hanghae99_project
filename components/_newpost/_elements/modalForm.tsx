@@ -25,7 +25,6 @@ interface PostFormData {
   contents: string;
   imgUrls: [];
   created_at: string;
-  likes: [];
   comments: [];
   status: boolean;
 }
@@ -45,10 +44,8 @@ export default function ModalForm() {
     defaultValues: {
       userId: user,
       contents: '',
-      imgUrls: [],
       status: true,
       created_at: new Date().toISOString(),
-      likes: [],
       comments: [],
     },
   });
