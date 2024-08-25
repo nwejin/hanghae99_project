@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { Card } from '@ui';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,8 @@ import { Post, User } from '@/lib/getAllPost';
 import { getComments, addComment, PostComment } from '@/lib/postComment';
 import { UserProfileProps } from '@/lib/userAuth';
 
+import { timeCheck } from '@/lib/timeUtils';
+
 interface detailProps {
   post: Post;
   user: User;
@@ -28,8 +30,6 @@ interface detailProps {
 }
 
 export default function DetailPage({ modal, post, user }: detailProps) {
-  const tags = Array.from({ length: 50 }).map((_, i, a) => `v1.2.0-beta.${a.length - i}`);
-
   const [inputValue, setInputValue] = useState('');
   const user_id = userStore((state) => state.user);
   const [comments, setComments] = useState<(PostComment & { user: UserProfileProps })[]>([]);
@@ -78,13 +78,14 @@ export default function DetailPage({ modal, post, user }: detailProps) {
           <X color="#ffffff" strokeWidth={3} />
         </button>
         <Card.Card className="relative z-10 flex h-[44rem] w-[70rem] items-center justify-center rounded-lg bg-white p-0 shadow-md">
-          <Card.CardContent className="flex h-full w-full pb-6 pt-6">
-            <div className="relative max-w-5xl border-2 border-slate-900">
-              <Carousel className="w-full" setApi={setApi}>
+          <Card.CardContent className="grid h-full w-full grid-cols-7 gap-4 pb-6 pt-6">
+            {/* 이미지 */}
+            <div className="border-1 relative col-span-4 flex items-center justify-center border">
+              <Carousel className="" setApi={setApi}>
                 <CarouselContent>
                   {post.imgUrls.map((img, index) => (
-                    <CarouselItem key={index} className="">
-                      <img src={img} width={650} height={650} alt="Pet Image" className="aspect-square object-cover" />
+                    <CarouselItem key={index}>
+                      <img src={img} alt="Pet Image" className="aspect-square object-cover" />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -94,52 +95,62 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                 {current} / {count}
               </div>
             </div>
-            <div className="h-full w-full">
-              <Card.Card className="border-bottm-0 rounded-none p-3">
-                <Card.CardContent className="p-0">
+
+            {/* 댓글 */}
+            <div className="col-span-3 flex h-full flex-col items-center justify-between overflow-hidden border">
+              <Card.Card className="m-0 w-full rounded-none border-none p-3">
+                <Card.CardContent className="flex items-center justify-between p-0">
                   <Link
                     href={`/user/${user.nickname}`}
                     className="flex items-center gap-2 text-sm font-semibold"
                     prefetch={false}>
-                    <Avatar className="h-8 w-8 border">
+                    <Avatar className="h-8 w-8">
                       <AvatarImage src={user.profile_image} alt={user.nickname} />
                       <AvatarFallback>{user.nickname}</AvatarFallback>
                     </Avatar>
                     {user.nickname}
                   </Link>
+                  <p className="text-xs text-gray-300">{timeCheck(post.created_at)}</p>
                 </Card.CardContent>
               </Card.Card>
-              <ScrollArea className="h-3/5 w-full rounded-none border">
+
+              <ScrollArea className="m-0 h-[70%] w-full rounded-none border-b">
                 <div className="p-4">
                   <h4 className="mb-4 text-sm font-medium leading-none"> {post.contents}</h4>
                   <Separator className="my-3" />
                   {comments.map((comment) => (
-                    <div key={comment.created_at} className="mb-4">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={comment.user.profileImage} alt={comment.user.nickname} />
-                          <AvatarFallback>{comment.user.nickname}</AvatarFallback>
-                        </Avatar>
-                        <div className="text-sm">
-                          <strong>{comment.user.nickname}</strong> {comment.comment}
+                    <div key={comment.created_at} className="p-2">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src={comment.user.profileImage} alt={comment.user.nickname} />
+                              <AvatarFallback>{comment.user.nickname}</AvatarFallback>
+                            </Avatar>
+                            <p className="ml-2">{comment.user.nickname}</p>
+                          </div>
+                          <p className="text-xs text-gray-300">{timeCheck(comment.created_at)}</p>
                         </div>
+                        <div className="flex w-full items-start text-sm">{comment.comment}</div>
                       </div>
-                      <Separator className="my-3" />
+                      <Separator className="my-2" />
                     </div>
                   ))}
                 </div>
+                <ScrollBar orientation="vertical" />
               </ScrollArea>
+
               <Buttons postId={post.id} userId={user_id} />
-              <div className="relative">
+              <div className="relative w-full">
                 <Textarea
                   placeholder="댓글을 입력하세요..."
-                  className="h-full rounded-none"
+                  className="resize-none rounded-none border-b-0 border-l-0 border-r-0 border-t"
                   value={inputValue}
                   onChange={handleChange}
                 />
                 {inputValue && (
-                  <Button className="absolute bottom-4 right-2" onClick={handleCommentSubmit}>
-                    등록
+                  <Button className="absolute bottom-4 right-2" variant="ghost" onClick={handleCommentSubmit}>
+                    <span style={{ color: 'hsl(214, 100%, 46%)' }}>등록</span>
                   </Button>
                 )}
               </div>

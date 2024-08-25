@@ -13,25 +13,38 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import UserPost from '../_elements/userPost';
-import { getAllPost } from '@/lib/getAllPost';
+
 import { useEffect, useState } from 'react';
-import { PostData } from '@/lib/getAllPost';
+import { PostData, subscribeToPosts } from '@/lib/getAllPost';
 
 export default function MainPage() {
   const [posts, setPosts] = useState<PostData[]>([]);
 
+  //   useEffect(() => {
+  //     const fetchPosts = async () => {
+  //       try {
+  //         const postsData = await getAllPost();
+  //         setPosts(postsData);
+  //         console.log(postsData);
+  //       } catch (error) {
+  //         console.error('Failed to fetch posts:', error);
+  //       }
+  //     };
+
+  //     fetchPosts();
+  //   }, []);
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const postsData = await getAllPost();
-        setPosts(postsData);
-        console.log(postsData);
-      } catch (error) {
-        console.error('Failed to fetch posts:', error);
-      }
+    // Define the onUpdate callback
+    const handleUpdate = (updatedPosts: PostData[]) => {
+      setPosts(updatedPosts);
     };
 
-    fetchPosts();
+    // Subscribe to posts
+    const unsubscribe = subscribeToPosts(handleUpdate);
+
+    // Cleanup subscription on component unmount
+    return () => unsubscribe();
   }, []);
   //   const posts: PostData[] = [
   //     {

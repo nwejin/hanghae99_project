@@ -111,7 +111,8 @@ export function userAuth() {
 
       switch (error.code) {
         case 'auth/invalid-credential':
-          setError('이메일을 확인해주세요');
+          setError('이메일/비밀번호를 확인해주세요');
+          console.log(error.code);
           break;
         case 'auth/user-not-found':
           setError('가입 정보가 없습니다.');

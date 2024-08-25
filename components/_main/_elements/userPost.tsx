@@ -26,7 +26,8 @@ interface UserPostProps {
 
 export default function UserPost({ post, user }: UserPostProps) {
   //   console.log(post.imgUrls);
-  const [isOwner, setIsOwner] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
+
   const [isOpen, setIsOpen] = useState(false);
   const [likeInfo, setLikeInfo] = useState<{ recentLikeUser: string | null; likeCount: number }>({
     recentLikeUser: null,
