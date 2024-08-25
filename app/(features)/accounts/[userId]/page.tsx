@@ -1,7 +1,10 @@
+import { ContentLayout } from '@/components/common/contentLayout';
+import AccountPageTemplates from '@/components/_account/_layouts/accountPageTemplates';
+
 export default function AccountPage() {
   return (
-    <div>
-      <p>계정설정 페이지</p>
-    </div>
+    <ContentLayout>
+      <AccountPageTemplates />
+    </ContentLayout>
   );
 }
