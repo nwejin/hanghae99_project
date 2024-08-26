@@ -1,6 +1,4 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from 'firebase/app';
-// TODO: Add SDKs for Firebase products that you want to use
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 import { getDatabase, ref, set } from 'firebase/database'; // Realtime Database

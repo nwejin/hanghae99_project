@@ -18,13 +18,9 @@ import DetailPage from '../_elements/detailPage';
 import { userStore } from '@/store/userStore';
 import { fetchLikeData } from '@/lib/postLike';
 import { getUserNickname } from '@/lib/userAuth';
+import { TotalPostType } from '@/lib/post';
 
-interface UserPostProps {
-  post: Post;
-  user: User;
-}
-
-export default function UserPost({ post, user }: UserPostProps) {
+export default function UserPost({ post, user }: TotalPostType) {
   //   console.log(post.imgUrls);
   const [isOwner, setIsOwner] = useState(false);
 

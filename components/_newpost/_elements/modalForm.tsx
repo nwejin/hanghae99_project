@@ -18,27 +18,28 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { addDoc, collection } from 'firebase/firestore';
 import { auth, firestore } from '@/config/firebase';
-import { error } from 'console';
+import { PostFormData } from '@/lib/post';
+import { addPost } from '@/lib/post';
 
-interface PostFormData {
-  userId: string;
-  contents: string;
-  imgUrls: [];
-  created_at: string;
-  comments: [];
-  status: boolean;
-}
+// interface PostFormData {
+//   userId: string;
+//   contents: string;
+//   imgUrls: [];
+//   created_at: string;
+//   comments: [];
+//   status: boolean;
+// }
 
 export default function ModalForm() {
   const { closeModal } = useModalStore();
   const { user, setUser } = userStore();
   const [formData, setFormData] = useState<Partial<PostFormData>>({});
 
-  console.log(user);
+  // console.log(user);
   const date = new Date();
 
-  console.log(auth);
-  console.log(user);
+  // console.log(auth);
+  // console.log(user);
 
   const methods = useForm<PostFormData>({
     defaultValues: {
@@ -46,7 +47,6 @@ export default function ModalForm() {
       contents: '',
       status: true,
       created_at: new Date().toISOString(),
-      comments: [],
     },
   });
 
@@ -100,7 +100,15 @@ export default function ModalForm() {
         if (user == '') {
           alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요');
         } else {
-          const updatedData = {
+          // const updatedData = {
+          //   ...data,
+          //   imgUrls,
+          //   created_at: new Date().toISOString(),
+          //   status: isPrivate,
+          //   userId: user,
+          // };
+
+          const postData: PostFormData = {
             ...data,
             imgUrls,
             created_at: new Date().toISOString(),
@@ -108,13 +116,14 @@ export default function ModalForm() {
             userId: user,
           };
 
-          const docRef = await addDoc(collection(firestore, 'posts'), updatedData);
-          console.log('Document written with ID: ', docRef.id);
+          // const docRef = await addDoc(collection(firestore, 'posts'), postData);
+          // console.log('Document written with ID: ', docRef.id);
+          await addPost(postData);
 
           closeModal();
         }
       } catch (error) {
-        console.error('Error adding document: ', error);
+        console.error('게시글 추가 에러', error);
       }
     }
   };

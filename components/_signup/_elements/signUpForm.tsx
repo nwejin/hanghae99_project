@@ -7,7 +7,7 @@ import SignUpStepMid from './signUpStepMid';
 import SignUpStepEnd from './signUpStepEnd';
 import ProgressBar from '../_ui/progressBar';
 import useEmailStore from '@/store/emailStore';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection } from 'firebase/firestore';
 import { auth, firestore } from '@/config/firebase';
 import { useRouter } from 'next/navigation';
 
@@ -29,6 +29,7 @@ interface FormData {
   pet_image?: string;
   petName: string;
   petSpecies: string;
+  petSubSpecies: string;
   user_uid: string;
 }
 
@@ -78,10 +79,22 @@ export default function SignUpForm() {
         nickname: userData.nickname,
         bio: userData.bio || '',
 
-        pet_image: userData.pet_image,
-        petName: userData.petName,
-        petSpecies: userData.petSpecies,
+        // pet_image: userData.pet_image,
+        // petName: userData.petName,
+        // petSpecies: userData.petSpecies,
+        // petSubSpecies: userData.petSubSpecies,
       });
+
+      if (userData.petName && userData.petSpecies) {
+        const petsRef = collection(userRef, 'pets'); // 서브컬렉션 'pets'
+        const petDocRef = doc(petsRef);
+        await setDoc(petDocRef, {
+          pet_image: userData.pet_image,
+          petName: userData.petName,
+          petSpecies: userData.petSpecies,
+          petSubSpecies: userData.petSubSpecies,
+        });
+      }
 
       router.push('/login');
       toast({

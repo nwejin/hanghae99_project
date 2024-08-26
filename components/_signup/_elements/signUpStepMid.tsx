@@ -170,8 +170,8 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
           {...register('nickname', {
             required: '닉네임을 입력해주세요',
             pattern: {
-              value: /^[a-zA-Z]+$/,
-              message: '닉네임은 영어만 입력 가능합니다.',
+              value: /^[a-zA-Z0-9]+$/,
+              message: '닉네임은 영어와 숫자만 입력 가능합니다.',
             },
           })}
           className="mb-2"

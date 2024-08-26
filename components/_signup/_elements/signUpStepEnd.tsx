@@ -3,7 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { endSchema } from '@/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import SignUpBtn from '../_ui/signUpBtn';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Controller } from 'react-hook-form';
 
 import { RotateCcw } from 'lucide-react';
 
@@ -13,6 +13,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useState } from 'react';
 import { storage } from '@/config/firebase';
 import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject } from 'firebase/storage';
+import {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from '@/components/ui/select';
+import { petCategoryData } from '@/lib/petCategory';
 
 interface FormProps {
   onSubmit: (data: StepData) => void;
@@ -23,10 +36,11 @@ interface StepData {
   pet_image?: string;
   petName: string;
   petSpecies: string;
+  petSubSpecies: string;
 }
 
 export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
-  const { handleSubmit } = useFormContext<StepData>();
+  const { handleSubmit, register, setValue, watch, control } = useFormContext<StepData>();
 
   const [imgPreview, setImgPreview] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState('');
@@ -95,6 +109,13 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
     onSubmit(petData);
   };
 
+  const handleSpeciesChange = (species: keyof typeof petCategoryData) => {
+    setValue('petSpecies', species);
+    setValue('petSubSpecies', '');
+  };
+
+  const watchedSpecies = watch('petSpecies') as keyof typeof petCategoryData;
+
   return (
     <form onSubmit={handleSubmit(finalSubmit)} className="grid gap-4">
       <div className="grid gap-2">
@@ -138,13 +159,61 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
         />
       </div>
       <div className="grid gap-2">
-        <TextInput
+        {/* <TextInput
           type="text"
           name="petSpecies"
           id="petSpecies"
           placeholder="친구는 어떤 종인가요?"
           text="반려동물 종"
-        />
+        /> */}
+        <Label htmlFor="petSpecies" className="mr-2 text-base font-semibold">
+          반려동물 정보
+        </Label>
+        <div className="mb-2 grid grid-cols-6 gap-2">
+          <div className="col-span-3">
+            <Controller
+              name="petSpecies"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    handleSpeciesChange(value as keyof typeof petCategoryData);
+                  }}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="대분류" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dog">강아지</SelectItem>
+                    <SelectItem value="cat">고양이</SelectItem>
+                    <SelectItem value="other">기타</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+          <div className="col-span-3">
+            <Controller
+              name="petSubSpecies"
+              control={control}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="중분류" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {watchedSpecies &&
+                      petCategoryData[watchedSpecies]?.map((subspecies) => (
+                        <SelectItem key={subspecies.value} value={subspecies.value}>
+                          {subspecies.label}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+        </div>
       </div>
       <div className="flex justify-end">
         <SignUpBtn text="이전" type="button" onClick={backStep} />
