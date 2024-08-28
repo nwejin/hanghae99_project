@@ -17,7 +17,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+// export const app = initializeApp(firebaseConfig);
+
+// next.js가 어플리케이션을 리로드할때 실수로 SDK를 다시 초기화 하는걸 방지한다.
+export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 export const storage = getStorage(app);
 export const database = getDatabase(app); // Realtime Database

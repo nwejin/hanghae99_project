@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Heart, Send, MessageCircle } from 'lucide-react';
-import { addLike, removeLike, isLiked } from '@/lib/postLike';
+// import { addLike, removeLike, isLiked } from '@/lib/postLike';
 import { useState, useEffect } from 'react';
+import { addLike, deleteLike, getLike } from '@/lib/like';
 
 interface ButtonsProps {
   postId: string;
@@ -14,13 +15,15 @@ export default function Buttons({ postId, userId }: ButtonsProps) {
   useEffect(() => {
     if (userId) {
       const fetchLikeStatus = async () => {
-        const likedStatus = await isLiked(postId, userId);
-        setLiked(likedStatus);
+        const likedStatus = await getLike(postId, userId);
+        setLiked(likedStatus.isLiked);
       };
 
       fetchLikeStatus();
     }
   }, [postId, userId]);
+
+  const likeData = { postId };
 
   const handleLike = async () => {
     if (!userId) {
@@ -33,9 +36,9 @@ export default function Buttons({ postId, userId }: ButtonsProps) {
 
     try {
       if (likeUpdate) {
-        await addLike(postId, userId);
+        await addLike(likeData);
       } else {
-        await removeLike(postId, userId);
+        await deleteLike(likeData);
       }
     } catch (error) {
       // 서버 요청 실패시 원상태로
