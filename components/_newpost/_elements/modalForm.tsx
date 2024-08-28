@@ -1,5 +1,4 @@
 import { Card } from '@ui';
-import { Input } from '@ui';
 import { Button } from '@ui';
 
 import { useModalStore } from '@/store/modalStore';
@@ -16,34 +15,18 @@ import SwitchBtn from '../_ui/switchBtn';
 import { userStore } from '@/store/userStore';
 import { useForm, FormProvider } from 'react-hook-form';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { addDoc, collection } from 'firebase/firestore';
-import { auth, firestore } from '@/config/firebase';
+
 import { PostFormData } from '@/lib/post';
 import { addPost } from '@/lib/post';
-
-// interface PostFormData {
-//   userId: string;
-//   contents: string;
-//   imgUrls: [];
-//   created_at: string;
-//   comments: [];
-//   status: boolean;
-// }
 
 export default function ModalForm() {
   const { closeModal } = useModalStore();
   const { user, setUser } = userStore();
   const [formData, setFormData] = useState<Partial<PostFormData>>({});
 
-  // console.log(user);
-  const date = new Date();
-
-  // console.log(auth);
-  // console.log(user);
-
   const methods = useForm<PostFormData>({
     defaultValues: {
-      userId: user,
+      userId: '',
       contents: '',
       status: true,
       created_at: new Date().toISOString(),
@@ -100,18 +83,9 @@ export default function ModalForm() {
         if (user == '') {
           alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요');
         } else {
-          // const updatedData = {
-          //   ...data,
-          //   imgUrls,
-          //   created_at: new Date().toISOString(),
-          //   status: isPrivate,
-          //   userId: user,
-          // };
-
           const postData: PostFormData = {
             ...data,
             imgUrls,
-            created_at: new Date().toISOString(),
             status: isPrivate,
             userId: user,
           };

@@ -13,6 +13,7 @@ import { auth } from '@/config/firebase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { userAuth } from '@/lib/userAuth';
+import { login } from '@/lib/login';
 
 interface userData {
   email: string;
@@ -21,8 +22,10 @@ interface userData {
 
 export default function LoginForm() {
   const { toast } = useToast();
-  const { login, error, loading } = userAuth();
+  // const { login, error, loading } = userAuth();
   const router = useRouter();
+
+  const [error, setError] = useState('');
 
   const resolveForm = useForm<userData>({
     resolver: zodResolver(loginSchema),
@@ -30,12 +33,27 @@ export default function LoginForm() {
 
   const onSubmit = async (data: userData) => {
     const { email, password } = data;
-    const userLogin = await login(email, password);
-    if (userLogin) {
+    const userLogin = await login(data);
+
+    if (!userLogin) {
       toast({
         title: '로그인이 완료되었습니다.',
       });
-      router.push('/');
+      // router.push('/');
+    } else {
+      // setError(userLogin);
+      switch (userLogin) {
+        case 'auth/invalid-credential':
+          setError('이메일/비밀번호를 확인해주세요');
+        case 'auth/user-not-found':
+          setError('가입 정보가 없습니다.');
+        case 'auth/wrong-password':
+          setError('비밀번호를 확인해주세요');
+        case 'auth/too-many-requests':
+          setError('잠시 후 다시 시도해주세요');
+        default:
+          setError('로그인에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 

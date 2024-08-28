@@ -25,7 +25,7 @@ import {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from '@/components/ui/select';
-import { petCategoryData } from '@/lib/petCategory';
+import { petCategoryData } from '@/shared/petCategory';
 
 interface FormProps {
   onSubmit: (data: StepData) => void;

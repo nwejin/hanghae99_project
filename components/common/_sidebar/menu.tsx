@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
-import { getMenuList } from '@/lib/menu-list';
+import { getMenuList } from '@/shared/menu-list';
 import { SignBtn } from './signBtn';
 import NewPostBtn from './newPostBtn';
 import { useEffect, useState } from 'react';

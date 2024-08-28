@@ -21,7 +21,7 @@ import { Post, User } from '@/lib/getAllPost';
 import { getComments, addComment, PostComment } from '@/lib/postComment';
 import { UserProfileProps } from '@/lib/userAuth';
 
-import { timeCheck } from '@/lib/timeUtils';
+import { timeCheck } from '@/shared/timeUtils';
 
 interface detailProps {
   post: Post;
@@ -85,7 +85,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                 <CarouselContent>
                   {post.imgUrls.map((img, index) => (
                     <CarouselItem key={index}>
-                      <img src={img} alt="Pet Image" className="aspect-square object-cover" />
+                      <img src={img} width={650} height={650} alt="Pet Image" className="aspect-square object-cover" />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
