@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { getUserProfile, UserProfileProps } from '@/lib/userAuth';
+import { date } from 'zod';
 
 export interface PostComment {
   userId: string;
@@ -47,13 +48,13 @@ export async function getComments(postId: string): Promise<(PostComment & { user
   const comments = await Promise.all(
     querySnapshot.docs.map(async (doc) => {
       const data = doc.data();
-      let createdAt = '';
+      // let createdAt = '';
 
-      if (data.created_at instanceof Timestamp) {
-        createdAt = data.created_at.toDate().toISOString();
-      } else if (typeof data.created_at === 'string') {
-        createdAt = data.created_at;
-      }
+      // if (data.created_at instanceof Timestamp) {
+      //   createdAt = data.created_at.toDate().toISOString();
+      // } else if (typeof data.created_at === 'string') {
+      //   createdAt = data.created_at;
+      // }
 
       const user = await getUserProfile(data.userId);
 
@@ -61,7 +62,7 @@ export async function getComments(postId: string): Promise<(PostComment & { user
         userId: data.userId,
         postId: data.postId,
         comment: data.comment,
-        created_at: createdAt,
+        created_at: data.created_at,
         user: user || { profileImage: '', nickname: 'Unknown' },
       } as PostComment & { user: UserProfileProps };
     })

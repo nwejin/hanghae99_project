@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server';
 import { firestore } from '@/config/firebase';
-import { collection, getDocs, query, orderBy, where, doc, getDoc, addDoc, serverTimestamp } from 'firebase/firestore';
-import { PostType, UserType, TotalPostType, PostFormData } from '@/lib/post';
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  where,
+  doc,
+  getDoc,
+  addDoc,
+  serverTimestamp,
+  deleteDoc,
+} from 'firebase/firestore';
+import { PostType, UserType, TotalPostType, PostFormData, PostIdType } from '@/lib/post';
 import { auth } from 'firebase-admin';
 import { cookies } from 'next/headers'; // To access cookies
 
@@ -64,6 +75,30 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: '게시글 작성 완료!, id:' + postRef.id });
   } catch (error) {
     console.error('게시글 추가 에러', error);
+    return NextResponse.error();
+  }
+}
+
+// 게시글 삭제
+export async function DELETE(req: Request) {
+  try {
+    const sessionCookie = cookies().get('session')?.value;
+    if (!sessionCookie) {
+      return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
+    }
+    // 세션 쿠키를 이용해 사용자를 인증
+    const decodedClaims = await auth().verifySessionCookie(sessionCookie, true);
+    if (!decodedClaims) {
+      return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
+    }
+
+    const { postId } = await req.json();
+
+    const postRef = await deleteDoc(doc(firestore, 'posts', postId));
+
+    return NextResponse.json({ message: '게시글 삭제 완료!' }, { status: 200 });
+  } catch (error) {
+    console.error('게시글 삭제 에러', error);
     return NextResponse.error();
   }
 }

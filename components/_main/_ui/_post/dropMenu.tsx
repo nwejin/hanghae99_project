@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { PawPrint, Bookmark, FileWarning, Heart, Send, MessageCircle, Trash2 } from 'lucide-react';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from '@/config/firebase';
+import { deletePost } from '@/lib/post';
+import { string } from 'zod';
 
 interface DropProps {
   isOwner: boolean;
@@ -17,9 +19,9 @@ interface DropProps {
 
 export default function DropMenu({ isOwner, id }: DropProps) {
   const handleDeletePost = async () => {
-    console.log(id);
+    // console.log(id);
     try {
-      await deleteDoc(doc(firestore, 'posts', id));
+      await deletePost(id);
       alert('게시글이 삭제되었습니다.');
     } catch (error) {
       console.error('게시글 삭제 에러:', error);

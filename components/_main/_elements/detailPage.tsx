@@ -110,7 +110,13 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                     </Avatar>
                     {user.nickname}
                   </Link>
-                  <p className="text-xs text-gray-300">{timeCheck(post.created_at)}</p>
+                  <p
+                    className="text-xs text-gray-300"
+                    onClick={() => {
+                      console.log(post.created_at);
+                    }}>
+                    {timeCheck(post.created_at)}
+                  </p>
                 </Card.CardContent>
               </Card.Card>
 
@@ -129,7 +135,13 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                             </Avatar>
                             <p className="ml-2">{comment.user.nickname}</p>
                           </div>
-                          <p className="text-xs text-gray-300">{timeCheck(comment.created_at)}</p>
+                          <p
+                            className="text-xs text-gray-300"
+                            onClick={() => {
+                              console.log(comment.created_at);
+                            }}>
+                            {timeCheck(comment.created_at)}
+                          </p>
                         </div>
                         <div className="flex w-full items-start text-sm">{comment.comment}</div>
                       </div>

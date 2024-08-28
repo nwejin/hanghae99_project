@@ -19,6 +19,7 @@ import { userStore } from '@/store/userStore';
 import { fetchLikeData } from '@/lib/postLike';
 import { getUserNickname } from '@/lib/userAuth';
 import { TotalPostType } from '@/lib/post';
+import { timeCheck } from '@/shared/timeUtils';
 
 export default function UserPost({ post, user }: TotalPostType) {
   //   console.log(post.imgUrls);
@@ -52,6 +53,7 @@ export default function UserPost({ post, user }: TotalPostType) {
   }, [post.id]);
 
   const modalControl = () => {
+    console.log(post.created_at);
     setIsOpen((prev) => !prev);
   };
 
@@ -81,7 +83,9 @@ export default function UserPost({ post, user }: TotalPostType) {
 
             <div className="grid w-full gap-1.5 px-2">
               <ContentsBox nickname={user.nickname} contents={post.contents} />
-              <DetailBtn modal={modalControl} />
+              <div>
+                <DetailBtn modal={modalControl} time={post.created_at} />
+              </div>
             </div>
           </CardFooter>
         </Card>
