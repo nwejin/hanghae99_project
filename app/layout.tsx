@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import '../styles/globals.css';
-
+import ReactQueryProvider from '@/utils/react-query-provider';
 import '@/config/firebase';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -17,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        {children}
-        <Toaster />
+        <ReactQueryProvider>
+          {children}
+          <Toaster />
+        </ReactQueryProvider>
       </body>
     </html>
   );

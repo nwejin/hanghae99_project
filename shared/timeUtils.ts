@@ -1,6 +1,17 @@
-export function timeCheck(dateData: string) {
+import { Timestamp } from 'firebase/firestore';
+
+export function timeCheck(dateData: string | Timestamp) {
+  let date: Date;
+
+  // dateData가 Timestamp 타입이면 Date 객체로 변환
+  if (dateData instanceof Timestamp) {
+    date = dateData.toDate();
+  } else {
+    // dateData가 문자열인 경우 그대로 Date 객체로 변환
+    date = new Date(dateData);
+  }
+
   const now = new Date();
-  const date = new Date(dateData);
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   const interval = Math.floor(seconds / 31536000);

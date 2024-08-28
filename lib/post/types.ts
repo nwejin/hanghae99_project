@@ -26,3 +26,5 @@ export type PostFormData = {
   created_at: string;
   status: boolean;
 };
+
+export type PostIdType = string;
