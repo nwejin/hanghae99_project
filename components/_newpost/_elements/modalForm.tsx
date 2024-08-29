@@ -18,6 +18,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 import { PostFormData } from '@/lib/post';
 import { addPost } from '@/lib/post';
+import { useCreatePost } from '@/lib/post';
 
 export default function ModalForm() {
   const { closeModal } = useModalStore();
@@ -29,7 +30,7 @@ export default function ModalForm() {
       userId: '',
       contents: '',
       status: true,
-      created_at: new Date().toISOString(),
+      created_at: '',
     },
   });
 
@@ -69,6 +70,12 @@ export default function ModalForm() {
     return downloadURLs;
   };
 
+  const { mutate: createPost } = useCreatePost({
+    onSuccess: () => {
+      closeModal(); // 게시글 생성 성공 시 모달을 닫습니다.
+    },
+  });
+
   const onSubmit = async (data: PostFormData) => {
     if (data.imgUrls.length === 0) {
       setError('imgUrls', { type: 'manual', message: '이미지를 최소 1개 이상 업로드해야 합니다.' });
@@ -90,11 +97,10 @@ export default function ModalForm() {
             userId: user,
           };
 
-          // const docRef = await addDoc(collection(firestore, 'posts'), postData);
-          // console.log('Document written with ID: ', docRef.id);
-          await addPost(postData);
+          // await addPost(postData);
 
-          closeModal();
+          // closeModal();
+          createPost(postData);
         }
       } catch (error) {
         console.error('게시글 추가 에러', error);

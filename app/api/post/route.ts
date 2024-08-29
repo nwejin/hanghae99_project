@@ -11,14 +11,19 @@ import {
   addDoc,
   serverTimestamp,
   deleteDoc,
+  limit,
 } from 'firebase/firestore';
 import { PostType, UserType, TotalPostType, PostFormData, PostIdType } from '@/lib/post';
 import { auth } from 'firebase-admin';
 import { cookies } from 'next/headers'; // To access cookies
 
 // 게시글 데이터 불러오기
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const url = new URL(req.url);
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '5', 10);
+    const page = parseInt(url.searchParams.get('page') || '1', 10);
+
     const fbCollection = collection(firestore, 'posts');
     // 공개, 최신순 데이터 조회
     const q = query(fbCollection, where('status', '==', false), orderBy('created_at', 'desc'));
@@ -39,7 +44,11 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json(totalPostData);
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = page * pageSize;
+    const paginatedPosts = totalPostData.slice(startIndex, endIndex);
+
+    return NextResponse.json(paginatedPosts);
   } catch (error) {
     console.error('게시글 조회 에러', error);
     return NextResponse.json({ message: '서버 에러' }, { status: 500 });
