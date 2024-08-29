@@ -1,3 +1,5 @@
+import { number } from 'zod';
+
 export type PostType = {
   id: string;
   userId: string;
@@ -28,3 +30,8 @@ export type PostFormData = {
 };
 
 export type PostIdType = string;
+
+export type PaginationType = {
+  page: number;
+  size: number;
+};

@@ -1,22 +1,23 @@
-import { TotalPostType, PostFormData, PostIdType } from './types';
+import { TotalPostType, PostFormData, PostIdType, PaginationType } from './types';
 
-export async function getPost(): Promise<TotalPostType[]> {
-  try {
-    const response = await fetch('/api/post');
+// export async function getPost(): Promise<TotalPostType[]> {
+//   try {
+//     const response = await fetch('/api/post');
+//     // const response = await fetch(`/api/post?page=${page}&pageSize=${pageSize}`);
 
-    // 응답 확인 - 2xx
-    if (!response.ok) {
-      throw new Error('fetch 오류');
-    }
+//     // 응답 확인 - 2xx
+//     if (!response.ok) {
+//       throw new Error('fetch 오류');
+//     }
 
-    // JSON 데이터를 파싱
-    const data: TotalPostType[] = await response.json();
-    return data;
-  } catch (error) {
-    console.error('게시글 조회 fetch 오류', error);
-    return [];
-  }
-}
+//     // JSON 데이터를 파싱
+//     const data: TotalPostType[] = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error('게시글 조회 fetch 오류', error);
+//     return [];
+//   }
+// }
 
 export async function addPost(postData: PostFormData): Promise<void> {
   try {
