@@ -22,8 +22,8 @@ export async function login(loginData: LoginType): Promise<string | null> {
     });
 
     const data = await response.json();
-    console.log(idToken);
-    console.log('로그인 응답:', data);
+    // console.log(idToken);
+    // console.log('로그인 응답:', data);
 
     if (response.ok) {
       //   console.log(message);

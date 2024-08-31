@@ -1,14 +1,20 @@
 import { Timestamp } from 'firebase/firestore';
 
-export function timeCheck(dateData: string | Timestamp) {
+export function timeCheck(dateData: Timestamp | { seconds: number; nanoseconds: number } | string) {
   let date: Date;
 
-  // dateData가 Timestamp 타입이면 Date 객체로 변환
+  // dateData가 Timestamp 객체인 경우
   if (dateData instanceof Timestamp) {
     date = dateData.toDate();
-  } else {
-    // dateData가 문자열인 경우 그대로 Date 객체로 변환
+  } else if (typeof dateData === 'string') {
+    // dateData가 문자열인 경우
     date = new Date(dateData);
+  } else if (dateData.seconds !== undefined && dateData.nanoseconds !== undefined) {
+    // dateData가 JSON 형식의 Timestamp 객체인 경우
+    date = new Date(dateData.seconds * 1000 + dateData.nanoseconds / 1000000);
+  } else {
+    // 예상치 못한 형식인 경우
+    throw new Error('Invalid date data format');
   }
 
   const now = new Date();

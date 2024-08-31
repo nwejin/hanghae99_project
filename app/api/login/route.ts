@@ -1,25 +1,25 @@
-import { auth } from 'firebase-admin';
-import { customInitApp } from '@/config/firebase_admin';
+// import { auth } from 'firebase-admin';
+import { auth } from '@/config/firebase_admin';
+// import { customInitApp } from '@/config/firebase_admin';
 import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { Value } from '@radix-ui/react-select';
 
-customInitApp();
+// customInitApp();
 
 export async function POST(req: Request) {
   try {
     const authorization = headers().get('Authorization');
-    // console.log(authorization)
+    console.log(authorization);
 
     if (authorization?.startsWith('Bearer ')) {
       const idToken = authorization.split('Bearer ')[1];
-      const decodedToken = await auth().verifyIdToken(idToken);
+      const decodedToken = await auth.verifyIdToken(idToken);
 
       //   console.log(decodedToken);
 
       if (decodedToken) {
         const expiresIn = 60 * 60 * 24 * 1 * 1000;
-        const sessionCookie = await auth().createSessionCookie(idToken, {
+        const sessionCookie = await auth.createSessionCookie(idToken, {
           expiresIn,
         });
         // console.log('authorization', authorization);
@@ -54,7 +54,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ isLogged: false }, { status: 401 });
     }
 
-    const decodedClaims = await auth().verifySessionCookie(session, true);
+    const decodedClaims = await auth.verifySessionCookie(session, true);
 
     if (!decodedClaims) {
       return NextResponse.json({ isLogged: false }, { status: 401 });

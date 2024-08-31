@@ -7,9 +7,10 @@ import { addLike, deleteLike, getLike } from '@/lib/like';
 interface ButtonsProps {
   postId: string;
   userId: string | null;
+  modal?: () => void;
 }
 
-export default function Buttons({ postId, userId }: ButtonsProps) {
+export default function Buttons({ postId, userId, modal }: ButtonsProps) {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ export default function Buttons({ postId, userId }: ButtonsProps) {
           <Heart className="h-4 w-4" fill={liked ? 'red' : 'white'} strokeWidth={liked ? 0 : 2} />
           <span className="sr-only">Like</span>
         </Button>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={modal}>
           <MessageCircle className="h-4 w-4" />
           <span className="sr-only">Comment</span>
         </Button>
