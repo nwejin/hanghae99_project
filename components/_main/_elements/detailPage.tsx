@@ -8,6 +8,7 @@ import { Heart, Send, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import Image from 'next/image';
+import { useGetComment, useCreatePost } from '@/lib/comment';
 
 import { useEffect, useState } from 'react';
 import Buttons from '../_ui/_post/buttons';
@@ -23,6 +24,8 @@ import { UserProfileProps } from '@/lib/userAuth';
 
 import { timeCheck } from '@/shared/timeUtils';
 
+import { getComment } from '@/lib/comment';
+
 interface detailProps {
   post: Post;
   user: User;
@@ -32,7 +35,7 @@ interface detailProps {
 export default function DetailPage({ modal, post, user }: detailProps) {
   const [inputValue, setInputValue] = useState('');
   const user_id = userStore((state) => state.user);
-  const [comments, setComments] = useState<(PostComment & { user: UserProfileProps })[]>([]);
+  // const [comments, setComments] = useState<(PostComment & { user: UserProfileProps })[]>([]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
@@ -55,20 +58,37 @@ export default function DetailPage({ modal, post, user }: detailProps) {
     });
   }, [api]);
 
-  useEffect(() => {
-    // 댓글 불러오기
-    const loadComments = async () => {
-      const fetchedComments = await getComments(post.id);
-      setComments(fetchedComments);
-    };
-    loadComments();
-  }, [post.id]);
+  // useEffect(() => {
+  //   // 댓글 불러오기
+  //   const loadComments = async () => {
+  //     const fetchedComments = await getComments(post.id);
+  //     setComments(fetchedComments);
+  //   };
+  //   loadComments();
+  // }, [post.id]);
 
+  const { data: comments, refetch } = useGetComment(post.id);
+  const createPost = useCreatePost();
+
+  // console.log(comments);
   const handleCommentSubmit = async () => {
     if (inputValue.trim() === '') return;
-    await addComment(post.id, user_id, inputValue);
-    setInputValue('');
+
+    createPost.mutate(
+      { postId: post.id, comment: inputValue },
+      {
+        onSuccess: () => {
+          setInputValue('');
+          refetch(); // 댓글 목록 갱신
+        },
+      }
+    );
   };
+  // const handleCommentSubmit = async () => {
+  //   if (inputValue.trim() === '') return;
+  //   await addComment(post.id, user_id, inputValue);
+  //   setInputValue('');
+  // };
 
   return (
     <>
@@ -124,8 +144,8 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                 <div className="p-4">
                   <h4 className="mb-4 text-sm font-medium leading-none"> {post.contents}</h4>
                   <Separator className="my-3" />
-                  {comments.map((comment) => (
-                    <div key={comment.created_at} className="p-2">
+                  {comments?.map((comment) => (
+                    <div key={comment.id} className="p-2">
                       <div className="flex flex-col items-center gap-2">
                         <div className="flex w-full items-center justify-between">
                           <div className="flex">

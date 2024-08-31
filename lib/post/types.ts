@@ -1,5 +1,3 @@
-import { number } from 'zod';
-
 export type PostType = {
   id: string;
   userId: string;

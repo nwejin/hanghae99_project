@@ -33,14 +33,14 @@ export default function UserPost({ post, user }: TotalPostType) {
 
   const user_id = userStore((state) => state.user);
 
-  useEffect(() => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
+  // useEffect(() => {
+  //   const auth = getAuth();
+  //   const currentUser = auth.currentUser;
 
-    if (currentUser && currentUser.email === user.email) {
-      setIsOwner(true);
-    }
-  }, [user.email]);
+  //   if (currentUser && currentUser.email === user.email) {
+  //     setIsOwner(true);
+  //   }
+  // }, [user.email]);
 
   useEffect(() => {
     const loadLikeData = async () => {
@@ -53,7 +53,6 @@ export default function UserPost({ post, user }: TotalPostType) {
   }, [post.id]);
 
   const modalControl = () => {
-    console.log(post.created_at);
     setIsOpen((prev) => !prev);
   };
 
@@ -69,7 +68,7 @@ export default function UserPost({ post, user }: TotalPostType) {
             <ImgCarousel imgUrls={post.imgUrls} />
           </CardContent>
           <CardFooter className="grid gap-2 p-2 pb-4">
-            <Buttons postId={post.id} userId={user_id} />
+            <Buttons postId={post.id} userId={user_id} modal={modalControl} />
             <div className="w-full px-2 text-sm">
               {likeInfo.recentLikeUser ? (
                 <>

@@ -29,7 +29,7 @@ export default function MainPage() {
   // if (error) return <div>Error: {error.message}</div>;
 
   const PAGE_SIZE = 5;
-  const INITIAL_FETCH_COUNT = 5;
+  const INITIAL_FETCH_COUNT = 5; // 초기 5페이지
 
   // 데이터 요청 함수
   const fetchProjects = async ({ pageParam = 1 }: { pageParam?: number }) => {
@@ -48,6 +48,7 @@ export default function MainPage() {
     queryKey: ['POST_KEY'],
     queryFn: fetchProjects,
     initialPageParam: 1,
+    // cursur가 없을때 사용
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
       if (lastPage.length === 0) {
         return undefined;
@@ -60,33 +61,37 @@ export default function MainPage() {
       }
       return firstPageParam - 1;
     },
-    // getNextPageParam: (lastPage, allPages) => {
-    //   // 현재 페이지에서 더 많은 데이터가 있는지 확인
-    //   // 현재 페이지 데이터가 페이지 크기와 같으면 다음 페이지가 있을 가능성이 높음
-    //   return lastPage.length === PAGE_SIZE ? allPages.length + 1 : undefined;
-    // },
   });
 
+  //사용자가 특정 화면에 진입 확인
   const observer = useRef<IntersectionObserver | null>(null);
+
+  // 무한 스크롤 트리거
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // 추가 데이터를 가져오는 중이거나, loadMoreRef가 아직 설정되지 않았다면 아무 작업도 하지 않고 종료
     if (isFetchingNextPage || !loadMoreRef.current) return;
 
+    // 대상 요소가 뷰포트에 진입하면 다음 페이지 데이터 호출
     const observerCallback: IntersectionObserverCallback = (entries) => {
+      // 요소가 화면에 보이고, 다음 페이지가 존재하며, 현재 추가 데이터를 가져오는 중이 아니라면 fetchNextPage() 호출
       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     };
 
+    // IntersectionObserver를 초기화하고, 특정 요소가 뷰포트와의 거리가 100px 이내로 들어오면 observerCallback 호출
     observer.current = new IntersectionObserver(observerCallback, {
-      rootMargin: '100px',
+      rootMargin: '100px', // 100px부터 감지
     });
 
+    // loadMoreRef.current가 설정되었다면 해당 요소에 대해 IntersectionObserver 시작
     if (loadMoreRef.current) {
       observer.current.observe(loadMoreRef.current);
     }
 
+    // 클린업 함수: 컴포넌트가 언마운트되거나, loadMoreRef.current가 변경될 때 이전 관찰을 중지
     return () => {
       if (observer.current && loadMoreRef.current) {
         observer.current.unobserve(loadMoreRef.current);
@@ -118,7 +123,7 @@ export default function MainPage() {
           {!hasNextPage && !isFetching && <p>Nothing more to load</p>}
         </div>
 
-        <div>{isFetching && !isFetchingNextPage ? 'Fetching...' : null}</div>
+        <div>{isFetching && !isFetchingNextPage ? '게시글을 조회중입니다.' : null}</div>
       </div>
     </>
   );
