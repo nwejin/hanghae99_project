@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Header from '../_ui/header';
 import LoginForm from '../_elements/loginForm';
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../../ui/form';
-
 export default function SignUpTemplates() {
   return (
     <Card.Card className="h-[35rem] w-[23rem] items-center justify-center shadow-md">

@@ -96,6 +96,7 @@ export function Menu({ isOpen }: MenuProps) {
                           variant={active ? 'secondary' : 'ghost'}
                           className="mb-1 h-10 w-full justify-start"
                           asChild>
+                          {/* */}
                           <Link href={href} onClick={(e) => menuClick(e, href)}>
                             <span className={cn(isOpen === false ? '' : 'mr-4')}>
                               <Icon size={18} />

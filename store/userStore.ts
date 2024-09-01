@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { create } from 'zustand';
 
 interface PetState {
@@ -9,7 +10,7 @@ interface PetState {
 
 interface UserState {
   userId: string | null;
-  setUserId: (useId: string) => void;
+  setUserId: (userId: string) => void;
   email: string | null;
   setEmail: (email: string) => void;
   nickName: string | null;
@@ -22,11 +23,11 @@ interface UserState {
 }
 
 export const userStore = create<UserState>((set) => ({
-  userId: JSON.parse(sessionStorage.getItem('userId') || 'null'),
-  email: JSON.parse(sessionStorage.getItem('email') || 'null'),
-  nickName: JSON.parse(sessionStorage.getItem('nickName') || 'null'),
-  profileImg: JSON.parse(sessionStorage.getItem('profileImg') || 'null'),
-  petInfo: JSON.parse(sessionStorage.getItem('petInfo') || 'null'),
+  userId: null,
+  email: null,
+  nickName: null,
+  profileImg: null,
+  petInfo: null,
   setUserId: (userId) => {
     sessionStorage.setItem('userId', JSON.stringify(userId));
     set({ userId });
@@ -62,3 +63,23 @@ export const userStore = create<UserState>((set) => ({
     });
   },
 }));
+
+export function useUserStore() {
+  const store = userStore();
+
+  useEffect(() => {
+    const userId = JSON.parse(sessionStorage.getItem('userId') || 'null');
+    const email = JSON.parse(sessionStorage.getItem('email') || 'null');
+    const nickName = JSON.parse(sessionStorage.getItem('nickName') || 'null');
+    const profileImg = JSON.parse(sessionStorage.getItem('profileImg') || 'null');
+    const petInfo = JSON.parse(sessionStorage.getItem('petInfo') || 'null');
+
+    store.setUserId(userId);
+    store.setEmail(email);
+    store.setNickName(nickName);
+    store.setProfileImg(profileImg);
+    store.setPetInfo(petInfo);
+  }, []);
+
+  return store;
+}
