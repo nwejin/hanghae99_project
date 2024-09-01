@@ -4,7 +4,6 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Heart, Send, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import Image from 'next/image';
@@ -15,27 +14,22 @@ import Buttons from '../_ui/_post/buttons';
 import { userStore } from '@/store/userStore';
 
 import { type CarouselApi } from '@/components/ui/carousel';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import CarouselBtn from '../_ui/_post/carouselBtn';
-
-import { Post, User } from '@/lib/getAllPost';
-import { getComments, addComment, PostComment } from '@/lib/postComment';
-import { UserProfileProps } from '@/lib/userAuth';
 
 import { timeCheck } from '@/shared/timeUtils';
 
-import { getComment } from '@/lib/comment';
+import { PostType, UserType } from '@/lib/post';
 
 interface detailProps {
-  post: Post;
-  user: User;
+  post: PostType;
+  user: UserType;
   modal: () => void;
 }
 
 export default function DetailPage({ modal, post, user }: detailProps) {
   const [inputValue, setInputValue] = useState('');
-  const user_id = userStore((state) => state.user);
-  // const [comments, setComments] = useState<(PostComment & { user: UserProfileProps })[]>([]);
+  const user_id = userStore((state) => state.userId);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
@@ -58,19 +52,9 @@ export default function DetailPage({ modal, post, user }: detailProps) {
     });
   }, [api]);
 
-  // useEffect(() => {
-  //   // 댓글 불러오기
-  //   const loadComments = async () => {
-  //     const fetchedComments = await getComments(post.id);
-  //     setComments(fetchedComments);
-  //   };
-  //   loadComments();
-  // }, [post.id]);
-
   const { data: comments, refetch } = useGetComment(post.id);
   const createPost = useCreatePost();
 
-  // console.log(comments);
   const handleCommentSubmit = async () => {
     if (inputValue.trim() === '') return;
 
@@ -84,11 +68,6 @@ export default function DetailPage({ modal, post, user }: detailProps) {
       }
     );
   };
-  // const handleCommentSubmit = async () => {
-  //   if (inputValue.trim() === '') return;
-  //   await addComment(post.id, user_id, inputValue);
-  //   setInputValue('');
-  // };
 
   return (
     <>

@@ -13,12 +13,8 @@ import { auth } from '@/config/firebase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { userAuth } from '@/lib/userAuth';
-import { login } from '@/lib/login';
-
-interface userData {
-  email: string;
-  password: string;
-}
+import { userLogIn } from '@/lib/login';
+import { LoginType } from '@/lib/login';
 
 export default function LoginForm() {
   const { toast } = useToast();
@@ -27,19 +23,19 @@ export default function LoginForm() {
 
   const [error, setError] = useState('');
 
-  const resolveForm = useForm<userData>({
+  const resolveForm = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: userData) => {
-    const { email, password } = data;
-    const userLogin = await login(data);
+  const onSubmit = async (data: LoginType) => {
+    const { email, user_password } = data;
+    const userLogin = await userLogIn(data);
 
     if (!userLogin) {
       toast({
         title: '로그인이 완료되었습니다.',
       });
-      // router.push('/');
+      router.push('/');
     } else {
       // setError(userLogin);
       switch (userLogin) {
@@ -65,7 +61,7 @@ export default function LoginForm() {
             <TextInput type="text" name="email" id="email" placeholder="pet@example.com" text="이메일" />
           </div>
           <div className="grid gap-2">
-            <TextInput type="password" name="password" id="password" placeholder="비밀번호" text="비밀번호" />
+            <TextInput type="password" name="user_password" id="user_password" placeholder="비밀번호" text="비밀번호" />
           </div>
 
           {/* {success && <p className="text-green-500">{success}</p>} */}

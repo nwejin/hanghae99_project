@@ -11,29 +11,32 @@ import { userAuth } from '@/lib/userAuth';
 import { useEffect, useState } from 'react';
 // 로그인 정보 불러오기
 import { userStore } from '@/store/userStore';
+import { userLogOut } from '@/lib/login';
 
 interface MenuProps {
   isOpen: boolean | undefined;
 }
 
 export function SignBtn({ isOpen }: MenuProps) {
-  const user = userStore((state) => state.user);
+  // const user = userStore((state) => state.userId);
   const { toast } = useToast();
 
-  const { logout } = userAuth();
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    const checkAuth = sessionStorage.getItem('auth');
+    const checkAuth = sessionStorage.getItem('userId');
     setIsAuth(!!checkAuth);
   }, []);
 
   const signOut = () => {
-    logout();
+    userLogOut();
     setIsAuth(false);
+
     toast({
       title: '로그아웃이 완료되었습니다.',
     });
+
+    // window.location.reload();
   };
 
   return (

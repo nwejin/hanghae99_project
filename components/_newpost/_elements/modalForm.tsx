@@ -22,7 +22,7 @@ import { useCreatePost } from '@/lib/post';
 
 export default function ModalForm() {
   const { closeModal } = useModalStore();
-  const { user, setUser } = userStore();
+
   const [formData, setFormData] = useState<Partial<PostFormData>>({});
 
   const methods = useForm<PostFormData>({
@@ -87,21 +87,12 @@ export default function ModalForm() {
       try {
         const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
 
-        if (user == '') {
-          alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요');
-        } else {
-          const postData: PostFormData = {
-            ...data,
-            imgUrls,
-            status: isPrivate,
-            userId: user,
-          };
-
-          // await addPost(postData);
-
-          // closeModal();
-          createPost(postData);
-        }
+        const postData: PostFormData = {
+          ...data,
+          imgUrls,
+          status: isPrivate,
+        };
+        createPost(postData);
       } catch (error) {
         console.error('게시글 추가 에러', error);
       }

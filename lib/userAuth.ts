@@ -52,7 +52,7 @@ export function userAuth() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { setUser } = userStore();
+  // const { setUser } = userStore();
 
   // 세션이 없으면 쿠키도 삭제
   const checkSessionAndCookie = () => {
@@ -70,15 +70,15 @@ export function userAuth() {
 
     // 인증 상태 갱신
     const checkUserStore = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setUser(user.uid);
-      } else {
-        setUser('');
-      }
+      // if (user) {
+      //   setUser(user.uid);
+      // } else {
+      //   setUser('');
+      // }
     });
 
     return () => checkUserStore();
-  }, [setUser]);
+  }, []);
 
   const login = async (email: string, password: string): Promise<UserCredential | null> => {
     setLoading(true);
@@ -87,7 +87,7 @@ export function userAuth() {
 
       const user = userCredential.user;
 
-      setUser(user.uid);
+      // setUser(user.uid);
 
       // Firestore에서 닉네임 가져오기
       const nickname = await getUserNickname(user.uid);
@@ -130,12 +130,12 @@ export function userAuth() {
     }
   };
 
-  const logout = () => {
-    auth.signOut();
-    sessionStorage.removeItem('auth');
-    setCookie('auth', '', { path: '/', maxAge: -1 });
-    router.push('/');
-  };
+  // const logout = () => {
+  //   auth.signOut();
+  //   sessionStorage.removeItem('user');
+  //   setCookie('session', '', { path: '/', maxAge: -1 });
+  //   router.push('/');
+  // };
 
-  return { login, logout, error, loading };
+  return { login, error, loading };
 }

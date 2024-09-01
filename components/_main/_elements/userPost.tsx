@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { Input } from '@ui';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
-import { Post, User } from '@/lib/getAllPost';
-
 import ImgCarousel from '../_ui/_post/imgCarousel';
 import DropMenu from '../_ui/_post/dropMenu';
 import UserProfile from '../_ui/_post/userProfile';
@@ -31,7 +29,7 @@ export default function UserPost({ post, user }: TotalPostType) {
     likeCount: 0,
   });
 
-  const user_id = userStore((state) => state.user);
+  const user_id = userStore((state) => state.userId);
 
   // useEffect(() => {
   //   const auth = getAuth();

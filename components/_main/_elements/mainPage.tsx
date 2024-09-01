@@ -8,6 +8,8 @@ import { TotalPostType } from '@/lib/post';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 
+import { userStore } from '@/store/userStore';
+
 export default function MainPage() {
   // const [posts, setPosts] = useState<TotalPostType[]>([]);
 
@@ -100,6 +102,9 @@ export default function MainPage() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (status === 'error') return <p>Error: {error.message}</p>;
+
+  // const userId = userStore((state) => state.userId);
+  // console.log(userId);
 
   return (
     <>
