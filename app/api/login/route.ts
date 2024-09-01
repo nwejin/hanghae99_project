@@ -3,13 +3,27 @@ import { auth } from '@/config/firebase_admin';
 // import { customInitApp } from '@/config/firebase_admin';
 import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { firestore } from '@/config/firebase';
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  where,
+  doc,
+  getDoc,
+  addDoc,
+  serverTimestamp,
+  deleteDoc,
+  limit,
+} from 'firebase/firestore';
 
 // customInitApp();
 
 export async function POST(req: Request) {
   try {
     const authorization = headers().get('Authorization');
-    console.log(authorization);
+    // console.log(authorization);
 
     if (authorization?.startsWith('Bearer ')) {
       const idToken = authorization.split('Bearer ')[1];
@@ -26,6 +40,7 @@ export async function POST(req: Request) {
         // console.log('Session Cookie:', sessionCookie);
 
         const options = {
+          path: '/',
           name: 'session',
           value: sessionCookie,
           maxAge: expiresIn / 1000,
@@ -60,7 +75,30 @@ export async function GET(req: Request) {
       return NextResponse.json({ isLogged: false }, { status: 401 });
     }
 
-    return NextResponse.json({ isLogged: true }, { status: 200 });
+    const userDocRef = doc(firestore, 'users', decodedClaims.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (!userDoc.exists()) {
+      return NextResponse.json({ isLogged: false, message: 'User not found' }, { status: 404 });
+    }
+
+    const userData = userDoc.data();
+
+    // 유저의 pet 정보 가져오기 (서브컬렉션)
+    const petsRef = collection(userDocRef, 'pets');
+    const petsSnapshot = await getDocs(petsRef);
+    const pets = petsSnapshot.docs.map((doc) => doc.data());
+
+    const responseUser = {
+      isLogged: true,
+      userId: decodedClaims.uid,
+      email: userData?.email || null,
+      nickName: userData?.nickname || null,
+      profileImg: userData?.profile_image || null,
+      petInfo: pets.length > 0 ? pets[0] : null,
+    };
+
+    return NextResponse.json(responseUser, { status: 200 });
   } catch (error) {
     console.error('세션 검증 에러:', error);
     return NextResponse.json({ isLogged: false }, { status: 401 });

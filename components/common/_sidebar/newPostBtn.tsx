@@ -16,7 +16,7 @@ export default function NewPostBtn({ isOpen }: MenuProps) {
   // console.log(modal);
 
   const btnClick = () => {
-    const auth = sessionStorage.getItem('auth');
+    const auth = sessionStorage.getItem('userId');
     if (!auth) {
       setAlertOpen(true);
     } else {

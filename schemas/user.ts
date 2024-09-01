@@ -52,5 +52,5 @@ export const endSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.string().email({ message: '유효한 이메일 주소를 입력해 주세요' }),
-  password: z.string().min(8, { message: '비밀번호는 8자 이상입니다.' }),
+  user_password: z.string().min(8, { message: '비밀번호는 8자 이상입니다.' }),
 });

@@ -96,7 +96,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
   };
 
   const onSubmit = async (data: StepData) => {
-    console.log('Step 2 Data:', data);
+    // console.log('Step 2 Data:', data);
 
     try {
       const q = query(collection(firestore, 'users'), where('nickname', '==', String(checkNick)));
