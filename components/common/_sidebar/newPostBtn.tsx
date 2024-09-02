@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { useModalStore } from '@/store/modalStore';
 import { useEffect, useState } from 'react';
 import NewPostAlert from './newPostAlert';
+import Link from 'next/link';
+import { useToast } from '@/components/ui/use-toast';
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -14,11 +16,20 @@ export default function NewPostBtn({ isOpen }: MenuProps) {
   const { modal, openModal, closeModal } = useModalStore();
   const [alertOpen, setAlertOpen] = useState(false);
   // console.log(modal);
+  const { toast } = useToast();
 
   const btnClick = () => {
-    const auth = sessionStorage.getItem('userId');
+    const auth = sessionStorage.getItem('user');
     if (!auth) {
-      setAlertOpen(true);
+      // setAlertOpen(true);
+      toast({
+        title: '로그인이 필요합니다.',
+        action: (
+          <Button>
+            <Link href="/login">로그인</Link>
+          </Button>
+        ),
+      });
     } else {
       openModal();
     }

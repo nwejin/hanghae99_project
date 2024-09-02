@@ -12,9 +12,10 @@ import { getMenuList } from '@/shared/menu-list';
 import { SignBtn } from './signBtn';
 import NewPostBtn from './newPostBtn';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+import { ToastAction } from '@/components/ui/toast';
 
 // 로그인 정보 불러오기
-import { userStore } from '@/store/userStore';
 import { getUserNickname } from '@/lib/userAuth';
 
 interface MenuProps {
@@ -25,20 +26,23 @@ export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   // const menuList = getMenuList(pathname);
 
-  const nickname = userStore((state) => state.nickName);
+  // const nickname = userStore((state) => state.nickName);
 
   // console.log('user', user);
 
-  // const [nickname, setNickname] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     // 세션에서 사용자 데이터 가져오기
-    const sessionData = sessionStorage.getItem('userId');
-    if (sessionData) {
+    const userDataString = sessionStorage.getItem('user');
+    if (userDataString) {
       try {
-        // setNickname(userData.nickname || null);
-        setIsLoggedIn(!!sessionData);
+        const parsedUserData = JSON.parse(userDataString);
+        setNickname(parsedUserData.nickName);
+        setIsLoggedIn(!!userDataString);
+
+        // console.log(nickname);
 
         // console.log(userData.nickname);
       } catch (error) {
@@ -50,10 +54,19 @@ export function Menu({ isOpen }: MenuProps) {
     // console.log(sessionData);
   }, []);
 
+  const { toast } = useToast();
+
   const menuClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!isLoggedIn) {
       e.preventDefault(); // 링크 기본 동작 방지
-      alert('로그인이 필요합니다.');
+      toast({
+        title: '로그인이 필요합니다.',
+        action: (
+          <Button>
+            <Link href="/login">로그인</Link>
+          </Button>
+        ),
+      });
     }
   };
 

@@ -11,7 +11,6 @@ import { useGetComment, useCreatePost } from '@/lib/comment';
 
 import { useEffect, useState } from 'react';
 import Buttons from '../_ui/_post/buttons';
-import { userStore } from '@/store/userStore';
 
 import { type CarouselApi } from '@/components/ui/carousel';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
@@ -29,7 +28,6 @@ interface detailProps {
 
 export default function DetailPage({ modal, post, user }: detailProps) {
   const [inputValue, setInputValue] = useState('');
-  const user_id = userStore((state) => state.userId);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
@@ -68,6 +66,15 @@ export default function DetailPage({ modal, post, user }: detailProps) {
       }
     );
   };
+
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    const userDataString = sessionStorage.getItem('user');
+    if (userDataString) {
+      const parsedUserData = JSON.parse(userDataString);
+      setUserId(parsedUserData.userId);
+    }
+  }, []);
 
   return (
     <>
@@ -151,7 +158,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                 <ScrollBar orientation="vertical" />
               </ScrollArea>
 
-              <Buttons postId={post.id} userId={user_id} />
+              <Buttons postId={post.id} userId={userId} />
               <div className="relative w-full">
                 <Textarea
                   placeholder="댓글을 입력하세요..."

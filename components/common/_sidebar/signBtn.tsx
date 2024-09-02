@@ -10,7 +10,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { userAuth } from '@/lib/userAuth';
 import { useEffect, useState } from 'react';
 // 로그인 정보 불러오기
-import { userStore } from '@/store/userStore';
+
 import { userLogOut } from '@/lib/login';
 
 interface MenuProps {
@@ -24,7 +24,7 @@ export function SignBtn({ isOpen }: MenuProps) {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    const checkAuth = sessionStorage.getItem('userId');
+    const checkAuth = sessionStorage.getItem('user');
     setIsAuth(!!checkAuth);
   }, []);
 

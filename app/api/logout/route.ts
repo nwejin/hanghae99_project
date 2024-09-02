@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       path: '/',
       maxAge: -1, // 쿠키 삭제
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
     });
 
     // console.log(response.cookies);

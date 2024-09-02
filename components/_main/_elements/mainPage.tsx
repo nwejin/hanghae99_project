@@ -8,8 +8,6 @@ import { TotalPostType } from '@/lib/post';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 
-import { userStore } from '@/store/userStore';
-
 export default function MainPage() {
   // const [posts, setPosts] = useState<TotalPostType[]>([]);
 
