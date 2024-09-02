@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           path: '/',
           name: 'session',
           value: sessionCookie,
-          maxAge: expiresIn / 1000,
+          // maxAge: expiresIn / 1000,
           httpOnly: true,
           secure: true,
         };

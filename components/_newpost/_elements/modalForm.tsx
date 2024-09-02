@@ -12,7 +12,6 @@ import ImgCarousel from '../_ui/_carousel/imgCarousel';
 import Contents from '../_ui/contents';
 import Header from '../_ui/header';
 import SwitchBtn from '../_ui/switchBtn';
-import { userStore } from '@/store/userStore';
 import { useForm, FormProvider } from 'react-hook-form';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 

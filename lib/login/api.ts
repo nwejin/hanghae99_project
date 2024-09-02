@@ -1,7 +1,7 @@
 import { LoginType } from './types';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/config/firebase';
-import { userStore } from '@/store/userStore';
+// import { userStore } from '@/store/userStore';
 import { deleteCookie } from 'cookies-next';
 
 export async function userLogIn(loginData: LoginType): Promise<string | null> {
@@ -38,17 +38,18 @@ export async function userLogIn(loginData: LoginType): Promise<string | null> {
       // console.log(userProfile);
 
       if (userProfileRes.ok) {
-        userStore.getState().setUserId(userProfile.userId);
-        userStore.getState().setEmail(userProfile.email);
-        userStore.getState().setNickName(userProfile.nickName);
-        userStore.getState().setProfileImg(userProfile.profileImg);
-
-        if (userProfile.petInfo) {
-          userStore.getState().setPetInfo(userProfile.petInfo);
-        }
+        sessionStorage.setItem('user', JSON.stringify(userProfile));
       }
+      //   userStore.getState().setUserId(userProfile.userId);
+      //   userStore.getState().setEmail(userProfile.email);
+      //   userStore.getState().setNickName(userProfile.nickName);
+      //   userStore.getState().setProfileImg(userProfile.profileImg);
 
-      // sessionStorage.setItem('user', JSON.stringify(userProfile));
+      //   if (userProfile.petInfo) {
+      //     userStore.getState().setPetInfo(userProfile.petInfo);
+      //   }
+      // }
+
       return null;
     } else {
       return data.message || '로그인 실패';
@@ -84,7 +85,8 @@ export async function userLogOut() {
       deleteCookie('session', { path: '/' });
     }
     // Zustand 상태 초기화
-    userStore.getState().clearUser();
+    // userStore.getState().clearUser();
+    sessionStorage.setItem('user', '');
   } catch (error) {
     console.error('로그아웃 실패:', error);
   }

@@ -1,4 +1,12 @@
-export const petCategoryData = {
+interface PetSubSpeciesType {
+  value: string;
+  label: string;
+}
+interface PetCategoryType {
+  [key: string]: PetSubSpeciesType[];
+}
+
+export const petCategoryData: PetCategoryType = {
   dog: [
     { value: 'retriever', label: '리트리버' },
     { value: 'cocker_spaniel', label: '코카스파니엘' },
@@ -19,3 +27,15 @@ export const petCategoryData = {
     { value: 'alligator', label: '악어' },
   ],
 };
+
+export function getPetLabel(petSpecies: string, petSubSpecies: string): string {
+  const speciesList = petCategoryData[petSpecies];
+
+  if (!speciesList) {
+    return '알 수 없음';
+  }
+
+  const pet = speciesList.find((item) => item.value === petSubSpecies);
+
+  return pet ? pet.label : '알 수 없음';
+}

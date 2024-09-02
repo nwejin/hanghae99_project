@@ -13,7 +13,7 @@ import DetailBtn from '../_ui/_post/detailBtn';
 import ContentsBox from '../_ui/_post/contentsBox';
 
 import DetailPage from '../_elements/detailPage';
-import { userStore } from '@/store/userStore';
+// import { userStore } from '@/store/userStore';
 import { fetchLikeData } from '@/lib/postLike';
 import { getUserNickname } from '@/lib/userAuth';
 import { TotalPostType } from '@/lib/post';
@@ -29,7 +29,7 @@ export default function UserPost({ post, user }: TotalPostType) {
     likeCount: 0,
   });
 
-  const user_id = userStore((state) => state.userId);
+  // const user_id = userStore((state) => state.userId);
 
   // useEffect(() => {
   //   const auth = getAuth();
@@ -54,6 +54,15 @@ export default function UserPost({ post, user }: TotalPostType) {
     setIsOpen((prev) => !prev);
   };
 
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    const userDataString = sessionStorage.getItem('user');
+    if (userDataString) {
+      const parsedUserData = JSON.parse(userDataString);
+      setUserId(parsedUserData.userId);
+    }
+  }, []);
+
   return (
     <>
       <Card className="mb-5 max-w-lg overflow-hidden rounded-xl">
@@ -66,7 +75,7 @@ export default function UserPost({ post, user }: TotalPostType) {
             <ImgCarousel imgUrls={post.imgUrls} />
           </CardContent>
           <CardFooter className="grid gap-2 p-2 pb-4">
-            <Buttons postId={post.id} userId={user_id} modal={modalControl} />
+            <Buttons postId={post.id} userId={userId} modal={modalControl} />
             <div className="w-full px-2 text-sm">
               {likeInfo.recentLikeUser ? (
                 <>

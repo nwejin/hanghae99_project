@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 
 import { getCookie, setCookie, deleteCookie } from 'cookies-next';
-import { userStore } from '@/store/userStore';
+// import { userStore } from '@/store/userStore';
 
 export async function getUserNickname(uid: string): Promise<string | null> {
   try {
