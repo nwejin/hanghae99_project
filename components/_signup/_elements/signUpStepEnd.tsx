@@ -109,7 +109,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
     onSubmit(petData);
   };
 
-  const handleSpeciesChange = (species: keyof typeof petCategoryData) => {
+  const handleSpeciesChange = (species: any) => {
     setValue('petSpecies', species);
     setValue('petSubSpecies', '');
   };
