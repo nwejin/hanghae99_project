@@ -32,10 +32,10 @@ export function getPetLabel(petSpecies: string, petSubSpecies: string): string {
   const speciesList = petCategoryData[petSpecies];
 
   if (!speciesList) {
-    return '알 수 없음';
+    return '알 수 없음'; // petSpecies가 존재하지 않을 때 처리
   }
 
   const pet = speciesList.find((item) => item.value === petSubSpecies);
 
-  return pet ? pet.label : '알 수 없음';
+  return pet ? pet.label : '알 수 없음'; // 해당하는 label을 찾으면 반환, 없으면 '알 수 없음' 반환
 }
