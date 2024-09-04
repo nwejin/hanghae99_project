@@ -86,7 +86,7 @@ export async function userLogOut() {
     }
     // Zustand 상태 초기화
     // userStore.getState().clearUser();
-    sessionStorage.setItem('user', '');
+    sessionStorage.removeItem('user');
   } catch (error) {
     console.error('로그아웃 실패:', error);
   }
