@@ -14,7 +14,7 @@ import {
   limit,
 } from 'firebase/firestore';
 import { PostType, UserType, TotalPostType, PostFormData, PostIdType } from '@/lib/post';
-import { auth } from 'firebase-admin';
+import { auth } from '@/config/firebase_admin';
 import { cookies } from 'next/headers'; // To access cookies
 
 // 게시글 데이터 불러오기
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     }
 
     // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth().verifySessionCookie(sessionCookie, true);
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
     // console.log(decodedClaims);
     // console.log(decodedClaims.uid);
     if (!decodedClaims) {
@@ -96,7 +96,7 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
     }
     // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth().verifySessionCookie(sessionCookie, true);
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
     if (!decodedClaims) {
       return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
     }

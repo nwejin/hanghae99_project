@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { LikeType } from '@/lib/like';
 import { NextResponse } from 'next/server';
-import { auth } from 'firebase-admin';
+import { auth } from '@/config/firebase_admin';
 import { cookies } from 'next/headers';
 
 // 좋아요
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     }
 
     // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth().verifySessionCookie(sessionCookie, true);
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
     // console.log(decodedClaims);
     // console.log(decodedClaims.uid);
     if (!decodedClaims) {
