@@ -23,10 +23,14 @@
 ## ⚙️ 기술 스택
 <div>
   <img src="https://img.shields.io/badge/nextdotjs-000000?style=for-the-badge&logo=react&logoColor=white">
+  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=react&logoColor=white">
   <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=react&logoColor=white">
+  <br />
+  <br />
   <img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=react&logoColor=white">
   <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=react&logoColor=white">
   <img src="https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=npm&logoColor=white">
+   <img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
   <br />
   <br />
   <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=sass&logoColor=white">
