@@ -39,8 +39,8 @@ export default function AccountPageTemplates() {
           // setNickname(userId);
           const response = await fetch(`/api/accounts?userId=${userId}`);
           const data = await response.json();
-          console.log(data);
-          console.log(data.pets[0]);
+          // console.log(data);
+          // console.log(data.pets[0]);
 
           if (response.ok) {
             setEmail(data.user.email || '');
