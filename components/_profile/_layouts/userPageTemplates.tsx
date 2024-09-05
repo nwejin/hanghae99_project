@@ -9,21 +9,10 @@ import { useState, useEffect } from 'react';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { petCategoryData } from '@/shared/petCategory';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
+import { PostType, UserType, PetType, getProfile } from '@/lib/profile';
 
 export default function UserPageTemplates() {
-  // const [email, setEmail] = useState('');
-  // const [nickname, setNickname] = useState('');
-  // const [bio, setBio] = useState('');
-  // const [password, setPassword] = useState('');
-
-  // const [profileImg, setProfileImg] = useState('');
-
-  // const [petImg, setPetImg] = useState('');
-  // const [petName, setPetName] = useState('');
-
-  // const [petSpecies, setPetSpecies] = useState<string | undefined>('');
-  // const [petSubSpecies, setPetSubSpecies] = useState<string | undefined>('');
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,24 +24,21 @@ export default function UserPageTemplates() {
     nickname: '',
   });
 
-  const [petData, setPetData] = useState([]);
-  const [posts, setPosts] = useState([]);
+  const [petData, setPetData] = useState<PetType[]>([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
-  console.log(posts);
+  // console.log(posts);
 
-  // console.log(nicknameParam);
   useEffect(() => {
     async function fetchData() {
       try {
-        // setNickname(userId);
-        const response = await fetch(`/api/profile?nickname=${nicknameParam}`);
-        const data = await response.json();
-        console.log(data);
+        const data = await getProfile(String(nicknameParam));
 
-        if (response.ok) {
+        console.log(data);
+        if (data) {
           setUserData(data.user);
-          setPetData(data.pets);
-          setPosts(data.posts);
+          setPetData(data.pets || []);
+          setPosts(data.posts || []);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -62,8 +48,8 @@ export default function UserPageTemplates() {
       }
     }
 
-    fetchData();
-  }, []);
+    if (nicknameParam) fetchData();
+  }, [nicknameParam]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -87,11 +73,11 @@ export default function UserPageTemplates() {
               </div>
 
               <div className="mt-2 flex items-center gap-4">
-                {/* <Avatar className="h-16 w-16">
-                  <AvatarImage src={petImg} alt="Pet Image" />
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src="" alt="Pet Image" />
                   <AvatarFallback>pet</AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <p>{petName}</p>
                   <div className="flex gap-2 text-sm text-gray-600">
                     <span>{petSpecies}</span>
@@ -113,16 +99,17 @@ export default function UserPageTemplates() {
           </div>
         </Card.CardHeader>
 
-        <Card.CardContent className="grid w-full grid-cols-4 gap-1 p-6">
-          {/* <div>
-            <img src={posts[0].imgUrls[0]} alt="" />
-          </div> */}
-          <img src={userData.profile_image} alt="" />
-          <img src={userData.profile_image} alt="" />
-          <img src={userData.profile_image} alt="" />
-          <img src={userData.profile_image} alt="" />
-          <img src={userData.profile_image} alt="" />
-          <img src={userData.profile_image} alt="" />
+        <Card.CardContent className="grid w-full grid-cols-4 gap-1 border-t-2 p-6">
+          {posts.map((post, index) => (
+            <div className="aspect-square rounded-sm">
+              <img
+                key={index}
+                src={String(post.imgUrls[0])}
+                alt={`게시글 이미지 ${index + 1}`}
+                className="left-0 top-0 h-full w-full rounded-sm object-cover"
+              />
+            </div>
+          ))}
         </Card.CardContent>
       </Card.Card>
     </>

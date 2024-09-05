@@ -1,5 +1,5 @@
 import { firestore } from '@/config/firebase';
-import { query, where, getDocs, collection } from 'firebase/firestore';
+import { query, where, getDocs, collection, orderBy } from 'firebase/firestore';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -34,7 +34,9 @@ export async function GET(req: Request) {
 
     // 유저의 게시물 정보 가져오기
     const postsRef = collection(firestore, 'posts');
-    const postsQuery = query(postsRef, where('userId', '==', userDoc.id)); // posts 컬렉션에서 해당 nickname의 게시물 가져오기
+    const postsQuery = query(postsRef, where('userId', '==', userDoc.id), orderBy('created_at', 'desc')); // posts 컬렉션에서 해당 id의 게시물 가져오기 //내림차순
+
+    // console.log(postsQuery);
     const postsSnapshot = await getDocs(postsQuery);
     const postsData = postsSnapshot.docs.map((doc) => ({
       id: doc.id,

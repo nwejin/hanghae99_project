@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-// 비밀번호 형태
-// const patterns = [
-//     '1234', 'abcd', 'qwerty', '1111', '0000'
-// ]
-
 // 비밀번호 복잡성 체크
 const verifyPassword = (password: string) => {
   const hasUpperCase = /[A-Z]/.test(password);

@@ -11,16 +11,16 @@ const firebaseAdminConfig = {
 };
 
 // 초기화
-// export function customInitApp() {
-//   if (getApps().length <= 0) {
-//     initializeApp(firebaseAdminConfig);
-//   }
-// }
-
-if (!getApps().length) {
-  initializeApp(firebaseAdminConfig);
+export function customInitApp() {
+  if (getApps().length <= 0) {
+    initializeApp(firebaseAdminConfig);
+  }
 }
 
-// customInitApp();
+// if (!getApps().length) {
+//   initializeApp(firebaseAdminConfig);
+// }
+
+customInitApp();
 export const auth = getAuth();
 export const db = getFirestore();

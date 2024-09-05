@@ -1,6 +1,6 @@
 // import { auth } from 'firebase-admin';
 import { auth } from '@/config/firebase_admin';
-// import { customInitApp } from '@/config/firebase_admin';
+import { customInitApp } from '@/config/firebase_admin';
 import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { firestore } from '@/config/firebase';
@@ -18,7 +18,7 @@ import {
   limit,
 } from 'firebase/firestore';
 
-// customInitApp();
+customInitApp();
 
 export async function POST(req: Request) {
   try {
