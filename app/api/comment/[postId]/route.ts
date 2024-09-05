@@ -14,7 +14,7 @@ import {
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { CommentType, ProfileType, CommentDataType } from '@/lib/comment';
-import { auth } from 'firebase-admin';
+import { auth } from '@/config/firebase_admin';
 
 export async function GET(req: Request, { params }: { params: { postId: string } }) {
   try {
@@ -74,7 +74,7 @@ export async function POST(req: Request, { params }: { params: { postId: string 
     if (!sessionCookie) {
       return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
     }
-    const decodedClaims = await auth().verifySessionCookie(sessionCookie, true);
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
 
     if (!decodedClaims) {
       return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
