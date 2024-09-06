@@ -89,7 +89,7 @@
 | Largest Contentful Paint |       2.2s        |       0s        |
 | Cumulative Layout Shift  |       0.06      |       00       |
 
-- next/image를 통한 이미지 최적화
+- 기존 img 태그 -> next/image를 통한 이미지 최적화
 
 > 위의 작업들을 통해 Performance Score 62점 → 88점으로 개선, Speed Index 속도 3.5초 → 1.3초로 개선
 
