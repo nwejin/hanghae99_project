@@ -42,7 +42,8 @@
 
 ## 💻 주요 기능
 ### [회원가입]
-> 초기 회원가입시 각 단계에 따라 회원 정보 입력이 가능합니다.
+> 초기 회원가입시 각 단계에 따라 회원 정보 입력이 가능합니다. ( /signup )
+
 <div>
   <img src="https://github.com/user-attachments/assets/3ee6a971-f006-4fb2-99df-f66720b389a3" alt="로그인 1"  height="250px" />
   <img src="https://github.com/user-attachments/assets/742c52c2-6381-476f-ae03-515d6a118512" alt="로그인 2"  height="250px" />
@@ -55,33 +56,37 @@
 * 3단계: 반려동물 정보 (반려동물 이미지 / 이름 / 종)
 
 ### [로그인]
-> 등록한 계정으로 로그인
-
+> 등록한 계정으로 로그인 ( /login )
 - firebase auth 유저 인증 및 sessionCookie 활용을 통한 로그인 인증 상태 관리
 
-
 ### [메인 페이지]
-> 게시글 작성/조회 및 유저 검색이 가능합니다.
+> 게시글 작성/조회 및 유저 검색이 가능합니다. ( / )
 - react-query 무한스크롤
 - invalidateQueries를 활용한 자동 업데이트
 
 
-
 ### [유저 프로필 페이지]
-> 개인 프로필 페이지로 해당 유저 정보 및 게시글 조회가 가능합니다.
+> 개인 프로필 페이지로 해당 유저 정보 및 게시글 조회가 가능합니다. ( /user/[nickname] )
+- 본인 페이지의 경우 게시글 수정 / 삭제 가능
 
-- 로그인한 회왼의 페이지의 경우 게시글 수정 가능
 
 ### [계정 설정 페이지]
-> 사용자의 회원 정보 / 반려동물 정보를 관리하는 페이지입니다.
-
-- 로그인한 사용자의 정보만 조회 가능
+> 사용자의 회원 정보 / 반려동물 정보를 관리하는 페이지입니다. ( /accounts/[nickname] )
 
 
 
-## ⚙️ 와이어프레임 / ERD 설계
-> 디자인 툴 : Figma 
-> 각 페이지 별 구조 설계 및 유저 플로우 
+## ⚙️ 와이어프레임 / 유저 플로우 차트
+> 디자인 툴 : Figma
+> 
+> 각 페이지 별 구조 설계 및 유저 플로우
+
+<img src="https://github.com/user-attachments/assets/3c3ec36b-1844-42a2-9cdf-6ca0f72e97d9" alt="와이어프레임" style="width: 700px" />
+
+> 디자인 툴 : miro
+> 
+> 각 페이지 별 구조 설계 및 유저 플로우
+<img src="https://github.com/user-attachments/assets/0d94bbb2-4ca3-49b7-a34e-f18379561d42" alt="와이어프레임" style="width: 700px" />
+
 
 
 
