@@ -73,6 +73,28 @@
 ### [계정 설정 페이지]
 > 사용자의 회원 정보 / 반려동물 정보를 관리하는 페이지입니다. ( /accounts/[nickname] )
 
+## 🔥 성능 최적화
+
+|                                              웹 성능 최적화 전 (24.09.06 기준)                                              |                                     웹 성능 최적화 후 (24.00.00 기준)                                    |
+| :---------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: |
+| <img src="https://github.com/user-attachments/assets/f38c9028-e095-4766-a64c-d12fbfff38d1" alt="9/6_lighthouse" alt="웹 성능 최적화 전 분석 이미지" width="500px" /> | <img src="https://github.com/user-attachments/assets/f38c9028-e095-4766-a64c-d12fbfff38d1" alt="9/6_lighthouse" alt="웹 성능 최적화 후 분석 이미지" width="500px" /> |
+
+|           항목           | 웹 성능 최적화 전 | 웹 성능 최적화 후 |
+| :----------------------: | :---------------: | :---------------: |
+|    Performance Score     |        80         |        00         |
+|  First Contentful Paint  |       0.2s        |       0s        |
+|       Speed Index        |       3.3s        |       0s        |
+|   Total Blocking Time    |       90ms       |        0ms        |
+| Largest Contentful Paint |       2.2s        |       0s        |
+| Cumulative Layout Shift  |       0.06      |       00       |
+
+- next/image를 통한 이미지 최적화
+
+> 위의 작업들을 통해 Performance Score 62점 → 88점으로 개선, Speed Index 속도 3.5초 → 1.3초로 개선
+
+
+## 🎯 트러블 슈팅
+## 💭 기술적 의사결정
 
 
 ## ⚙️ 와이어프레임 / 유저 플로우 차트
@@ -90,7 +112,61 @@
 
 
 
-## 🗂️ 디렉터리 구조
+## 🗂️ 폴더 구조
+
+```
+📦app
+ ┣ 📂(afterLogin)
+ ┣ 📂(beforeLogin)
+ ┣ 📂api
+ ┃ ┣ 📂accounts
+ ┃ ┣ 📂comment
+ ┃ ┣ 📂like
+ ┃ ┣ 📂login
+ ┃ ┣ 📂logout
+ ┃ ┣ 📂post
+ ┃ ┣ 📂profile
+ ┃ ┗ 📂search
+📦components
+ ┣ 📂_account
+ ┣ 📂_main
+ ┃ ┣ 📂_elements
+ ┃ ┣ 📂_layouts
+ ┃ ┗ 📂_ui
+ ┣ 📂_newpost
+ ┣ 📂_profile
+ ┣ 📂_signup
+ ┣ 📂common
+ ┗ 📂ui
+📦config
+📦lib
+ ┣ 📂accounts
+ ┣ 📂comment
+ ┣ 📂like
+ ┣ 📂login
+ ┣ 📂post
+ ┗ 📂profile
+📦public
+📦schemas
+📦shared
+📦store
+📦styles
+📦utils
+
+```
+| 폴더명 | 설명 |
+| --- | --- |
+| `components` | 재사용 컴포넌트들을 모아놓은 폴더   |
+| `constants` | 상수 값을 모아놓은 폴더   |
+| `hooks` | 커스텀 훅 선언   |
+| `interface` | 타입에 대한 정의를 모아놓은 폴더    |
+| `layout` | 컴포넌트 페이지 레이아웃을 모아놓은 폴더   |
+| `pages` | 컴포넌트 페이지를 모아놓은 폴더   |
+| `router` | 페이지 라우터 컴포넌트들을 모아놓은 폴더 |
+| `service` | 서버와 관련된 config 폴더 |
+| `store` | 전역 상태를 관리하기 위한 폴더 |
+| `styles` | 전역 스타일을 관리학 위한 폴더 |
+| `utils` | 유틸 함수를 모아놓은 폴더 |
 
 
 
