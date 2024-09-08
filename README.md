@@ -51,12 +51,6 @@
 
 ### [회원가입]
 > 초기 회원가입시 각 단계에 따라 회원 정보 입력이 가능합니다. ( /signup )
-
-<div>
-  <img src="https://github.com/user-attachments/assets/3ee6a971-f006-4fb2-99df-f66720b389a3" alt="로그인 1"  height="250px" />
-  <img src="https://github.com/user-attachments/assets/742c52c2-6381-476f-ae03-515d6a118512" alt="로그인 2"  height="250px" />
-  <img src="https://github.com/user-attachments/assets/a71195f3-73d4-4669-8724-8b1d0346fcc9" alt="로그인 3"  height="250px" />
-<div/>
   
 * 1단계: 이메일 / 비밀번호
   * 유효성 검사 (zod) - 이메일: 이메일 형식 / 비밀번호: 대문자, 소문자, 특수문자 중 3종류 이상 포함
