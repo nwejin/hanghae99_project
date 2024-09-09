@@ -1,10 +1,10 @@
-import { ContentLayout } from '@/components/common/contentLayout';
-import AccountPageTemplates from '@/components/_account/_layouts/accountPageTemplates';
+import { ContentLayout } from '@/components/common';
+import { AccountsContainer } from '@/components/features';
 
 export default function AccountPage() {
   return (
     <ContentLayout>
-      <AccountPageTemplates />
+      <AccountsContainer.Container />
     </ContentLayout>
   );
 }

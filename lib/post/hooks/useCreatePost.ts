@@ -3,7 +3,7 @@ import { addPost } from '@/lib/post';
 import { PostFormData } from '@/lib/post';
 import { ApiError } from '@/shared/api-error';
 import { POST_KEY } from '@/lib/post';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/common/ui/use-toast';
 
 export const useCreatePost = (options: UseMutationOptions<void, ApiError, PostFormData> = {}) => {
   // QueryClient 인스턴스 가져오기

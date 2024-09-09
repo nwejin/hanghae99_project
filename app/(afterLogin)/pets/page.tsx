@@ -2,7 +2,7 @@
 
 import useTestStore from '@/store/testStore';
 import { useState } from 'react';
-import { ContentLayout } from '@/components/common/contentLayout';
+import { ContentLayout } from '@/components/common/layouts/contentLayout';
 
 export default function PetPage() {
   const { A, B, increseA, increseB, testText, setData } = useTestStore();
