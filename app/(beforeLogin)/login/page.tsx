@@ -1,9 +1,9 @@
-import LoginTemplates from '../../../components/_login/_layouts/loginTemplates';
+import { LoginContainer } from '@/components/features';
 
 export default function LoginPage() {
   return (
     <div className="flex h-screen w-screen items-center justify-center">
-      <LoginTemplates />
+      <LoginContainer.Container />
     </div>
   );
 }

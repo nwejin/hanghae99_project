@@ -1,7 +1,7 @@
 import { ApiError } from '@/shared/api-error';
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
 import { CommentDataType } from '@/lib/comment';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/common';
 import { addComment } from '@/lib/comment';
 import { COMMENT_KEY } from '@/lib/comment';
 

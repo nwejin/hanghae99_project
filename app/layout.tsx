@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import '../styles/globals.css';
 import ReactQueryProvider from '@/utils/react-query-provider';
 import '@/config/firebase';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/common';
 
 export const metadata: Metadata = {
   title: '멍냥터',
