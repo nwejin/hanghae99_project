@@ -28,7 +28,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginType) => {
-    const { email, user_password } = data;
+    // const { email, user_password } = data;
     const userLogin = await userLogIn(data);
 
     if (!userLogin) {
@@ -63,12 +63,8 @@ export default function LoginForm() {
           <div className="grid gap-2">
             <TextInput type="password" name="user_password" id="user_password" placeholder="비밀번호" text="비밀번호" />
           </div>
-
-          {/* {success && <p className="text-green-500">{success}</p>} */}
           <LoginBtn />
-
           <span className="min-h-[20px] text-sm text-red-500">{error ? error : ''}</span>
-          {/* {error && <span className="text-sm text-red-500">{error}</span>} */}
         </form>
       </FormProvider>
     </>
