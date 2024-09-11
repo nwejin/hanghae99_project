@@ -136,7 +136,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
             type="file"
             id="profile_image"
             placeholder="프로필이미지"
-            className="mb-2 mr-6 w-80"
+            className="mb-2 mr-6"
             onChange={prevImg}
             name='"profile_image'
           />
@@ -182,7 +182,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
       <div className="grid gap-2">
         <TextInput type="text" name="bio" id="bio" placeholder="자기소개" text="자기소개" />
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-between">
         <SignUpBtn text="이전" type="button" onClick={backStep} />
         <SignUpBtn text="다음" type="submit" />
       </div>

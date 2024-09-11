@@ -66,34 +66,31 @@ export default function SignUpForm() {
   const userSubmit = async (data: Partial<FormData>) => {
     const userData = { ...formData, ...data };
     // console.log(userData.user_uid);
-
-    const userKey = userData.user_uid;
-
     try {
-      const userRef = doc(firestore, 'users', String(userKey));
-      await setDoc(userRef, {
-        email: userData.email,
-        password: userData.user_pw,
+      if (userData.email && userData.user_pw) {
+        const userRegister = await createUserWithEmailAndPassword(auth, userData.email, userData.user_pw);
+        const user_uid = userRegister.user.uid;
 
-        profile_image: userData.profile_image,
-        nickname: userData.nickname,
-        bio: userData.bio || '',
+        const userRef = doc(firestore, 'users', String(user_uid));
+        await setDoc(userRef, {
+          email: userData.email,
+          password: userData.user_pw,
 
-        // pet_image: userData.pet_image,
-        // petName: userData.petName,
-        // petSpecies: userData.petSpecies,
-        // petSubSpecies: userData.petSubSpecies,
-      });
-
-      if (userData.petName && userData.petSpecies) {
-        const petsRef = collection(userRef, 'pets'); // 서브컬렉션 'pets'
-        const petDocRef = doc(petsRef);
-        await setDoc(petDocRef, {
-          pet_image: userData.pet_image,
-          petName: userData.petName,
-          petSpecies: userData.petSpecies,
-          petSubSpecies: userData.petSubSpecies,
+          profile_image: userData.profile_image,
+          nickname: userData.nickname,
+          bio: userData.bio || '',
         });
+
+        if (userData.petName && userData.petSpecies) {
+          const petsRef = collection(userRef, 'pets'); // 서브컬렉션 'pets'
+          const petDocRef = doc(petsRef);
+          await setDoc(petDocRef, {
+            pet_image: userData.pet_image,
+            petName: userData.petName,
+            petSpecies: userData.petSpecies,
+            petSubSpecies: userData.petSubSpecies,
+          });
+        }
       }
 
       router.push('/login');

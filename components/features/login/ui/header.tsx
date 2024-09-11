@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import text_logo from '@/public/text_logo.png';
 
-export default function Header() {
+export function Header() {
   return (
     <>
       <Card.CardHeader className="items-center">

@@ -120,7 +120,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
             type="file"
             id="pet_image"
             placeholder="반려동물 이미지"
-            className="mb-2 mr-6 w-80"
+            className="mb-2 mr-6"
             onChange={prevImg}
             name='"pet_image'
           />
@@ -206,7 +206,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
           </div>
         </div>
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-between">
         <SignUpBtn text="이전" type="button" onClick={backStep} />
         <SignUpBtn text="회원가입" type="submit" />
       </div>

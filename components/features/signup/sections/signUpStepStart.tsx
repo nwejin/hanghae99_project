@@ -43,15 +43,23 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
 
   const onSubmit = async (data: StepData) => {
     try {
-      const userRegister = await createUserWithEmailAndPassword(auth, checkEmail, checkPW);
-      const user_uid = userRegister.user.uid;
+      // const userRegister = await createUserWithEmailAndPassword(auth, checkEmail, checkPW);
+      // const user_uid = userRegister.user.uid;
 
-      const authData = { ...data, user_uid };
-      // console.log(user_uid);
-      // console.log(userRegister);
-      nextStep(authData);
-    } catch (error: any) {
-      setError('중복된 이메일입니다!');
+      const q = query(collection(firestore, 'users'), where('email', '==', String(checkEmail)));
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        const authData = { ...data };
+        // console.log(authData);
+        nextStep(authData);
+      } else {
+        setError('중복된 이메일입니다!');
+      }
+      // const authData = { ...data, user_uid };
+    } catch (error) {
+      setError('이메일 확인 중 오류가 발생했습니다.');
     }
   };
 
