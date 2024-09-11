@@ -26,7 +26,7 @@
 <div>
   <img src="https://img.shields.io/badge/next.js-v14.2.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
   <img src="https://img.shields.io/badge/typescript-v5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-  <img src="https://img.shields.io/badge/reactquery-v3.39.3-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
+  <img src="https://img.shields.io/badge/reactquery-v5.52.2-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
 </div>
 <div>
   <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
