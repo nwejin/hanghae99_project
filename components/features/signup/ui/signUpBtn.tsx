@@ -1,6 +1,5 @@
 import { Button } from '@/components/common';
-import { types } from 'util';
-import { string } from 'zod';
+import { MoveRight, MoveLeft } from 'lucide-react';
 
 type ButtonType = 'button' | 'submit' | 'reset';
 interface SignUpBtnProps {
@@ -8,11 +7,11 @@ interface SignUpBtnProps {
   type: ButtonType;
   onClick?: () => void;
 }
-// w-full
+
 export default function SignUpBtn({ text, onClick, type }: SignUpBtnProps) {
   return (
     <>
-      <Button type={type} className="ml-4 w-32" onClick={onClick}>
+      <Button type={type} className="h-6 w-20" onClick={onClick}>
         {text}
       </Button>
     </>

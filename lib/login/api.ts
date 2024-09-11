@@ -40,15 +40,6 @@ export async function userLogIn(loginData: LoginType): Promise<string | null> {
       if (userProfileRes.ok) {
         sessionStorage.setItem('user', JSON.stringify(userProfile));
       }
-      //   userStore.getState().setUserId(userProfile.userId);
-      //   userStore.getState().setEmail(userProfile.email);
-      //   userStore.getState().setNickName(userProfile.nickName);
-      //   userStore.getState().setProfileImg(userProfile.profileImg);
-
-      //   if (userProfile.petInfo) {
-      //     userStore.getState().setPetInfo(userProfile.petInfo);
-      //   }
-      // }
 
       return null;
     } else {
