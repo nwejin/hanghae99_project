@@ -20,63 +20,60 @@
 | 테스트 계정 password | 55good@@ |
 </div>
 
-
 ## ⚙️ 기술 스택
+
+#### FrontEnd
 <div>
-  <img src="https://img.shields.io/badge/nextdotjs-000000?style=for-the-badge&logo=react&logoColor=white">
-  <img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=react&logoColor=white">
-  <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=react&logoColor=white">
-  <br />
-  <br />
-  <img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=react&logoColor=white">
-  <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=react&logoColor=white">
-  <img src="https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=npm&logoColor=white">
-   <img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
-  <br />
-  <br />
-  <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=sass&logoColor=white">
-  <img src="https://img.shields.io/badge/shadcnui-000000?style=for-the-badge&logo=sass&logoColor=white">
-  <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
-  <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=npm&logoColor=white">
+  <img src="https://img.shields.io/badge/next.js-v14.2.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
+  <img src="https://img.shields.io/badge/typescript-v5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img src="https://img.shields.io/badge/reactquery-v3.39.3-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
+</div>
+<div>
+  <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
+  <img src="https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white">
+  <img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=zustand&logoColor=%2361DAFB"/>
 </div>
 
+#### Style
+<div>
+  <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
+  <img src="https://img.shields.io/badge/shadcnui-000000?style=for-the-badge&logo=shadcnui&logoColor=white">
+</div>
 
-피드백) 그룹화 해서 분류 제목 달기 / 아이콘 맞게 수정하기 / 타입스크립트, 리액트쿼리, 넥스트 버전 쓰기
+#### DataBase
+<div>
+   <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white">
+</div>
 
+#### Deployment | Package Management
+<div>
+ <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+   <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
+</div>
 
 ## 💻 주요 기능
 피드백) 완성된 페이지 gif 파일로 미리보기 넣기 / 내용이 길어지면 토글로 열로 닫을 수 있게 만들기
 피드백) 페이지별 말고 기능별로 분류 나누기 ex) 유저 검색, 게시글 작성 등..
 피드백) 기능 설명은 간단하게 -> 여기서는 기술적인 부분보다는 기능적인 내용 위주로 작성 + ui/ux부분에 초점을 맞춰서 작성해보기
 
-### [회원가입]
-> 초기 회원가입시 각 단계에 따라 회원 정보 입력이 가능합니다. ( /signup )
-  
-* 1단계: 이메일 / 비밀번호
-  * 유효성 검사 (zod) - 이메일: 이메일 형식 / 비밀번호: 대문자, 소문자, 특수문자 중 3종류 이상 포함
-* 2단계: 회원 정보 (프로필 이미지 / 닉네임 / 자기소개)
-* 3단계: 반려동물 정보 (반려동물 이미지 / 이름 / 종)
+### [유저 인증]
+> 초기 회원가입시 각 단계에 따라 회원 정보 입력이 가능하며 zod를 통해 유효성 검사를 진행합니다.
+> 
+> 유효성 검사 (zod) - 이메일: 이메일 형식 / 비밀번호: 대문자, 소문자, 특수문자 중 3종류 이상 포함
+>
+> firebase auth 유저 인증 및 sessionCookie 활용을 통한 로그인 인증 상태 관리
 
-### [로그인]
-> 등록한 계정으로 로그인 ( /login )
-- firebase auth 유저 인증 및 sessionCookie 활용을 통한 로그인 인증 상태 관리
 
-gif넣기
-
-### [메인 페이지]
-> 게시글 작성/조회 및 유저 검색이 가능합니다. ( / )
+### [게시글 작성]
+> 
 - react-query 무한스크롤
 - invalidateQueries를 활용한 자동 업데이트
 
 
-gif넣기
-
-### [유저 프로필 페이지]
+### [유저 검색]
 > 개인 프로필 페이지로 해당 유저 정보 및 게시글 조회가 가능합니다. ( /user/[nickname] )
 - 본인 페이지의 경우 게시글 수정 / 삭제 가능
 
-
-gif넣기
 
 ### [계정 설정 페이지]
 > 사용자의 회원 정보 / 반려동물 정보를 관리하는 페이지입니다. ( /accounts/[nickname] )
