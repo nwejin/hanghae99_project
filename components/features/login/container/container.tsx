@@ -1,12 +1,12 @@
 import { Card, LinkButton } from '@/components/common';
 
-import { Header } from '../ui/header';
+import { LogoHeader } from '@/components/common';
 import LoginForm from '../sections/loginForm';
 
 export function Container() {
   return (
     <Card.Card className="h-[35rem] w-[25rem] items-center justify-center rounded-3xl pb-8 pt-8 shadow-md">
-      <Header />
+      <LogoHeader />
       <Card.CardContent className="flex h-[20rem] flex-col justify-evenly gap-y-2">
         <LoginForm />
       </Card.CardContent>

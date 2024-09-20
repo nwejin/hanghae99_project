@@ -130,12 +130,5 @@ export function userAuth() {
     }
   };
 
-  // const logout = () => {
-  //   auth.signOut();
-  //   sessionStorage.removeItem('user');
-  //   setCookie('session', '', { path: '/', maxAge: -1 });
-  //   router.push('/');
-  // };
-
   return { login, error, loading };
 }
