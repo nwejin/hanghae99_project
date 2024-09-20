@@ -27,6 +27,8 @@ export function Container() {
   const [petData, setPetData] = useState<PetType[]>([]);
   const [posts, setPosts] = useState<PostType[]>([]);
 
+  const [isView, setIsView] = useState(false);
+
   // console.log(posts);
 
   useEffect(() => {
@@ -101,7 +103,7 @@ export function Container() {
 
         <Card.CardContent className="grid w-full grid-cols-4 gap-1 border-t-2 p-6">
           {posts.map((post, index) => (
-            <div className="aspect-square rounded-sm">
+            <div className="relative aspect-square rounded-sm border-2">
               <img
                 key={index}
                 src={String(post.imgUrls[0])}

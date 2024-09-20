@@ -42,7 +42,7 @@ export function getMenuList(pathname: string, user?: { nickname?: string | null 
     //   ],
     // },
     {
-      groupLabel: 'Contents',
+      groupLabel: '콘텐츠',
       menus: [
         {
           href: '/pets',
@@ -65,7 +65,7 @@ export function getMenuList(pathname: string, user?: { nickname?: string | null 
       ],
     },
     {
-      groupLabel: 'Settings',
+      groupLabel: '계정정보',
       menus: [
         {
           href: `/user/${user?.nickname}`,

@@ -130,12 +130,4 @@ export default function MainPage() {
       </div>
     </>
   );
-
-  // return (
-  //   <>
-  //     <div className="flex flex-col">
-  //       {posts?.map((postData) => <UserPost key={postData.post.id} post={postData.post} user={postData.user} />)}
-  //     </div>
-  //   </>
-  // );
 }

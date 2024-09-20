@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import logo from '@/public/logo.png';
+import box_logo from '@/public/box_logo.png';
 import text_logo from '@/public/text_logo.png';
 
 import { Button } from '@/components/common';
@@ -41,7 +41,11 @@ export default function SideBar() {
             variant="link"
             asChild>
             <Link href="/" className="flex items-center gap-2">
-              {isOpen == false ? <Image src={logo} alt="Icon" width={24} height={24} className="mr-1 h-7 w-7" /> : ''}
+              {isOpen == false ? (
+                <Image src={box_logo} alt="Icon" width={24} height={24} className="mr-1 h-7 w-7" />
+              ) : (
+                ''
+              )}
               <Image
                 src={text_logo}
                 alt="멍냥터 로고"
