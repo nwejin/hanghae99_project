@@ -103,13 +103,18 @@ export function Container() {
 
         <Card.CardContent className="grid w-full grid-cols-4 gap-1 border-t-2 p-6">
           {posts.map((post, index) => (
-            <div className="relative aspect-square rounded-sm border-2">
+            <div key={index} className="group relative aspect-square rounded-sm">
+              {/* 게시글 이미지 */}
               <img
-                key={index}
                 src={String(post.imgUrls[0])}
                 alt={`게시글 이미지 ${index + 1}`}
-                className="left-0 top-0 h-full w-full rounded-sm object-cover"
+                className="h-full w-full rounded-sm object-cover"
               />
+
+              {/* Hover시 나타나는 오버레이 박스 */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center rounded-sm bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <p className="font-bold text-white">{/* ❤️ {post.} &nbsp; 💬 {post.commentsCount} */}</p>
+              </div>
             </div>
           ))}
         </Card.CardContent>
