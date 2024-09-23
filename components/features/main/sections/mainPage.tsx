@@ -3,31 +3,14 @@ import UserPost from './userPost';
 import { useEffect, useState, useRef } from 'react';
 import { TotalPostType } from '@/lib/post';
 // import { getPost } from '@/lib/post';
+import { Spinner } from '@/components/common';
 
 // import { useGetPost } from '@/lib/post';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
+import { PostSkeleton } from '@/components/common';
 
 export default function MainPage() {
-  // const [posts, setPosts] = useState<TotalPostType[]>([]);
-
-  // useEffect(() => {
-  //   const fetchPost = async () => {
-  //     try {
-  //       const postData = await getPost();
-  //       setPosts(postData);
-  //     } catch (error) {
-  //       console.error('데이터 조회 실패', error);
-  //     }
-  //   };
-  //   fetchPost();
-  // }, []);
-
-  // const { data: posts, error, isLoading } = useGetPost(); // useGetPost 훅을 사용하여 데이터 가져오기
-
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error.message}</div>;
-
   const PAGE_SIZE = 5;
   const INITIAL_FETCH_COUNT = 5; // 초기 5페이지
 
@@ -108,6 +91,7 @@ export default function MainPage() {
     <>
       <div>
         {/* 데이터를 페이지 단위로 렌더링 */}
+
         {data?.pages &&
           data.pages.map((page, i) => (
             <Fragment key={i}>
@@ -116,17 +100,12 @@ export default function MainPage() {
               ))}
             </Fragment>
           ))}
-        {/* <div>
-          <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
-            {isFetchingNextPage ? 'Loading more...' : hasNextPage ? 'Load More' : 'Nothing more to load'}
-          </button>
-        </div> */}
         <div ref={loadMoreRef}>
-          {isFetchingNextPage && <p>Loading more...</p>}
-          {!hasNextPage && !isFetching && <p>Nothing more to load</p>}
+          {isFetchingNextPage && <Spinner />}
+          {!hasNextPage && !isFetching && <p>모든 게시글을 확인했습니다.</p>}
         </div>
 
-        <div>{isFetching && !isFetchingNextPage ? '게시글을 조회중입니다.' : null}</div>
+        <div>{isFetching && !isFetchingNextPage ? <PostSkeleton /> : null}</div>
       </div>
     </>
   );
