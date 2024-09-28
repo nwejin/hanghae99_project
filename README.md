@@ -96,9 +96,18 @@ gif넣기
 | Largest Contentful Paint |       2.2s        |       0s        |
 | Cumulative Layout Shift  |       0.06      |       00       |
 
-- 기존 img 태그 -> next/image를 통한 이미지 최적화
+- 기존 img 태그 
 피드백) 이미지 최적화 부분을 고민해서 진행하기 next/image는 내장 라이브러리라서 다른걸로 최적화 해보기
 피드백) 개선사항은 이미지 말고 점수로만 기록해도 괜찮다
+
+webp변환을 위해 이미지 업로드시 변환 작업 수행 
+이후 기존 img 태그를 next/image를 사용하여 로딩 시간 감소
+
+png시 
+
+  <img src="https://github.com/user-attachments/assets/1a6cfbfd-903e-49fb-9420-b886382d314b" alt="기존"  height="100px" />
+
+
 
 > 위의 작업들을 통해 Performance Score 62점 → 88점으로 개선, Speed Index 속도 3.5초 → 1.3초로 개선
 
@@ -107,8 +116,6 @@ gif넣기
 
 피드백) 단순한 에러 해결은 작성하지 말고 실제로 어떠한 부분을 적용할때 발생했던 에러
 피드백) ex) 메인페이지에서 게시글을 작성했을때 작성한 게시글이 바로 업데이트되지 않아서 새로고침을 해야하는 문제 발생 -> 작성하는 동시에 바로 화면에 보여졌으면 좋겠음 -> 파이어베이스를 사용하니까 getDoc을 onSnapshot으로 변경해서 게시글이 추가되면 실시간 반영되게 -> 리액트쿼리 invalidateQueries로 쿼리키로 데이터를 불러오게 해서 해당 문제 처리
-
-1. 회원가입 시 유저 정보 확인
 
 ## 💭 기술적 의사결정
 
