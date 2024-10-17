@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 
 export function Container() {
   const { closeModal } = useModalStore();
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center">

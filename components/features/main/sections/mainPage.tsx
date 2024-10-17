@@ -9,6 +9,7 @@ import { Spinner } from '@/components/common';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { PostSkeleton } from '@/components/common';
+import { PostEnd, PostLoading } from '../ui';
 
 export default function MainPage() {
   const PAGE_SIZE = 5;
@@ -89,9 +90,9 @@ export default function MainPage() {
 
   return (
     <>
-      <div>
+      <div className="">
         {/* 데이터를 페이지 단위로 렌더링 */}
-
+        {/* <PostSkeleton /> */}
         {data?.pages &&
           data.pages.map((page, i) => (
             <Fragment key={i}>
@@ -101,8 +102,8 @@ export default function MainPage() {
             </Fragment>
           ))}
         <div ref={loadMoreRef}>
-          {isFetchingNextPage && <Spinner />}
-          {!hasNextPage && !isFetching && <p>모든 게시글을 확인했습니다.</p>}
+          {isFetchingNextPage && <PostLoading />}
+          {!hasNextPage && !isFetching && <PostEnd />}
         </div>
 
         <div>{isFetching && !isFetchingNextPage ? <PostSkeleton /> : null}</div>
