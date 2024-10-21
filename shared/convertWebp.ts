@@ -35,7 +35,7 @@ export const convertToWebP = async (image: File): Promise<Blob | undefined> => {
               resolve(webpBlob);
             },
             'image/webp',
-            0.5
+            0.8
           );
         };
       };

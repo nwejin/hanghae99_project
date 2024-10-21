@@ -13,31 +13,35 @@ import CarouselItems from './carouselItems';
 import { useFormContext } from 'react-hook-form';
 
 import CarouselBtn from './carouselBtn';
+import { convertToWebP } from '@/shared';
 
 export default function ImgCarousel() {
-  // const checkImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log(e.target.files);
-  // };
-
-  // const [imgPreview, setImgPreview] = useState<File | null>(null);
-  const [imgUrl, setImgUrl] = useState('');
-
-  // const prevImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files === null) return;
-  //   const file = e.target.files[0];
-  //   setImgUrl(URL.createObjectURL(file));
-  //   setImgPreview(file);
-  // };
-
-  const { setValue, watch } = useFormContext();
-  const imgUrls = watch('imgUrls');
+  const { setValue } = useFormContext();
 
   const [imgPreviews, setImgPreviews] = useState<string[]>([]);
 
-  const checkImg = (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
+  const MAX_IMAGES = 5;
+
+  const checkImg = async (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
     if (e.target.files) {
+      // const filesArray = Array.from(e.target.files);
+      // const urls = filesArray.map((file) => URL.createObjectURL(file));
+
       const filesArray = Array.from(e.target.files);
-      const urls = filesArray.map((file) => URL.createObjectURL(file));
+      const urls: string[] = [];
+
+      for (const file of filesArray) {
+        try {
+          const webpBlob = await convertToWebP(file); // 이미지를 WebP로 변환
+          if (webpBlob) {
+            const webpUrl = URL.createObjectURL(webpBlob);
+            urls.push(webpUrl);
+          }
+        } catch (error) {
+          console.error('이미지 변환 에러:', error);
+          return;
+        }
+      }
 
       if (index !== undefined) {
         // 기존 이미지를 업데이트
@@ -48,12 +52,12 @@ export default function ImgCarousel() {
         setValue('imgUrls', updatedPreviews);
       } else {
         // 새 이미지를 추가
-        if (imgPreviews.length + urls.length <= 5) {
+        if (imgPreviews.length + urls.length <= MAX_IMAGES) {
           const updatedPreviews = [...imgPreviews, ...urls];
           setImgPreviews(updatedPreviews);
           setValue('imgUrls', updatedPreviews);
         } else {
-          alert('이미지는 최대 5개까지만 등록할 수 있습니다.');
+          alert(`이미지는 최대 ${MAX_IMAGES}개까지만 등록할 수 있습니다.`);
         }
       }
     }
@@ -87,8 +91,8 @@ export default function ImgCarousel() {
                         alt={`Image ${index}`}
                         objectFit="cover"
                         className="left-0 top-0 h-full w-full rounded-sm object-cover"
-                        width={400}
-                        height={225}
+                        // width={400}
+                        // height={225}
                       />
                       {/* 새로고침  */}
                       <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black bg-opacity-30 opacity-0 transition-opacity group-hover:opacity-100">
