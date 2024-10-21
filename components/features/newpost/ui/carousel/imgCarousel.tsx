@@ -91,8 +91,8 @@ export default function ImgCarousel() {
                         alt={`Image ${index}`}
                         objectFit="cover"
                         className="left-0 top-0 h-full w-full rounded-sm object-cover"
-                        // width={400}
-                        // height={225}
+                        width={512}
+                        height={512}
                       />
                       {/* 새로고침  */}
                       <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black bg-opacity-30 opacity-0 transition-opacity group-hover:opacity-100">

@@ -93,7 +93,13 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                 <Carousel.CarouselContent>
                   {post.imgUrls.map((img, index) => (
                     <Carousel.CarouselItem key={index}>
-                      <img src={img} width={650} height={650} alt="Pet Image" className="aspect-square object-cover" />
+                      <Image
+                        src={img}
+                        width={650}
+                        height={650}
+                        alt={`Pet Image ${index}`}
+                        className="aspect-square object-cover"
+                      />
                     </Carousel.CarouselItem>
                   ))}
                 </Carousel.CarouselContent>
