@@ -4,6 +4,7 @@ import { type CarouselApi } from '@/components/common/ui/carousel';
 import { Carousel } from '@/components/common';
 import CarouselBtn from './carouselBtn';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface imgProps {
   imgUrls: string[];
@@ -33,7 +34,13 @@ export default function ImgCarousel({ imgUrls }: imgProps) {
         <Carousel.CarouselContent>
           {imgUrls.map((img, index) => (
             <Carousel.CarouselItem key={index}>
-              <img src={img} width={600} height={600} alt="Pet Image" className="aspect-square object-cover" />
+              <Image
+                src={img}
+                alt={`Pet Image ${index}`}
+                className="aspect-square object-cover"
+                width={512}
+                height={512}
+              />
             </Carousel.CarouselItem>
           ))}
         </Carousel.CarouselContent>
