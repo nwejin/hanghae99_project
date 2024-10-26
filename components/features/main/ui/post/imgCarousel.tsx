@@ -34,13 +34,7 @@ export default function ImgCarousel({ imgUrls }: imgProps) {
         <Carousel.CarouselContent>
           {imgUrls.map((img, index) => (
             <Carousel.CarouselItem key={index}>
-              <Image
-                src={img}
-                alt={`Pet Image ${index}`}
-                className="aspect-square object-cover"
-                width={512}
-                height={512}
-              />
+              <Image src={img} alt={`Pet Image ${index}`} className="" width={512} height={512} />
             </Carousel.CarouselItem>
           ))}
         </Carousel.CarouselContent>
