@@ -1,9 +1,10 @@
 import MoonLoader from 'react-spinners/MoonLoader';
+import FadeLoader from 'react-spinners/FadeLoader';
 
 export function Spinner() {
   return (
     <>
-      <MoonLoader color="#FF9022" size={30} speedMultiplier={0.7} />
+      <FadeLoader color="#FF9022" height={13} margin={0} radius={3} width={5} />
     </>
   );
 }

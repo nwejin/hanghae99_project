@@ -103,6 +103,7 @@ export default function MainPage() {
           ))}
         <div ref={loadMoreRef}>
           {isFetchingNextPage && <PostLoading />}
+          {/* <PostLoading /> */}
           {!hasNextPage && !isFetching && <PostEnd />}
         </div>
 
