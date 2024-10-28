@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/common';
+import { Button, Card, Avatar } from '@/components/common';
 import { cn } from '@/lib/utils';
 import { useSidebarToggle } from '@/store/sidebarStore';
-import { X } from 'lucide-react';
+import { Drama, X, ChevronsRight } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/common';
+import Link from 'next/link';
 
 interface SearchBarProps {
   setIsSearchOpen: () => void;
@@ -27,6 +28,7 @@ export default function SearchBar({ setIsSearchOpen }: SearchBarProps) {
 
       if (response.ok) {
         setSearchResults(data); // 검색 결과 설정
+        console.log(searchResults);
       } else {
         setError(data.error); // 오류 메시지 설정
       }
@@ -43,13 +45,13 @@ export default function SearchBar({ setIsSearchOpen }: SearchBarProps) {
         isSearchOpen ? 'w-96' : 'w-0',
         'hidden lg:block' // PC에서만 보이도록 설정
       )}>
-      <div className="flex items-center justify-between p-4">
+      <div className="flex items-center justify-between bg-white p-4">
         <p className="text-lg font-bold">검색</p>
         <Button variant="ghost" onClick={() => setIsSearchOpen()}>
           <X size={16} strokeWidth={3} color="#333" />
         </Button>
       </div>
-      <form onSubmit={handleSearch} className="grid grid-cols-5 gap-2 bg-slate-100 p-2">
+      <form onSubmit={handleSearch} className="grid grid-cols-5 gap-2 bg-slate-50 p-2">
         <input
           type="text"
           value={searchQuery}
@@ -61,7 +63,21 @@ export default function SearchBar({ setIsSearchOpen }: SearchBarProps) {
           <span style={{ color: 'hsl(214, 100%, 46%)' }}>검색</span>
         </Button>
       </form>
-      <ScrollArea className="h-full bg-slate-200 p-2">
+      <ScrollArea className="h-full bg-white p-2">
+        {searchResults.map((data, index) => (
+          <Card.Card className="mb-3 p-2 shadow-none" key={index}>
+            <Link href={`/user/${data.nickname}`} className="flex items-center justify-between">
+              <Avatar.Avatar className="h-12 w-12 border">
+                <Avatar.AvatarImage alt="img" src={data.profile_image} />
+                <Avatar.AvatarFallback>{data.nickname}</Avatar.AvatarFallback>
+              </Avatar.Avatar>
+              <div className="w-full pl-4">
+                <p className="font-bold">{data.nickname}</p>
+              </div>
+              <ChevronsRight />
+            </Link>
+          </Card.Card>
+        ))}
         <ScrollBar orientation="vertical" />
       </ScrollArea>
     </div>
