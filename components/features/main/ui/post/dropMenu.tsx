@@ -1,6 +1,6 @@
 import { DropdownMenu } from '@/components/common';
 import { Button } from '@/components/common';
-import { PawPrint, Bookmark, FileWarning, Heart, Send, MessageCircle, Trash2 } from 'lucide-react';
+import { PawPrint, Bookmark, Pencil, FileWarning, Heart, Send, MessageCircle, Trash2 } from 'lucide-react';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from '@/config/firebase';
 import { deletePost } from '@/lib/post';
@@ -32,24 +32,15 @@ export default function DropMenu({ isOwner, id }: DropProps) {
         </DropdownMenu.DropdownMenuTrigger>
         <DropdownMenu.DropdownMenuContent align="end">
           <DropdownMenu.DropdownMenuItem>
-            <Bookmark className="mr-2 h-4 w-4" />
-            Save
+            <Pencil className="mr-2 h-4 w-4" />
+            수정하기
           </DropdownMenu.DropdownMenuItem>
 
           <DropdownMenu.DropdownMenuSeparator />
-          <DropdownMenu.DropdownMenuItem>
-            <FileWarning className="mr-2 h-4 w-4" />
-            Report
+          <DropdownMenu.DropdownMenuItem onClick={handleDeletePost}>
+            <Trash2 className="mr-2 h-4 w-4" />
+            삭제하기
           </DropdownMenu.DropdownMenuItem>
-          {isOwner && (
-            <>
-              <DropdownMenu.DropdownMenuSeparator />
-              <DropdownMenu.DropdownMenuItem onClick={handleDeletePost}>
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </DropdownMenu.DropdownMenuItem>
-            </>
-          )}
         </DropdownMenu.DropdownMenuContent>
       </DropdownMenu.DropdownMenu>
     </>

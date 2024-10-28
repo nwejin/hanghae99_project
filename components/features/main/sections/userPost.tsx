@@ -33,14 +33,14 @@ export default function UserPost({ post, user }: TotalPostType) {
 
   // const user_id = userStore((state) => state.userId);
 
-  // useEffect(() => {
-  //   const auth = getAuth();
-  //   const currentUser = auth.currentUser;
+  useEffect(() => {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
 
-  //   if (currentUser && currentUser.email === user.email) {
-  //     setIsOwner(true);
-  //   }
-  // }, [user.email]);
+    if (currentUser && currentUser.email === user.email) {
+      setIsOwner(true);
+    }
+  }, [user.email]);
 
   useEffect(() => {
     const loadLikeData = async () => {
@@ -71,7 +71,7 @@ export default function UserPost({ post, user }: TotalPostType) {
         <Card.Card className="rounded-none border-0 shadow-none">
           <Card.CardHeader className="flex flex-row items-center p-4">
             <UserProfile nickname={user.nickname} profile_image={user.profile_image} />
-            <DropMenu isOwner={isOwner} id={post.id} />
+            {isOwner ? <DropMenu isOwner={isOwner} id={post.id} /> : ''}
           </Card.CardHeader>
           <Card.CardContent className="relative p-0">
             <ImgCarousel imgUrls={post.imgUrls} />
