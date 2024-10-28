@@ -25,7 +25,7 @@ export default function MainPageSide() {
     if (userDataString) {
       const parsedUserData = JSON.parse(userDataString);
       setUserData(parsedUserData);
-      const petData = getPetLabel(parsedUserData.petInfo.petSpecies, parsedUserData.petInfo.petSubSpecies);
+      const petData = getPetLabel(parsedUserData.petInfo?.petSpecies, parsedUserData.petInfo?.petSubSpecies);
 
       setPet(petData);
     }
@@ -69,7 +69,7 @@ export default function MainPageSide() {
                 <Card.CardContent className="w-full p-0 pl-6">
                   <div className="font-bold">{userData?.nickName}</div>
                   <div className="flex text-sm font-bold">
-                    <p className="text-gray-500">{userData?.petInfo.petName}</p>
+                    <p className="text-gray-500">{userData?.petInfo?.petName}</p>
                     <p className="pl-1 pr-1 text-gray-500">-</p>
                     <p className="text-gray-500">{pet}</p>
                   </div>

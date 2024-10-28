@@ -1,3 +1,5 @@
+'use client';
+
 import { DropdownMenu } from '@/components/common';
 import { Button } from '@/components/common';
 import { PawPrint, Bookmark, Pencil, FileWarning, Heart, Send, MessageCircle, Trash2 } from 'lucide-react';
@@ -5,13 +7,22 @@ import { doc, deleteDoc } from 'firebase/firestore';
 import { firestore } from '@/config/firebase';
 import { deletePost } from '@/lib/post';
 import { string } from 'zod';
+import { useState } from 'react';
+import EditModal from './editModal';
 
 interface DropProps {
   isOwner: boolean;
   id: string;
+  contents: string;
 }
 
-export default function DropMenu({ isOwner, id }: DropProps) {
+export default function DropMenu({ isOwner, id, contents }: DropProps) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const handleEditPost = () => {
+    setIsEditOpen(true);
+  };
+
   const handleDeletePost = async () => {
     // console.log(id);
     try {
@@ -31,7 +42,7 @@ export default function DropMenu({ isOwner, id }: DropProps) {
           </Button>
         </DropdownMenu.DropdownMenuTrigger>
         <DropdownMenu.DropdownMenuContent align="end">
-          <DropdownMenu.DropdownMenuItem>
+          <DropdownMenu.DropdownMenuItem onClick={handleEditPost}>
             <Pencil className="mr-2 h-4 w-4" />
             수정하기
           </DropdownMenu.DropdownMenuItem>
@@ -43,6 +54,7 @@ export default function DropMenu({ isOwner, id }: DropProps) {
           </DropdownMenu.DropdownMenuItem>
         </DropdownMenu.DropdownMenuContent>
       </DropdownMenu.DropdownMenu>
+      {isEditOpen && <EditModal postId={id} initialContents={contents} onClose={() => setIsEditOpen(false)} />}
     </>
   );
 }
