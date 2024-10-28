@@ -33,3 +33,8 @@ export type PaginationType = {
   page: number;
   size: number;
 };
+
+export type EditType = {
+  id: string;
+  contents: string;
+};

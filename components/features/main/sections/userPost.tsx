@@ -71,7 +71,7 @@ export default function UserPost({ post, user }: TotalPostType) {
         <Card.Card className="rounded-none border-0 shadow-none">
           <Card.CardHeader className="flex flex-row items-center p-4">
             <UserProfile nickname={user.nickname} profile_image={user.profile_image} />
-            {isOwner ? <DropMenu isOwner={isOwner} id={post.id} /> : ''}
+            {isOwner ? <DropMenu isOwner={isOwner} id={post.id} contents={post.contents} /> : ''}
           </Card.CardHeader>
           <Card.CardContent className="relative p-0">
             <ImgCarousel imgUrls={post.imgUrls} />

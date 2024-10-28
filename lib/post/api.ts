@@ -82,3 +82,6 @@ export async function deletePost(postId: PostIdType): Promise<void> {
     console.error('게시글 삭제 fetch 오류', error);
   }
 }
+
+// 게시글 수정
+export async function editPost() {}
