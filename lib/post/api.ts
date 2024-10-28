@@ -1,4 +1,4 @@
-import { TotalPostType, PostFormData, PostIdType, PaginationType } from './types';
+import { TotalPostType, PostFormData, PostIdType, PaginationType, EditType } from './types';
 
 // export async function getPost(): Promise<TotalPostType[]> {
 //   try {
@@ -84,4 +84,31 @@ export async function deletePost(postId: PostIdType): Promise<void> {
 }
 
 // 게시글 수정
-export async function editPost() {}
+export async function editPost(editData: EditType): Promise<void> {
+  try {
+    const { id, contents } = editData;
+    const cookies = document.cookie.split('; ');
+
+    const sessionCookie = cookies.find((cookie) => cookie.startsWith('session='));
+
+    const sessionToken = sessionCookie ? sessionCookie.split('=')[1] : '';
+
+    const response = await fetch('/api/post', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionToken}`,
+      },
+      body: JSON.stringify({ postId: id, contents }),
+    });
+
+    if (!response.ok) {
+      throw new Error('게시글 수정 오류');
+    }
+
+    const result = await response.json();
+    console.log('게시글 수정 fetch성공', result.message);
+  } catch (error) {
+    console.error('게시글 수정 에러', error);
+  }
+}
