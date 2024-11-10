@@ -41,29 +41,29 @@ export function getMenuList(pathname: string, user?: { nickname?: string | null 
     //     },
     //   ],
     // },
-    {
-      groupLabel: '콘텐츠',
-      menus: [
-        {
-          href: '/pets',
-          label: '반려동물 정보',
-          active: pathname.includes('/pets'),
-          icon: PawPrint,
-        },
-        // {
-        //   href: '/pets',
-        //   label: '반려동물 공간',
-        //   active: pathname.includes('/pets'),
-        //   icon: Bookmark,
-        // },
-        {
-          href: '/direct',
-          label: '메시지',
-          active: pathname.includes('/direct'),
-          icon: MessageSquareHeart,
-        },
-      ],
-    },
+    // {
+    //   groupLabel: '콘텐츠',
+    //   menus: [
+    //     {
+    //       href: '/pets',
+    //       label: '반려동물 정보',
+    //       active: pathname.includes('/pets'),
+    //       icon: PawPrint,
+    //     },
+    //     // {
+    //     //   href: '/pets',
+    //     //   label: '반려동물 공간',
+    //     //   active: pathname.includes('/pets'),
+    //     //   icon: Bookmark,
+    //     // },
+    //     {
+    //       href: '/direct',
+    //       label: '메시지',
+    //       active: pathname.includes('/direct'),
+    //       icon: MessageSquareHeart,
+    //     },
+    //   ],
+    // },
     {
       groupLabel: '계정정보',
       menus: [

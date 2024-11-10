@@ -51,6 +51,13 @@ export async function userLogIn(loginData: LoginType): Promise<string | null> {
   }
 }
 
+// error type
+// if (isError) {    return <div>Error: {(error as Error).message}</div>  }
+
+// 에러 처리를 위한 헬퍼 함수  const handleError = (error: unknown) => {    const errorMessage =      error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다."    console.error("에러 발생:", errorMessage)    toast({      title: "오류가 발생했습니다.",      description: errorMessage,    })    setLoading(false) // 에러 발생 시 loading 상태를 false로 설정  }
+
+// } catch (error: unknown) {      const errorMessage =        error instanceof Error          ? error.message          : "알 수 없는 오류가 발생했습니다."      toast({        title: "팔로워 불러오기 실패",        description: errorMessage,      })      setError(errorMessage)    }  }
+
 export async function userLogOut() {
   try {
     // Firebase 인증 로그아웃
