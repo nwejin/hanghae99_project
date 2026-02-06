@@ -79,7 +79,6 @@
 > 사용자의 회원 정보 / 반려동물 정보를 관리하는 페이지입니다. ( /accounts/[nickname] )
 
 
-gif넣기
 
 ## 🔥 성능 최적화
 
@@ -141,67 +140,6 @@ png시
 > 각 페이지 별 구조 설계 및 유저 플로우
 <img src="https://github.com/user-attachments/assets/0d94bbb2-4ca3-49b7-a34e-f18379561d42" alt="와이어프레임" style="width: 700px" />
 
-
-
-
-## 🗂️ 폴더 구조
-피드백) 폴더 구조 변경하기 컴포넌트 -> feature -> 각 페이지별 기능들 / common -> ui로 구분하기 
-피드백) 너무 세분화해서 폴더 구조를 나눌 필요는 없을듯
-
-```
-📦app
- ┣ 📂(afterLogin)
- ┣ 📂(beforeLogin)
- ┣ 📂api
- ┃ ┣ 📂accounts
- ┃ ┣ 📂comment
- ┃ ┣ 📂like
- ┃ ┣ 📂login
- ┃ ┣ 📂logout
- ┃ ┣ 📂post
- ┃ ┣ 📂profile
- ┃ ┗ 📂search
-📦components
- ┣ 📂_account
- ┣ 📂_main
- ┃ ┣ 📂_elements
- ┃ ┣ 📂_layouts
- ┃ ┗ 📂_ui
- ┣ 📂_newpost
- ┣ 📂_profile
- ┣ 📂_signup
- ┣ 📂common
- ┗ 📂ui
-📦config
-📦lib
- ┣ 📂accounts
- ┣ 📂comment
- ┣ 📂like
- ┣ 📂login
- ┣ 📂post
- ┗ 📂profile
-📦public
-📦schemas
-📦shared
-📦store
-📦styles
-📦utils
-
-```
-| 폴더명 |  | 설명 |
-| --- | --- | --- |
-| `components` | 각 페이지별 컴포넌트를 모아놓은 폴더   | |
-| `components` |  `common` | 재사용 가능한 컴포넌트를 모아놓은 폴더  | 
-| `app` | 각 페이지를 모아놓은 폴더   | |
-| `hooks` | 커스텀 훅 선언   | |
-| `interface` | 타입에 대한 정의를 모아놓은 폴더    | |
-| `layout` | 컴포넌트 페이지 레이아웃을 모아놓은 폴더   | |
-| `pages` | 컴포넌트 페이지를 모아놓은 폴더   | |
-| `router` | 페이지 라우터 컴포넌트들을 모아놓은 폴더 | |
-| `service` | 서버와 관련된 config 폴더 | |
-| `store` | 전역 상태를 관리하기 위한 폴더 | |
-| `styles` | 전역 스타일을 관리학 위한 폴더 | |
-| `utils` | 유틸 함수를 모아놓은 폴더 | |
 
 
 
