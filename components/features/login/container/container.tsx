@@ -5,7 +5,7 @@ import LoginForm from '../sections/loginForm';
 
 export function Container() {
   return (
-    <Card.Card className="h-[35rem] w-[25rem] items-center justify-center rounded-3xl pb-8 pt-8 shadow-md">
+    <Card.Card className="h-[35rem] w-full items-center justify-center rounded-3xl pb-8 pt-8 shadow-md sm:w-[25rem]">
       <LogoHeader />
       <Card.CardContent className="flex h-[20rem] flex-col justify-evenly gap-y-2">
         <LoginForm />
