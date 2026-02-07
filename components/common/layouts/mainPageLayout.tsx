@@ -17,7 +17,7 @@ export function MainPageLayout({ children }: { children: React.ReactNode }) {
       {modal && <AddPostModal.Container />}
       <main
         className={cn(
-          'min-h-[100vh] bg-zinc-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900',
+          'min-h-[100vh] bg-[#eeeeee] transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900',
           isOpen === false ? 'lg:ml-[90px]' : 'lg:ml-60'
         )}>
         {children}
