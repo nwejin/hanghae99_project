@@ -1,4 +1,4 @@
-import { Button } from '@/components/common';
+//import { Button } from '@/components/common';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
@@ -10,12 +10,12 @@ interface ButtonProps {
 export function LinkButton({ href, text }: ButtonProps) {
   return (
     <>
-      <Button className="w-full" variant="ghost">
+      <button className="flex h-full w-full items-center justify-center rounded-md bg-gray-300 py-2 text-[#333]">
         <Link href={href} className="flex items-center">
           {text}
-          <ChevronRight size={16} />
+          <ChevronRight size={18} color="#333" />
         </Link>
-      </Button>
+      </button>
     </>
   );
 }
