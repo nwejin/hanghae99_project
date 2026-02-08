@@ -3,14 +3,10 @@ import MainPage from '../sections/mainPage';
 
 export function Container() {
   return (
-    <div className="grid grid-cols-[0.5fr_3fr_2fr_0.5fr] gap-2">
-      <div></div>
-
+    <div className="flex items-center justify-center">
       <MainPage />
 
-      <MainPageSide />
-
-      <div></div>
+      {/* <MainPageSide /> */}
     </div>
   );
 }
