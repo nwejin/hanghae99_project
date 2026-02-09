@@ -3,5 +3,5 @@ interface ContentLayoutProps {
 }
 
 export function ContentLayout({ children }: ContentLayoutProps) {
-  return <div className="container w-full py-8">{children}</div>;
+  return <div className="w-full px-4 py-8">{children}</div>;
 }

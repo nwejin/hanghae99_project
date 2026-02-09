@@ -1,27 +1,21 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-
-import SideBar from '../sidebar/sidebar';
-import { useSidebarToggle } from '@/store/sidebarStore';
 import { useModalStore } from '@/store/modalStore';
 import { AddPostModal } from '@/components/features';
+import Header from '../header/header';
+import Footer from '../footer/footer';
 
 export function MainPageLayout({ children }: { children: React.ReactNode }) {
-  const isOpen = useSidebarToggle((state) => state.isOpen);
   const { modal } = useModalStore();
 
   return (
-    <>
-      <SideBar />
-      {modal && <AddPostModal.Container />}
-      <main
-        className={cn(
-          'min-h-[100vh] bg-[#eeeeee] transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900',
-          isOpen === false ? 'lg:ml-[90px]' : 'lg:ml-60'
-        )}>
-        {children}
-      </main>
-    </>
+    <div className="min-h-screen bg-white dark:bg-zinc-900">
+      <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col bg-white dark:bg-zinc-950">
+        <Header />
+        {modal && <AddPostModal.Container />}
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </div>
   );
 }
