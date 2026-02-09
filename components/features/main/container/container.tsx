@@ -3,7 +3,7 @@ import MainPage from '../sections/mainPage';
 
 export function Container() {
   return (
-    <div className="flex items-center justify-center">
+    <div className="w-full">
       <MainPage />
 
       {/* <MainPageSide /> */}

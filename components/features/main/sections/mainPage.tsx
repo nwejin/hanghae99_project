@@ -1,5 +1,5 @@
 'use client';
-import UserPost from './userPost';
+import UserPostCard from './userPostCard';
 import { useEffect, useState, useRef } from 'react';
 import { TotalPostType } from '@/lib/post';
 // import { getPost } from '@/lib/post';
@@ -90,25 +90,21 @@ export default function MainPage() {
 
   return (
     <>
-      <div className="">
-        {/* 데이터를 페이지 단위로 렌더링 */}
-        {/* <PostSkeleton /> */}
+      <div className="grid grid-cols-3 grid-flow-dense gap-1">
         {data?.pages &&
           data.pages.map((page, i) => (
             <Fragment key={i}>
               {page.map((item: { post: any; user: any }) => (
-                <UserPost key={item.post.id} post={item.post} user={item.user} />
+                <UserPostCard key={item.post.id} post={item.post} user={item.user} />
               ))}
             </Fragment>
           ))}
-        <div ref={loadMoreRef}>
-          {isFetchingNextPage && <PostLoading />}
-          {/* <PostLoading /> */}
-          {!hasNextPage && !isFetching && <PostEnd />}
-        </div>
-
-        <div>{isFetching && !isFetchingNextPage ? <PostSkeleton /> : null}</div>
       </div>
+      <div ref={loadMoreRef}>
+        {isFetchingNextPage && <PostLoading />}
+        {!hasNextPage && !isFetching && <PostEnd />}
+      </div>
+      <div>{isFetching && !isFetchingNextPage ? <PostSkeleton /> : null}</div>
     </>
   );
 }

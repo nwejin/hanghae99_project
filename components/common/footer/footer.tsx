@@ -44,7 +44,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="sticky bottom-0 z-20 flex items-center justify-around border-t bg-white py-2 dark:border-zinc-800 dark:bg-zinc-900">
+    <footer className="sticky bottom-0 z-20 flex h-[60px] items-center justify-around border-t bg-white py-2 dark:border-zinc-800 dark:bg-zinc-900">
       <Button variant={pathname === '/' ? 'secondary' : 'ghost'} size="icon" asChild>
         <Link href="/">
           <Home size={24} />
