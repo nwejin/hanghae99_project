@@ -4,9 +4,7 @@ import { MainContiner } from '@/components/features';
 export default function MainPage() {
   return (
     <MainPageLayout>
-      <ContentLayout>
-        <MainContiner.Container />
-      </ContentLayout>
+      <MainContiner.Container />
     </MainPageLayout>
   );
 }
