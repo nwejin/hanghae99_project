@@ -1,19 +1,45 @@
 'use client';
 
+import { useRef, useState, useEffect } from 'react';
 import { useModalStore } from '@/store/modalStore';
 import { AddPostModal } from '@/components/features';
 import Header from '../header/header';
 import Footer from '../footer/footer';
+import { ChevronDown } from 'lucide-react';
 
 export function MainPageLayout({ children }: { children: React.ReactNode }) {
   const { modal } = useModalStore();
+  const mainRef = useRef<HTMLElement>(null);
+  const [showIndicator, setShowIndicator] = useState(true);
+
+  useEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      setShowIndicator(el.scrollTop < 10);
+    };
+
+    el.addEventListener('scroll', handleScroll);
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#eeeeee] dark:bg-zinc-900">
-      <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col bg-white shadow-xl max-sm:shadow-none dark:bg-zinc-950">
+    <div className="h-screen bg-[#eeeeee] dark:bg-zinc-900">
+      <div className="mx-auto flex h-full w-full max-w-2xl flex-col bg-white shadow-xl dark:bg-zinc-950 max-sm:shadow-none">
         <Header />
         {modal && <AddPostModal.Container />}
-        <main className="flex-1">{children}</main>
+        <div className="relative flex-1 overflow-hidden">
+          <main ref={mainRef} className="scrollbar-hide h-full overflow-y-auto">
+            {children}
+          </main>
+          <div
+            className={`pointer-events-none absolute bottom-0 left-0 right-0 flex h-16 items-end justify-center bg-gradient-to-t from-white to-transparent pb-1 transition-opacity duration-500 dark:from-zinc-950 ${
+              showIndicator ? 'opacity-100' : 'opacity-0'
+            }`}>
+            <ChevronDown size={24} className="animate-bounce text-primary" />
+          </div>
+        </div>
         <Footer />
       </div>
     </div>
