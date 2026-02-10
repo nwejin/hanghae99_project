@@ -1,63 +1,57 @@
 'use client';
 
-import Link from 'next/link';
-import { Home, SquarePen, User } from 'lucide-react';
-import { Button } from '@/components/common';
+import { Home, Search, SquarePen, User, LogIn, LogOut } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useModalStore } from '@/store/modalStore';
 import { useEffect, useState } from 'react';
-import { useToast } from '@/components/common/ui/use-toast';
+import { cn } from '@/lib/utils';
 
 export default function Footer() {
   const pathname = usePathname();
-  const { openModal } = useModalStore();
-  const { toast } = useToast();
-  const [nickname, setNickname] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const userDataString = sessionStorage.getItem('user');
-    if (userDataString) {
-      try {
-        const parsed = JSON.parse(userDataString);
-        setNickname(parsed.nickName || null);
-        setIsLoggedIn(true);
-      } catch {
-        setIsLoggedIn(false);
-      }
-    }
+    setIsLoggedIn(!!userDataString);
   }, []);
 
-  const handleNewPost = () => {
-    if (!isLoggedIn) {
-      toast({
-        title: '로그인이 필요합니다.',
-        action: (
-          <Button>
-            <Link href="/login">로그인</Link>
-          </Button>
-        ),
-      });
-      return;
-    }
-    openModal();
-  };
+  const tabs = [
+    { icon: Home, label: '홈', active: pathname === '/' },
+    { icon: Search, label: '검색', active: pathname === '/search' },
+    { icon: SquarePen, label: '글 작성', active: false },
+    { icon: User, label: '프로필', active: pathname.includes('/user') },
+    {
+      icon: isLoggedIn ? LogOut : LogIn,
+      label: isLoggedIn ? '로그아웃' : '로그인',
+      active: pathname === '/login',
+    },
+  ];
 
   return (
-    <footer className="sticky bottom-0 z-20 flex h-[60px] items-center justify-around border-t bg-white py-2 dark:border-zinc-800 dark:bg-zinc-900">
-      <Button variant={pathname === '/' ? 'secondary' : 'ghost'} size="icon" asChild>
-        <Link href="/">
-          <Home size={24} />
-        </Link>
-      </Button>
-      <Button variant="ghost" size="icon" onClick={handleNewPost}>
-        <SquarePen size={24} />
-      </Button>
-      <Button variant={pathname.includes('/user') ? 'secondary' : 'ghost'} size="icon" asChild>
-        <Link href={isLoggedIn ? `/user/${nickname}` : '/login'}>
-          <User size={24} />
-        </Link>
-      </Button>
+    <footer className="sticky bottom-0 z-20 flex h-[60px] bg-white dark:bg-zinc-900">
+      {tabs.map(({ icon: Icon, label, active }, index) => (
+        <button
+          key={label}
+          className={cn(
+            'flex h-full w-full flex-col items-center justify-center border-t border-gray-200 shadow-[inset_0_2px_3px_0_rgba(0,0,0,0.06)] transition-all duration-200 dark:border-zinc-700',
+            index < tabs.length - 1 && 'border-r',
+            active
+              ? 'bg-primary text-white shadow-[inset_0_2px_3px_0_rgba(0,0,0,0.15)]'
+              : 'text-gray-400 opacity-60 hover:opacity-100'
+          )}
+        >
+          <div className={cn('transition-transform duration-200', active && '-translate-y-1.5')}>
+            <Icon size={22} />
+          </div>
+          <span
+            className={cn(
+              'text-[10px] font-bold transition-all duration-200',
+              active ? '-translate-y-1.5 opacity-100' : 'hidden'
+            )}
+          >
+            {label}
+          </span>
+        </button>
+      ))}
     </footer>
   );
 }
