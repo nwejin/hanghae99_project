@@ -1,53 +1,40 @@
 'use client';
 
-import { Card } from '@/components/common';
-import { Button } from '@/components/common';
+import { Input } from '@/components/common';
 
 import { useModalStore } from '@/store/modalStore';
 
-import { BadgePlus } from 'lucide-react';
-import Image from 'next/image';
-import testImg from '@/public/logo.png';
-import { useState } from 'react';
-
-import ImgCarousel from '../ui/carousel/imgCarousel';
-import Contents from '../ui/contents';
-import Header from '../ui/header';
-import SwitchBtn from '../ui/switchBtn';
 import { useForm, FormProvider } from 'react-hook-form';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+import ImgCarousel from '../ui/carousel/imgCarousel';
+import Contents from '../ui/contents';
+
 import { PostFormData } from '@/lib/post';
-import { addPost } from '@/lib/post';
 import { useCreatePost } from '@/lib/post';
 
-export default function ModalForm() {
-  const { closeModal } = useModalStore();
+interface ModalFormProps {
+  formRef?: React.RefObject<HTMLFormElement>;
+}
 
-  const [formData, setFormData] = useState<Partial<PostFormData>>({});
+export default function ModalForm({ formRef }: ModalFormProps) {
+  const { closeModal } = useModalStore();
 
   const methods = useForm<PostFormData>({
     defaultValues: {
       userId: '',
-      contents: '',
-      status: true,
+      tags: [],
       created_at: '',
+      photoDate: '',
     },
   });
 
   const {
     handleSubmit,
-    setValue,
+    register,
     formState: { errors },
     setError,
-    clearErrors,
   } = methods;
-
-  const [isPrivate, setIsPrivate] = useState(false);
-  const handleSwitchChange = (value: boolean) => {
-    setIsPrivate(value);
-    setValue('status', value);
-  };
 
   const uploadImages = async (urls: string[]): Promise<string[]> => {
     const storage = getStorage();
@@ -56,10 +43,10 @@ export default function ModalForm() {
     for (const url of urls) {
       uploadPromises.push(
         fetch(url)
-          .then((res) => res.blob()) // `blob` URL을 파일로 변환
+          .then((res) => res.blob())
           .then((blob) => {
             const timestamp = new Date().getTime();
-            const fileName = `${timestamp}_${url.split('/').pop()}`; // 고유한 파일 이름 생성
+            const fileName = `${timestamp}_${url.split('/').pop()}`;
             const storageRef = ref(storage, `images/${fileName}`);
 
             return uploadBytes(storageRef, blob).then(() => getDownloadURL(storageRef));
@@ -73,58 +60,58 @@ export default function ModalForm() {
 
   const { mutate: createPost } = useCreatePost({
     onSuccess: () => {
-      closeModal(); // 게시글 생성 성공 시 모달을 닫습니다.
+      closeModal();
     },
   });
 
   const onSubmit = async (data: PostFormData) => {
-    if (data.imgUrls.length === 0) {
+    if (!data.imgUrls || data.imgUrls.length === 0) {
       setError('imgUrls', { type: 'manual', message: '이미지를 최소 1개 이상 업로드해야 합니다.' });
+      return;
     }
-    if (!data.contents) {
-      setError('contents', { type: 'manual', message: '내용을 입력해주세요.' });
+    if (!data.tags || data.tags.length === 0) {
+      setError('tags', { type: 'manual', message: '태그를 최소 1개 이상 입력해주세요.' });
+      return;
     }
-    if (data.imgUrls.length > 0 && data.contents) {
-      try {
-        const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
 
-        const postData: PostFormData = {
-          ...data,
-          imgUrls,
-          status: isPrivate,
-        };
-        createPost(postData);
-      } catch (error) {
-        console.error('게시글 추가 에러', error);
-      }
+    try {
+      const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
+
+      const postData: PostFormData = {
+        ...data,
+        imgUrls,
+      };
+      createPost(postData);
+    } catch (error) {
+      console.error('게시글 추가 에러', error);
     }
   };
 
   return (
-    <>
-      <Card.Card className="relative z-10 h-[35rem] w-[50rem] items-center justify-center rounded-lg bg-white p-0 shadow-md">
-        <Header />
-        <Card.CardContent className="justify-betweenp-4 flex h-4/5 pt-6">
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex h-full w-full">
-              <div className="flex h-full w-3/4 justify-center">
-                <ImgCarousel />
-              </div>
-              <div className="mt-2 w-2/5 flex-row">
-                <Contents />
-                <SwitchBtn isPrivate={isPrivate} onToggle={handleSwitchChange} />
-                <div className="mt-2 h-10">
-                  {errors.contents && <p className="text-sm text-red-500">{errors.contents.message}</p>}
-                  {errors.imgUrls && <p className="text-sm text-red-500">{errors.imgUrls.message}</p>}
-                </div>
-                <div className="mt-4 flex items-center justify-end">
-                  <Button>작성하기</Button>
-                </div>
-              </div>
-            </form>
-          </FormProvider>
-        </Card.CardContent>
-      </Card.Card>
-    </>
+    <FormProvider {...methods}>
+      <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 px-4">
+        <div className="w-full">
+          <ImgCarousel />
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <div>
+            <label className="mb-1 block text-sm font-semibold text-gray-600 dark:text-gray-300">촬영 날짜</label>
+            <Input type="date" {...register('photoDate', { required: '날짜를 선택해주세요.' })} />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-semibold text-gray-600 dark:text-gray-300">태그</label>
+            <Contents />
+          </div>
+
+          <div className="min-h-[20px]">
+            {errors.tags && <p className="text-sm text-red-500">{errors.tags.message}</p>}
+            {errors.imgUrls && <p className="text-sm text-red-500">{errors.imgUrls.message}</p>}
+            {errors.photoDate && <p className="text-sm text-red-500">{errors.photoDate.message}</p>}
+          </div>
+        </div>
+      </form>
+    </FormProvider>
   );
 }

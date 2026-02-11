@@ -1,16 +1,71 @@
-import { Textarea } from '@/components/common';
+'use client';
+
+import { Input } from '@/components/common';
 import { useFormContext } from 'react-hook-form';
+import { useState } from 'react';
+import { X } from 'lucide-react';
 
 export default function Contents() {
-  const { register } = useFormContext();
+  const { setValue } = useFormContext();
+  const [tags, setTags] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState('');
+
+  const addTag = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed || tags.includes(trimmed)) return;
+
+    const updated = [...tags, trimmed];
+    setTags(updated);
+    setValue('tags', updated);
+    setInputValue('');
+  };
+
+  const removeTag = (index: number) => {
+    const updated = tags.filter((_, i) => i !== index);
+    setTags(updated);
+    setValue('tags', updated);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.includes(' ')) {
+      const trimmed = value.replace(/\s/g, '');
+      if (trimmed) addTag(trimmed);
+    } else {
+      setInputValue(value);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTag(inputValue);
+    }
+    if (e.key === 'Backspace' && !inputValue && tags.length > 0) {
+      removeTag(tags.length - 1);
+    }
+  };
+
   return (
-    <>
-      <Textarea
-        placeholder="내용을 입력하세요"
-        rows={5}
-        className="h-3/5 w-full resize-none"
-        {...register('contents', { required: '내용을 입력하세요' })}
+    <div className="w-full">
+      <div className="mb-2 flex flex-wrap gap-1.5">
+        {tags.map((tag, index) => (
+          <span
+            key={index}
+            onClick={() => removeTag(index)}
+            className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary transition-colors hover:bg-primary/20">
+            #{tag}
+            <X size={12} />
+          </span>
+        ))}
+      </div>
+      <Input
+        placeholder="태그 입력 후 스페이스 (10자 이내)"
+        value={inputValue}
+        maxLength={10}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
       />
-    </>
+    </div>
   );
 }

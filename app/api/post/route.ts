@@ -5,7 +5,6 @@ import {
   getDocs,
   query,
   orderBy,
-  where,
   doc,
   getDoc,
   addDoc,
@@ -27,7 +26,7 @@ export async function GET(req: Request) {
 
     const fbCollection = collection(firestore, 'posts');
     // 공개, 최신순 데이터 조회
-    const q = query(fbCollection, where('status', '==', false), orderBy('created_at', 'desc'));
+    const q = query(fbCollection, orderBy('created_at', 'desc'));
 
     const getPost = await getDocs(q);
 
