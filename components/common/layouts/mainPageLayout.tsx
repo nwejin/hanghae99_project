@@ -28,7 +28,6 @@ export function MainPageLayout({ children }: { children: React.ReactNode }) {
     <div className="h-screen bg-[#eeeeee] dark:bg-zinc-900">
       <div className="mx-auto flex h-full w-full max-w-2xl flex-col bg-white shadow-xl dark:bg-zinc-950 max-sm:shadow-none">
         <Header />
-        {modal && <AddPostModal.Container />}
         <div className="relative flex-1 overflow-hidden">
           <main ref={mainRef} className="scrollbar-hide h-full overflow-y-auto">
             {children}
@@ -39,6 +38,7 @@ export function MainPageLayout({ children }: { children: React.ReactNode }) {
             }`}>
             <ChevronDown size={24} className="animate-bounce text-primary" />
           </div>
+          {modal && <AddPostModal.Container />}
         </div>
         <Footer />
       </div>

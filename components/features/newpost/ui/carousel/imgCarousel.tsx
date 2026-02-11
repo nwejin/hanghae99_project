@@ -9,7 +9,6 @@ import { useState } from 'react';
 import { RefreshCcw } from 'lucide-react';
 import { BadgePlus } from 'lucide-react';
 
-import CarouselItems from './carouselItems';
 import { useFormContext } from 'react-hook-form';
 
 import CarouselBtn from './carouselBtn';
@@ -65,7 +64,7 @@ export default function ImgCarousel() {
 
   return (
     <>
-      <Carousel.Carousel className="ml-12 w-full max-w-sm">
+      <Carousel.Carousel className="w-full">
         <Carousel.CarouselContent>
           {imgPreviews.length === 0 ? (
             <Carousel.CarouselItem key="placeholder">
@@ -85,7 +84,7 @@ export default function ImgCarousel() {
               <Carousel.CarouselItem key={index}>
                 <div className="group relative p-1">
                   <Card.Card>
-                    <Card.CardContent className="relative flex aspect-square items-center justify-center p-1">
+                    <Card.CardContent className="relative flex aspect-[4/3] items-center justify-center p-1">
                       <Image
                         src={imgUrl}
                         alt={`Image ${index}`}

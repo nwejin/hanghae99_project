@@ -1,10 +1,10 @@
 export type PostType = {
   id: string;
   userId: string;
-  contents: string;
+  tags: string[];
   imgUrls: string[];
   created_at: string;
-  status: boolean;
+  photoDate: string;
 };
 
 export type UserType = {
@@ -21,10 +21,10 @@ export type TotalPostType = {
 
 export type PostFormData = {
   userId: string;
-  contents: string;
+  tags: string[];
   imgUrls: string[];
   created_at: string;
-  status: boolean;
+  photoDate: string;
 };
 
 export type PostIdType = string;
