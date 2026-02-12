@@ -45,6 +45,8 @@
    <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white">
 </div>
 
+supabase 이관 (02/12)...
+
 #### Deployment | Package Management
 <div>
  <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
