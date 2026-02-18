@@ -16,9 +16,13 @@
 | --- | --- |
 | 개발 기간 | 2024.08.07 ~ 2024.09.04 (28일) |
 | 배포 주소 |[배포 링크 🌎](https://hanghae99-project.vercel.app/) |
+
+</div>
+
+<!--
 | 테스트 계정 email | admin@naver.com |
 | 테스트 계정 password | 55good@@ |
-</div>
+-->
 
 ## ⚙️ 기술 스택
 
