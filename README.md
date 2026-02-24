@@ -2,7 +2,6 @@
   <br />
   <img src="https://github.com/user-attachments/assets/bbd42328-9caf-4f01-b32f-732e89334ffb" alt="멍냥터"  height="100px" />
   <br />
-  <br />
 </div>
 
 
