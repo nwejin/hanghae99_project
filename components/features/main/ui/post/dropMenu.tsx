@@ -3,10 +3,7 @@
 import { DropdownMenu } from '@/components/common';
 import { Button } from '@/components/common';
 import { PawPrint, Bookmark, Pencil, FileWarning, Heart, Send, MessageCircle, Trash2 } from 'lucide-react';
-import { doc, deleteDoc } from 'firebase/firestore';
-import { firestore } from '@/config/firebase';
 import { deletePost } from '@/lib/post';
-import { string } from 'zod';
 import { useState } from 'react';
 import EditModal from './editModal';
 

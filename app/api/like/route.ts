@@ -1,54 +1,34 @@
-import { firestore } from '@/config/firebase';
-import {
-  doc,
-  setDoc,
-  deleteDoc,
-  getDoc,
-  serverTimestamp,
-  query,
-  collection,
-  where,
-  orderBy,
-  getDocs,
-} from 'firebase/firestore';
-import { LikeType } from '@/lib/like';
+import { createClient } from '@/config/supabase/server';
 import { NextResponse } from 'next/server';
-import { auth } from '@/config/firebase_admin';
-import { cookies } from 'next/headers';
 
 // 좋아요
 export async function POST(req: Request) {
   try {
-    const sessionCookie = cookies().get('session')?.value;
-    // console.log(sessionCookie);
-    if (!sessionCookie) {
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
       return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
     }
 
-    // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
-    // console.log(decodedClaims);
-    // console.log(decodedClaims.uid);
-    if (!decodedClaims) {
-      return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
-    }
     const { postId } = await req.json();
-
-    const userId = decodedClaims.uid;
+    const userId = user.id;
 
     if (!postId) {
-      return NextResponse.json({ message: '게시글/유저 정보 없음' }, { status: 400 });
-    } else if (!userId) {
-      return NextResponse.json({ message: '유저 정보 없음' }, { status: 400 });
+      return NextResponse.json({ message: '게시글 정보 없음' }, { status: 400 });
     }
 
-    const likeRef = doc(firestore, 'posts', postId, 'likes', userId);
+    const { error } = await supabase.from('likes').upsert(
+      {
+        user_id: userId,
+        post_id: postId,
+      },
+      { onConflict: 'post_id,user_id' }
+    );
 
-    await setDoc(likeRef, {
-      userId,
-      postId,
-      created_at: serverTimestamp(),
-    });
+    if (error) throw error;
 
     return NextResponse.json({ message: '좋아요 추가 완료' });
   } catch (error) {
@@ -63,13 +43,20 @@ export async function DELETE(req: Request) {
     const { postId, userId } = await req.json();
 
     if (!postId) {
-      return NextResponse.json({ message: '게시글/유저 정보 없음' }, { status: 400 });
+      return NextResponse.json({ message: '게시글 정보 없음' }, { status: 400 });
     } else if (!userId) {
       return NextResponse.json({ message: '유저 정보 없음' }, { status: 400 });
     }
 
-    const likeRef = doc(firestore, 'posts', postId, 'likes', userId);
-    await deleteDoc(likeRef);
+    const supabase = createClient();
+
+    const { error } = await supabase
+      .from('likes')
+      .delete()
+      .eq('post_id', postId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
 
     return NextResponse.json({ message: '좋아요 취소 완료' });
   } catch (error) {
@@ -81,7 +68,6 @@ export async function DELETE(req: Request) {
 // 좋아요 확인
 export async function GET(req: Request) {
   try {
-    // 쿼리 파라미터에서 postId와 userId를 가져옴
     const { searchParams } = new URL(req.url);
     const postId = searchParams.get('postId');
     const userId = searchParams.get('userId');
@@ -90,28 +76,42 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: '게시글 정보 없음' }, { status: 400 });
     }
 
+    const supabase = createClient();
+
     // 특정 유저의 좋아요 상태 확인
     if (userId) {
-      const likeRef = doc(firestore, 'posts', postId, 'likes', userId);
-      const likeDoc = await getDoc(likeRef);
-      const isLiked = likeDoc.exists();
+      const { data, error } = await supabase
+        .from('likes')
+        .select('id')
+        .eq('post_id', postId)
+        .eq('user_id', userId)
+        .maybeSingle();
 
-      return NextResponse.json({ isLiked });
+      if (error) throw error;
+
+      return NextResponse.json({ isLiked: !!data });
     } else {
-      // 좋아요 데이터 (likeCount와 최근 유저) 가져오기
-      const likesRef = collection(firestore, 'posts', postId, 'likes');
-      const q = query(likesRef, orderBy('created_at', 'desc'));
-      const likeDocs = await getDocs(q);
+      // 좋아요 수 + 최근 유저
+      const { count, error: countError } = await supabase
+        .from('likes')
+        .select('*', { count: 'exact', head: true })
+        .eq('post_id', postId);
 
-      const likeCount = likeDocs.size;
+      if (countError) throw countError;
 
-      let recentUser: string | null = null;
-      if (!likeDocs.empty) {
-        const mostRecentLike = likeDocs.docs[0].data();
-        recentUser = mostRecentLike.userId;
-      }
+      // 최근 좋아요 유저
+      const { data: recentLike } = await supabase
+        .from('likes')
+        .select('user_id')
+        .eq('post_id', postId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-      return NextResponse.json({ likeCount, recentUser });
+      return NextResponse.json({
+        likeCount: count || 0,
+        recentUser: recentLike?.user_id || null,
+      });
     }
   } catch (error) {
     console.error('좋아요 확인/데이터 가져오기 에러', error);

@@ -5,7 +5,7 @@ import { Input } from '@/components/common';
 import { useModalStore } from '@/store/modalStore';
 
 import { useForm, FormProvider } from 'react-hook-form';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { createClient } from '@/config/supabase/client';
 
 import ImgCarousel from '../ui/carousel/imgCarousel';
 import Contents from '../ui/contents';
@@ -37,19 +37,29 @@ export default function ModalForm({ formRef }: ModalFormProps) {
   } = methods;
 
   const uploadImages = async (urls: string[]): Promise<string[]> => {
-    const storage = getStorage();
+    const supabase = createClient();
     const uploadPromises: Promise<string>[] = [];
 
     for (const url of urls) {
       uploadPromises.push(
         fetch(url)
           .then((res) => res.blob())
-          .then((blob) => {
+          .then(async (blob) => {
             const timestamp = new Date().getTime();
             const fileName = `${timestamp}_${url.split('/').pop()}`;
-            const storageRef = ref(storage, `images/${fileName}`);
+            const filePath = `images/${fileName}.webp`;
 
-            return uploadBytes(storageRef, blob).then(() => getDownloadURL(storageRef));
+            const { error } = await supabase.storage
+              .from('posts')
+              .upload(filePath, blob, { contentType: 'image/webp' });
+
+            if (error) throw error;
+
+            const { data } = supabase.storage
+              .from('posts')
+              .getPublicUrl(filePath);
+
+            return data.publicUrl;
           })
       );
     }

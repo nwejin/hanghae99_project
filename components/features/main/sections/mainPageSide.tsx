@@ -35,8 +35,7 @@ export default function MainPageSide() {
   //   return null;
   // }
 
-  const defaultImg =
-    'https://firebasestorage.googleapis.com/v0/b/hanghae99-project-0807.appspot.com/o/profile%2Fdefault_user.png?alt=media&token=24a62e1e-26b2-4adc-aa4c-29fefe3bc0bc';
+  const defaultImg = '/default_user.png';
 
   return (
     <div className="hidden md:block">

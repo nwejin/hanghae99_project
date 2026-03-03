@@ -1,33 +1,28 @@
-import { firestore } from '@/config/firebase';
-import { query, where, getDocs, collection, orderBy, startAt, endAt } from 'firebase/firestore';
+import { createClient } from '@/config/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
-    const searchTerm = url.searchParams.get('searchTerm'); // URL에서 searchTerm 파라미터 가져오기
+    const searchTerm = url.searchParams.get('searchTerm');
 
     if (!searchTerm) {
       return NextResponse.json({ error: '검색어 필요' }, { status: 400 });
     }
 
-    // 'users' 컬렉션에서 nickname 필드를 기준으로 부분 일치 쿼리
-    const usersRef = collection(firestore, 'users');
-    const userQuery = query(
-      usersRef,
-      where('nickname', '>=', searchTerm),
-      where('nickname', '<=', searchTerm + '\uf8ff') // Unicode 값을 이용해 부분 일치 검색
-    );
+    const supabase = createClient();
 
-    const userSnapshot = await getDocs(userQuery);
+    // ILIKE로 부분 일치 검색 (기존 Unicode range 대체)
+    const { data: usersData, error } = await supabase
+      .from('users')
+      .select('*')
+      .ilike('nickname', `${searchTerm}%`);
 
-    if (userSnapshot.empty) {
+    if (error) throw error;
+
+    if (!usersData || usersData.length === 0) {
       return NextResponse.json({ error: '유저 정보가 없습니다.' }, { status: 404 });
     }
-
-    // 검색 결과로 유저 정보 가져오기
-    const usersData = userSnapshot.docs.map((doc) => doc.data());
-    console.log(usersData);
 
     return NextResponse.json(usersData, { status: 200 });
   } catch (error) {

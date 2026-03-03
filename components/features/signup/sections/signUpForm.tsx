@@ -1,23 +1,18 @@
 'use client';
 import { useToast } from '@/components/common';
 import { useForm, FormProvider } from 'react-hook-form';
-import SignUpBtn from '../ui/signUpBtn';
 import SignUpStepStart from './signUpStepStart';
 import SignUpStepMid from './signUpStepMid';
 import SignUpStepEnd from './signUpStepEnd';
 import ProgressBar from '../ui/progressBar';
 import useEmailStore from '@/store/emailStore';
-import { doc, setDoc, collection } from 'firebase/firestore';
-import { auth, firestore } from '@/config/firebase';
+import { createClient } from '@/config/supabase/client';
 import { useRouter } from 'next/navigation';
 
-// 유효성 검사
-import { number, ZodSchema } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-import { useState, useEffect } from 'react';
-import { userSchema, midSchema, endSchema } from '@/schemas/user';
+import { useState } from 'react';
+import { userSchema } from '@/schemas/user';
 
 interface FormData {
   email: string;
@@ -38,6 +33,7 @@ export default function SignUpForm() {
   const [formData, setFormData] = useState<Partial<FormData>>({});
 
   const router = useRouter();
+  const supabase = createClient();
 
   const methods = useForm<FormData>({
     resolver: isStep === 1 ? zodResolver(userSchema) : undefined,
@@ -50,8 +46,6 @@ export default function SignUpForm() {
 
   const nextStep = (data: Partial<FormData>) => {
     setEmail(String(formData.email));
-    // console.log('prew data', formData);
-    // console.log('new Data', data);
     setFormData((prev) => ({ ...prev, ...data }));
     setIsStep((prev) => prev + 1);
     const mergedData = { ...formData, ...data };
@@ -65,31 +59,41 @@ export default function SignUpForm() {
 
   const userSubmit = async (data: Partial<FormData>) => {
     const userData = { ...formData, ...data };
-    // console.log(userData.user_uid);
     try {
       if (userData.email && userData.user_pw) {
-        const userRegister = await createUserWithEmailAndPassword(auth, userData.email, userData.user_pw);
-        const user_uid = userRegister.user.uid;
-
-        const userRef = doc(firestore, 'users', String(user_uid));
-        await setDoc(userRef, {
+        // Supabase Auth로 회원가입
+        const { data: authData, error: authError } = await supabase.auth.signUp({
           email: userData.email,
           password: userData.user_pw,
+        });
 
-          profile_image: userData.profile_image,
+        if (authError) throw authError;
+
+        const user_uid = authData.user?.id;
+        if (!user_uid) throw new Error('사용자 ID를 가져올 수 없습니다.');
+
+        // users 테이블에 프로필 정보 저장
+        const { error: userError } = await supabase.from('users').insert({
+          id: user_uid,
+          email: userData.email,
           nickname: userData.nickname,
+          profile_image: userData.profile_image || '',
           bio: userData.bio || '',
         });
 
+        if (userError) throw userError;
+
+        // pets 테이블에 반려동물 정보 저장
         if (userData.petName && userData.petSpecies) {
-          const petsRef = collection(userRef, 'pets'); // 서브컬렉션 'pets'
-          const petDocRef = doc(petsRef);
-          await setDoc(petDocRef, {
-            pet_image: userData.pet_image,
-            petName: userData.petName,
-            petSpecies: userData.petSpecies,
-            petSubSpecies: userData.petSubSpecies,
+          const { error: petError } = await supabase.from('pets').insert({
+            user_id: user_uid,
+            pet_name: userData.petName,
+            pet_species: userData.petSpecies,
+            pet_sub_species: userData.petSubSpecies || '',
+            pet_image: userData.pet_image || '',
           });
+
+          if (petError) throw petError;
         }
       }
 

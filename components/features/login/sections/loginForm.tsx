@@ -8,8 +8,6 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/schemas/user';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/config/firebase';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { userAuth } from '@/lib/userAuth';
