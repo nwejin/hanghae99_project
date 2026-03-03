@@ -1,21 +1,5 @@
 import { NextResponse } from 'next/server';
-import { firestore } from '@/config/firebase';
-import {
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  doc,
-  getDoc,
-  addDoc,
-  serverTimestamp,
-  deleteDoc,
-  limit,
-  updateDoc,
-} from 'firebase/firestore';
-import { PostType, UserType, TotalPostType, PostFormData, PostIdType } from '@/lib/post';
-import { auth } from '@/config/firebase_admin';
-import { cookies } from 'next/headers'; // To access cookies
+import { createClient } from '@/config/supabase/server';
 
 // 게시글 데이터 불러오기
 export async function GET(req: Request) {
@@ -24,31 +8,39 @@ export async function GET(req: Request) {
     const pageSize = parseInt(url.searchParams.get('pageSize') || '5', 10);
     const page = parseInt(url.searchParams.get('page') || '1', 10);
 
-    const fbCollection = collection(firestore, 'posts');
-    // 공개, 최신순 데이터 조회
-    const q = query(fbCollection, orderBy('created_at', 'desc'));
-
-    const getPost = await getDocs(q);
-
-    const totalPostData: TotalPostType[] = [];
-
-    // 유저 uid로 유저 정보 가져오기
-    for (const postDoc of getPost.docs) {
-      const postData = postDoc.data() as PostType;
-      const userRef = doc(firestore, 'users', postData.userId);
-      const userDoc = await getDoc(userRef);
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data() as UserType;
-        totalPostData.push({ post: { ...postData, id: postDoc.id }, user: userData });
-      }
-    }
+    const supabase = createClient();
 
     const startIndex = (page - 1) * pageSize;
-    const endIndex = page * pageSize;
-    const paginatedPosts = totalPostData.slice(startIndex, endIndex);
+    const endIndex = page * pageSize - 1;
 
-    return NextResponse.json(paginatedPosts);
+    // JOIN으로 유저 정보를 한 번에 가져오기 (N+1 문제 해결)
+    const { data: posts, error } = await supabase
+      .from('posts')
+      .select('*, users(id, email, nickname, profile_image)')
+      .order('created_at', { ascending: false })
+      .range(startIndex, endIndex);
+
+    if (error) throw error;
+
+    const totalPostData = (posts || []).map((post) => ({
+      post: {
+        id: post.id,
+        userId: post.user_id,
+        contents: post.contents,
+        imgUrls: post.img_urls,
+        tags: post.tags,
+        created_at: post.created_at,
+        photoDate: post.photo_date,
+      },
+      user: {
+        id: post.users.id,
+        email: post.users.email,
+        nickname: post.users.nickname,
+        profile_image: post.users.profile_image,
+      },
+    }));
+
+    return NextResponse.json(totalPostData);
   } catch (error) {
     console.error('게시글 조회 에러', error);
     return NextResponse.json({ message: '서버 에러' }, { status: 500 });
@@ -58,30 +50,32 @@ export async function GET(req: Request) {
 // 게시글 데이터 추가
 export async function POST(req: Request) {
   try {
-    const sessionCookie = cookies().get('session')?.value;
-    // console.log(sessionCookie);
-    if (!sessionCookie) {
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
       return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
     }
 
-    // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
-    // console.log(decodedClaims);
-    // console.log(decodedClaims.uid);
-    if (!decodedClaims) {
-      return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
-    }
-    const data: PostFormData = await req.json();
+    const data = await req.json();
 
-    const postData = {
-      ...data,
-      userId: decodedClaims.uid, // 인증된 사용자의 UID 추가 - 세션 토큰
-      created_at: serverTimestamp(),
-    };
+    const { data: postData, error } = await supabase
+      .from('posts')
+      .insert({
+        user_id: user.id,
+        contents: data.contents || '',
+        img_urls: data.imgUrls,
+        tags: data.tags,
+        photo_date: data.photoDate || null,
+      })
+      .select('id')
+      .single();
 
-    const postRef = await addDoc(collection(firestore, 'posts'), postData);
+    if (error) throw error;
 
-    return NextResponse.json({ message: '게시글 작성 완료!, id:' + postRef.id });
+    return NextResponse.json({ message: '게시글 작성 완료!, id:' + postData.id });
   } catch (error) {
     console.error('게시글 추가 에러', error);
     return NextResponse.error();
@@ -91,19 +85,23 @@ export async function POST(req: Request) {
 // 게시글 삭제
 export async function DELETE(req: Request) {
   try {
-    const sessionCookie = cookies().get('session')?.value;
-    if (!sessionCookie) {
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
       return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
-    }
-    // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
-    if (!decodedClaims) {
-      return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
     }
 
     const { postId } = await req.json();
 
-    const postRef = await deleteDoc(doc(firestore, 'posts', postId));
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', postId);
+
+    if (error) throw error;
 
     return NextResponse.json({ message: '게시글 삭제 완료!' }, { status: 200 });
   } catch (error) {
@@ -115,22 +113,23 @@ export async function DELETE(req: Request) {
 // 게시글 수정
 export async function PUT(req: Request) {
   try {
-    const sessionCookie = cookies().get('session')?.value;
-    if (!sessionCookie) {
-      return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
-    }
+    const supabase = createClient();
 
-    // 세션 쿠키를 이용해 사용자를 인증
-    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
-    if (!decodedClaims) {
-      return NextResponse.json({ message: '세션이 만료되었거나 유효하지 않습니다.' }, { status: 401 });
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
     }
 
     const { postId, contents } = await req.json();
 
-    // 특정 게시글 참조
-    const postRef = doc(firestore, 'posts', postId);
-    await updateDoc(postRef, { contents });
+    const { error } = await supabase
+      .from('posts')
+      .update({ contents })
+      .eq('id', postId);
+
+    if (error) throw error;
 
     return NextResponse.json({ message: '게시글 수정 완료!' }, { status: 200 });
   } catch (error) {

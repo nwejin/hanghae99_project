@@ -10,14 +10,11 @@ import { useFormContext } from 'react-hook-form';
 import { Avatar } from '@/components/common';
 import { RotateCcw } from 'lucide-react';
 
-import { auth, app, firestore } from '@/config/firebase';
-import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { createClient } from '@/config/supabase/client';
 import { useState } from 'react';
-import { storage } from '@/config/firebase';
 
 import { Input } from '@/components/common';
 import { Label } from '@/components/common';
-import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject } from 'firebase/storage';
 
 interface FormProps {
   nextStep: (data: StepData) => void;
@@ -45,14 +42,26 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
   const [imgPreview, setImgPreview] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState('');
   const [uploadedImgUrl, setUploadedImgUrl] = useState<string | null>(null);
+  const [uploadedFilePath, setUploadedFilePath] = useState<string | null>(null);
+
+  const supabase = createClient();
 
   const uploadImg = async (file: File) => {
     const timestamp = new Date().getTime();
-    const storageRef = ref(storage, `profile/${timestamp}_profile`);
-    await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(storageRef);
-    // console.log(downloadURL);
-    return downloadURL;
+    const filePath = `${timestamp}_profile.webp`;
+
+    const { error } = await supabase.storage
+      .from('profiles')
+      .upload(filePath, file, { contentType: 'image/webp' });
+
+    if (error) throw error;
+
+    const { data } = supabase.storage
+      .from('profiles')
+      .getPublicUrl(filePath);
+
+    setUploadedFilePath(filePath);
+    return data.publicUrl;
   };
 
   // 이미지 미리보기
@@ -66,26 +75,25 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
     setUploadedImgUrl(path);
   };
 
-  const defaultImg =
-    'https://firebasestorage.googleapis.com/v0/b/hanghae99-project-0807.appspot.com/o/profile%2Fdefault_user.png?alt=media&token=24a62e1e-26b2-4adc-aa4c-29fefe3bc0bc';
+  const defaultImg = '/default_user.png';
 
   const resetImg = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (uploadedImgUrl) {
+    if (uploadedFilePath) {
       try {
-        // Storage 참조 가져오기
-        const storageRef = ref(storage, uploadedImgUrl);
-        // 파일 삭제
-        await deleteObject(storageRef);
+        await supabase.storage
+          .from('profiles')
+          .remove([uploadedFilePath]);
 
         // 상태 초기화
         setImgUrl('');
         setImgPreview(null);
         setUploadedImgUrl(null);
+        setUploadedFilePath(null);
 
         const fileInput = document.getElementById('profile_image') as HTMLInputElement;
         if (fileInput) {
-          fileInput.value = ''; // 입력값 초기화
+          fileInput.value = '';
         }
 
         console.log('이미지가 성공적으로 삭제되었습니다.');
@@ -98,14 +106,16 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
   };
 
   const onSubmit = async (data: StepData) => {
-    // console.log('Step 2 Data:', data);
-
     try {
-      const q = query(collection(firestore, 'users'), where('nickname', '==', String(checkNick)));
+      // Supabase에서 닉네임 중복 체크
+      const { data: existingUsers, error: queryError } = await supabase
+        .from('users')
+        .select('nickname')
+        .eq('nickname', String(checkNick));
 
-      const querySnapshot = await getDocs(q);
+      if (queryError) throw queryError;
 
-      if (querySnapshot.empty) {
+      if (!existingUsers || existingUsers.length === 0) {
         const profileImageUrl = uploadedImgUrl ? uploadedImgUrl : defaultImg;
 
         const profileData = {

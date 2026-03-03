@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAuth } from 'firebase/auth';
 import { Card } from '@/components/common';
 import Link from 'next/link';
 import { Input } from '@/components/common';
@@ -15,14 +14,12 @@ import DetailBtn from '../ui/post/detailBtn';
 import ContentsBox from '../ui/post/contentsBox';
 
 import DetailPage from './detailPage';
-// import { userStore } from '@/store/userStore';
 import { fetchLikeData } from '@/lib/postLike';
 import { getUserNickname } from '@/lib/userAuth';
 import { TotalPostType } from '@/lib/post';
 import { timeCheck } from '@/shared/timeUtils';
 
 export default function UserPost({ post, user }: TotalPostType) {
-  //   console.log(post.imgUrls);
   const [isOwner, setIsOwner] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -31,14 +28,14 @@ export default function UserPost({ post, user }: TotalPostType) {
     likeCount: 0,
   });
 
-  // const user_id = userStore((state) => state.userId);
-
   useEffect(() => {
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-
-    if (currentUser && currentUser.email === user.email) {
-      setIsOwner(true);
+    // sessionStorage에서 현재 로그인 유저 확인
+    const userDataString = sessionStorage.getItem('user');
+    if (userDataString) {
+      const parsedUserData = JSON.parse(userDataString);
+      if (parsedUserData.email === user.email) {
+        setIsOwner(true);
+      }
     }
   }, [user.email]);
 

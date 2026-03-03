@@ -2,24 +2,13 @@
 import { Input } from '@/components/common';
 import { Label } from '@/components/common';
 import { TextInputProps } from '@type';
-//
-import { Avatar } from '@/components/common';
-import { RotateCcw } from 'lucide-react';
-import { ref, uploadBytes, getDownloadURL, getStorage } from 'firebase/storage';
 
-import { storage } from '@/config/firebase';
-
-import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-
-import useEmailStore from '@/store/emailStore';
 
 export default function TextInput({ type, name, id, placeholder, text }: TextInputProps) {
   const {
     register,
     formState: { errors },
-    getValues,
-    watch,
   } = useFormContext();
 
   return (

@@ -7,7 +7,6 @@ import { Button } from '@/components/common';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/common';
 
 import { LogOut, LogIn } from 'lucide-react';
-import { auth } from '@/config/firebase';
 import { useToast } from '@/components/common/ui/use-toast';
 import { userAuth } from '@/lib/userAuth';
 import { useEffect, useState } from 'react';

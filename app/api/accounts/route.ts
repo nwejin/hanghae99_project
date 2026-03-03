@@ -1,43 +1,34 @@
-import { firestore } from '@/config/firebase';
-import { query } from 'firebase/database';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { NextRequest, NextResponse } from 'next/server';
-import { string } from 'zod';
+import { createClient } from '@/config/supabase/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const userId = url.searchParams.get('userId');
 
-    const userRef = doc(firestore, 'users', String(userId));
-    const userDoc = await getDoc(userRef);
+    const supabase = createClient();
 
-    // // 유저 문서가 존재하지 않으면 404 오류 반환
-    if (!userDoc.exists()) {
+    // 유저 정보 + 펫 정보를 한 번에 조회
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('*, pets(*)')
+      .eq('id', String(userId))
+      .single();
+
+    if (userError || !userData) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // 유저 문서 데이터
-    const userData = userDoc.data();
-
-    // 반려동물 정보
-    const petsRef = collection(firestore, 'users', String(userId), 'pets');
-    const petsSnapshot = await getDocs(petsRef);
-
-    const petsData = petsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const { pets, ...user } = userData;
 
     return NextResponse.json(
       {
-        user: userData,
-        pets: petsData,
+        user,
+        pets: pets || [],
       },
       { status: 200 }
     );
   } catch (error) {
-    // 서버 오류 발생 시 500 오류 반환
     console.error('Error fetching user:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

@@ -2,22 +2,10 @@ import { AuthType, LikeCountType } from './types';
 
 export async function addLike(LikeData: AuthType): Promise<void> {
   try {
-    const cookies = document.cookie.split('; ');
-    // console.log('Cookies:', cookies); // 디버깅: 쿠키 값 확인
-    const sessionCookie = cookies.find((cookie) => cookie.startsWith('session='));
-    // console.log('Session Cookie:', sessionCookie); // 디버깅: 세션 쿠키 확인
-
-    // sessionCookie에서 'session=' 부분을 제거하여 순수한 쿠키 값만 가져오기
-    const sessionToken = sessionCookie ? sessionCookie.split('=')[1] : '';
-    // console.log('Session Token:', sessionToken); // 디버깅: 세션 토큰 확인
-
-    // console.log(cookies);
-
     const response = await fetch('/api/like', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${sessionToken}`,
       },
       body: JSON.stringify(LikeData),
     });
@@ -76,6 +64,6 @@ export async function getLike(postId: string, userId: string | null): Promise<Li
     return { likeCount, recentUser, isLiked };
   } catch (error) {
     console.error('좋아요 데이터 조회 오류', error);
-    return { likeCount: 0, recentUser: null, isLiked: false }; // 에러 시 기본값 리턴
+    return { likeCount: 0, recentUser: null, isLiked: false };
   }
 }

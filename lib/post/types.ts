@@ -1,6 +1,7 @@
 export type PostType = {
   id: string;
   userId: string;
+  contents: string;
   tags: string[];
   imgUrls: string[];
   created_at: string;

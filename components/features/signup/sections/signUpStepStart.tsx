@@ -3,18 +3,10 @@
 import TextInput from '../ui/textInput';
 import SignUpBtn from '../ui/signUpBtn';
 import { useFormContext } from 'react-hook-form';
-import {
-  getAuth,
-  fetchSignInMethodsForEmail,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
 import { Input } from '@/components/common';
 import { Label } from '@/components/common';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/common';
-import { auth, app, firestore } from '@/config/firebase';
-import { getFirestore, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { useState } from 'react';
+import { createClient } from '@/config/supabase/client';
 
 interface FormProps {
   nextStep: (data: StepData) => void;
@@ -39,25 +31,25 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
   const [error, setError] = useState<string | null>(null);
 
   const checkEmail = watch('email');
-  const checkPW = watch('user_pw');
 
   const onSubmit = async (data: StepData) => {
     try {
-      // const userRegister = await createUserWithEmailAndPassword(auth, checkEmail, checkPW);
-      // const user_uid = userRegister.user.uid;
+      const supabase = createClient();
 
-      const q = query(collection(firestore, 'users'), where('email', '==', String(checkEmail)));
+      // Supabase에서 이메일 중복 체크
+      const { data: existingUsers, error: queryError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('email', String(checkEmail));
 
-      const querySnapshot = await getDocs(q);
+      if (queryError) throw queryError;
 
-      if (querySnapshot.empty) {
+      if (!existingUsers || existingUsers.length === 0) {
         const authData = { ...data };
-        // console.log(authData);
         nextStep(authData);
       } else {
         setError('중복된 이메일입니다!');
       }
-      // const authData = { ...data, user_uid };
     } catch (error) {
       setError('이메일 확인 중 오류가 발생했습니다.');
     }

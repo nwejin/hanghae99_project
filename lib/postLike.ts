@@ -1,16 +1,4 @@
-import { firestore } from '@/config/firebase';
-import {
-  doc,
-  setDoc,
-  deleteDoc,
-  getDoc,
-  serverTimestamp,
-  query,
-  collection,
-  where,
-  orderBy,
-  getDocs,
-} from 'firebase/firestore';
+import { createClient } from '@/config/supabase/client';
 
 export interface Like {
   userId: string;
@@ -20,60 +8,68 @@ export interface Like {
 
 // 좋아요
 export async function addLike(postId: string, userId: string | null) {
-  if (!userId) {
-    return;
-  }
+  if (!userId) return;
 
-  const likeRef = doc(firestore, 'posts', postId, 'likes', userId);
-
-  await setDoc(likeRef, {
-    userId,
-    postId,
-    created_at: serverTimestamp(),
-  });
+  const supabase = createClient();
+  await supabase.from('likes').upsert(
+    { user_id: userId, post_id: postId },
+    { onConflict: 'post_id,user_id' }
+  );
 }
 
 // 취소
 export async function removeLike(postId: string, userId: string | null) {
-  if (!userId) {
-    return;
-  }
-  const likeRef = doc(firestore, 'posts', postId, 'likes', userId);
+  if (!userId) return;
 
-  await deleteDoc(likeRef);
+  const supabase = createClient();
+  await supabase
+    .from('likes')
+    .delete()
+    .eq('post_id', postId)
+    .eq('user_id', userId);
 }
 
 // 로그인 유저 좋아요 확인
 export async function isLiked(postId: string, userId: string | null): Promise<boolean> {
-  if (!userId) {
-    return false;
-  }
+  if (!userId) return false;
 
-  const likeRef = doc(firestore, 'posts', postId, 'likes', userId);
-  const likeDoc = await getDoc(likeRef);
+  const supabase = createClient();
+  const { data } = await supabase
+    .from('likes')
+    .select('id')
+    .eq('post_id', postId)
+    .eq('user_id', userId)
+    .maybeSingle();
 
-  return likeDoc.exists();
+  return !!data;
 }
 
-// 좋아요 수 확인
+// 좋아요 데이터 가져오기
 interface LikeData {
   recentUser: string | null;
   likeCount: number;
 }
 
-// 좋아요 데이터 가져오기
 export async function fetchLikeData(postId: string): Promise<LikeData> {
-  const likesRef = collection(firestore, 'posts', postId, 'likes');
-  const q = query(likesRef, orderBy('created_at', 'desc'));
-  const likeDocs = await getDocs(q);
+  const supabase = createClient();
 
-  const likeCount = likeDocs.size;
+  // 좋아요 수
+  const { count } = await supabase
+    .from('likes')
+    .select('*', { count: 'exact', head: true })
+    .eq('post_id', postId);
 
-  let recentUser: string | null = null;
-  if (!likeDocs.empty) {
-    const mostRecentLike = likeDocs.docs[0].data();
-    recentUser = mostRecentLike.userId;
-  }
+  // 최근 좋아요 유저
+  const { data: recentLike } = await supabase
+    .from('likes')
+    .select('user_id')
+    .eq('post_id', postId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
 
-  return { recentUser, likeCount };
+  return {
+    recentUser: recentLike?.user_id || null,
+    likeCount: count || 0,
+  };
 }
