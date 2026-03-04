@@ -12,6 +12,7 @@ import { RotateCcw } from 'lucide-react';
 
 import { createClient } from '@/config/supabase/client';
 import { useState } from 'react';
+import { convertToWebP } from '@/shared/convertWebp';
 
 import { Input } from '@/components/common';
 import { Label } from '@/components/common';
@@ -46,7 +47,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
 
   const supabase = createClient();
 
-  const uploadImg = async (file: File) => {
+  const uploadImg = async (file: Blob) => {
     const timestamp = new Date().getTime();
     const filePath = `${timestamp}_profile.webp`;
 
@@ -71,7 +72,9 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
     setImgUrl(URL.createObjectURL(file));
     setImgPreview(file);
 
-    const path = await uploadImg(file);
+    const webpBlob = await convertToWebP(file);
+    if (!webpBlob) return;
+    const path = await uploadImg(webpBlob);
     setUploadedImgUrl(path);
   };
 

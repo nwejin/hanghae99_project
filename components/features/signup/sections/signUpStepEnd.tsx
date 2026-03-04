@@ -14,6 +14,7 @@ import { Label } from '@/components/common';
 import { Avatar } from '@/components/common';
 import { useState } from 'react';
 import { createClient } from '@/config/supabase/client';
+import { convertToWebP } from '@/shared/convertWebp';
 import { Select } from '@/components/common';
 import { petCategoryData } from '@/shared/petCategory';
 
@@ -39,7 +40,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
 
   const supabase = createClient();
 
-  const uploadImg = async (file: File) => {
+  const uploadImg = async (file: Blob) => {
     const timestamp = new Date().getTime();
     const filePath = `${timestamp}_pet.webp`;
 
@@ -64,7 +65,9 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
     setImgUrl(URL.createObjectURL(file));
     setImgPreview(file);
 
-    const path = await uploadImg(file);
+    const webpBlob = await convertToWebP(file);
+    if (!webpBlob) return;
+    const path = await uploadImg(webpBlob);
     setUploadedImgUrl(path);
   };
 
