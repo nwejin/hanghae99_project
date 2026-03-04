@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import '../styles/globals.css';
 import ReactQueryProvider from '@/utils/ReactQueryProvider';
-import '@/config/firebase';
 import { Toaster } from '@/components/common';
 
 export const metadata: Metadata = {
