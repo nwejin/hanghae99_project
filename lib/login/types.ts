@@ -1,4 +1,4 @@
 export type LoginType = {
-  email: string;
+  user_id: string;
   user_password: string;
 };

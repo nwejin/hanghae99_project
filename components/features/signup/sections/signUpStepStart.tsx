@@ -13,10 +13,9 @@ interface FormProps {
 }
 
 interface StepData {
-  email: string;
+  user_id: string;
   user_pw: string;
   password_verify: string;
-  user_uid: string;
 }
 
 export default function SignUpStepStart({ nextStep }: FormProps) {
@@ -24,34 +23,31 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
     handleSubmit,
     register,
     formState: { errors },
-    getValues,
     watch,
   } = useFormContext<StepData>();
 
   const [error, setError] = useState<string | null>(null);
 
-  const checkEmail = watch('email');
+  const checkUserId = watch('user_id');
 
   const onSubmit = async (data: StepData) => {
     try {
       const supabase = createClient();
 
-      // Supabase에서 이메일 중복 체크
       const { data: existingUsers, error: queryError } = await supabase
         .from('users')
-        .select('email')
-        .eq('email', String(checkEmail));
+        .select('user_id')
+        .eq('user_id', String(checkUserId));
 
       if (queryError) throw queryError;
 
       if (!existingUsers || existingUsers.length === 0) {
-        const authData = { ...data };
-        nextStep(authData);
+        nextStep(data);
       } else {
-        setError('중복된 이메일입니다!');
+        setError('중복된 아이디입니다!');
       }
     } catch (error) {
-      setError('이메일 확인 중 오류가 발생했습니다.');
+      setError('아이디 확인 중 오류가 발생했습니다.');
     }
   };
 
@@ -59,14 +55,14 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
       <div className="grid gap-2">
         <div className="flex items-center">
-          <Label htmlFor="email" className="mr-2 text-base font-semibold">
-            이메일
+          <Label htmlFor="user_id" className="mr-2 text-base font-semibold">
+            아이디
           </Label>
           {error && <span className="text-sm text-red-500">{error}</span>}
-          {errors['email'] && <span className="text-sm text-red-500">{errors['email']?.message as string}</span>}
+          {errors['user_id'] && <span className="text-sm text-red-500">{errors['user_id']?.message as string}</span>}
         </div>
 
-        <Input type="text" id="email" placeholder="pet@example.com" {...register('email')} className="mb-2" />
+        <Input type="text" id="user_id" placeholder="아이디를 입력해주세요" {...register('user_id')} className="mb-2" />
       </div>
       <div className="grid gap-2">
         <TextInput type="password" name="user_pw" id="user_pw" placeholder="비밀번호" text="비밀번호" />

@@ -14,7 +14,11 @@ const verifyPassword = (password: string) => {
 export const userSchema = z
   .object({
     // start
-    email: z.string().email({ message: '유효한 형식으로 입력해주세요' }).min(1, { message: '이메일을 입력해주세요' }),
+    user_id: z
+      .string()
+      .min(4, { message: '아이디는 4자리 이상이어야 합니다' })
+      .max(20, { message: '아이디는 20자리 이하로 입력해주세요' })
+      .regex(/^[a-zA-Z0-9]+$/, { message: '아이디는 영어와 숫자만 입력 가능합니다' }),
     user_pw: z
       .string()
       .min(8, { message: '비밀번호는 8자리 이상이어야합니다' })
@@ -26,16 +30,13 @@ export const userSchema = z
     path: ['password_verify'],
   });
 
-const defaultImg = '/dog.png';
 
 export const midSchema = z.object({
   // mid
-  // profile_image: z.string().optional(),
-  nickame: z
+  nickname: z
     .string()
-    .min(2, { message: '아이디는 2자리 이상으로 입력해주세요' })
-    .max(10, { message: '아이디는 10자리 이하로 입력해주세요' }),
-  bio: z.string().max(30, { message: '자기소개는 30자 이하로 입력해주세요' }).optional(),
+    .min(2, { message: '닉네임은 2자리 이상으로 입력해주세요' })
+    .max(10, { message: '닉네임은 10자리 이하로 입력해주세요' }),
 });
 
 export const endSchema = z.object({
@@ -46,6 +47,6 @@ export const endSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().email({ message: '유효한 이메일 주소를 입력해 주세요' }),
+  user_id: z.string().min(4, { message: '아이디를 입력해주세요' }),
   user_password: z.string().min(8, { message: '비밀번호는 8자 이상입니다.' }),
 });
