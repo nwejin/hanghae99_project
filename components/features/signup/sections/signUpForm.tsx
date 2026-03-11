@@ -5,7 +5,6 @@ import SignUpStepStart from './signUpStepStart';
 import SignUpStepMid from './signUpStepMid';
 import SignUpStepEnd from './signUpStepEnd';
 import ProgressBar from '../ui/progressBar';
-import useEmailStore from '@/store/emailStore';
 import { createClient } from '@/config/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -15,17 +14,15 @@ import { useState } from 'react';
 import { userSchema } from '@/schemas/user';
 
 interface FormData {
-  email: string;
+  user_id: string;
   user_pw: string;
   password_verify: string;
   profile_image?: string;
   nickname: string;
-  bio?: string;
   pet_image?: string;
   petName: string;
   petSpecies: string;
   petSubSpecies: string;
-  user_uid: string;
 }
 
 export default function SignUpForm() {
@@ -40,16 +37,12 @@ export default function SignUpForm() {
     mode: 'onChange',
   });
 
-  const { setEmail } = useEmailStore();
   const { toast } = useToast();
   const { reset } = methods;
 
   const nextStep = (data: Partial<FormData>) => {
-    setEmail(String(formData.email));
     setFormData((prev) => ({ ...prev, ...data }));
     setIsStep((prev) => prev + 1);
-    const mergedData = { ...formData, ...data };
-    console.log('Merged data:', mergedData);
     reset();
   };
 
@@ -60,10 +53,11 @@ export default function SignUpForm() {
   const userSubmit = async (data: Partial<FormData>) => {
     const userData = { ...formData, ...data };
     try {
-      if (userData.email && userData.user_pw) {
-        // Supabase Auth로 회원가입
+      if (userData.user_id && userData.user_pw) {
+        const fakeEmail = `${userData.user_id}@paw-sns.local`;
+
         const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: userData.email,
+          email: fakeEmail,
           password: userData.user_pw,
         });
 
@@ -72,18 +66,16 @@ export default function SignUpForm() {
         const user_uid = authData.user?.id;
         if (!user_uid) throw new Error('사용자 ID를 가져올 수 없습니다.');
 
-        // users 테이블에 프로필 정보 저장
         const { error: userError } = await supabase.from('users').insert({
           id: user_uid,
-          email: userData.email,
+          user_id: userData.user_id,
+          email: fakeEmail,
           nickname: userData.nickname,
           profile_image: userData.profile_image || '',
-          bio: userData.bio || '',
         });
 
         if (userError) throw userError;
 
-        // pets 테이블에 반려동물 정보 저장
         if (userData.petName && userData.petSpecies) {
           const { error: petError } = await supabase.from('pets').insert({
             user_id: user_uid,

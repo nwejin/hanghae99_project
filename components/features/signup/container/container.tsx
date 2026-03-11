@@ -1,27 +1,22 @@
 import { Card, LinkButton } from '@/components/common';
 
 import SignUpForm from '../sections/signUpForm';
-import ImgSection from '../sections/imgSection';
 import Image from 'next/image';
-import dog from '@/public/dog_img.png';
-import cat from '@/public/cat_img.png';
-import { LogoHeader } from '@/components/common';
+import { dog_img, cat_img } from '@/public';
 
 export function Container() {
   return (
-    <Card.Card className="grid h-[35rem] w-[50rem] grid-cols-2 rounded-3xl p-3 shadow-md">
-      <Card.Card className="flex w-full flex-col justify-between rounded-none border-none p-4 shadow-none">
-        <LogoHeader />
-        <ImgSection />
-        <Card.CardFooter className="flex flex-col gap-y-2 pb-4">
-          <LinkButton href="/login" text="로그인" />
-        </Card.CardFooter>
-      </Card.Card>
-      <Card.Card className="flex items-center justify-center rounded-none border-none shadow-none">
-        <Card.CardContent className="flex w-full flex-col p-4">
-          <SignUpForm />
-        </Card.CardContent>
-      </Card.Card>
-    </Card.Card>
+    <div className="h-auto w-full items-center justify-center rounded-3xl pb-8 pt-8 sm:w-[30rem]">
+      <div className="mb-4 flex items-end justify-center">
+        <Image src={dog_img} alt="dog" width={130} className="mr-1" />
+        <Image src={cat_img} alt="cat" width={130} className="mr-1" />
+      </div>
+      <Card.CardContent className="flex w-full flex-col p-4">
+        <SignUpForm />
+      </Card.CardContent>
+      <Card.CardFooter className="flex flex-col gap-y-2 pb-4">
+        <LinkButton href="/login" text="로그인" />
+      </Card.CardFooter>
+    </div>
   );
 }

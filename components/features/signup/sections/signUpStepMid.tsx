@@ -1,11 +1,7 @@
 'use client';
 
-import TextInput from '../ui/textInput';
-import { useForm, FormProvider } from 'react-hook-form';
-import { midSchema } from '@/schemas/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import SignUpBtn from '../ui/signUpBtn';
 import { useFormContext } from 'react-hook-form';
+import SignUpBtn from '../ui/signUpBtn';
 
 import { Avatar } from '@/components/common';
 import { RotateCcw } from 'lucide-react';
@@ -25,7 +21,6 @@ interface FormProps {
 interface StepData {
   profile_image?: string;
   nickname: string;
-  bio?: string;
 }
 
 export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
@@ -33,7 +28,6 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
     handleSubmit,
     watch,
     register,
-    getValues,
     formState: { errors },
   } = useFormContext<StepData>();
 
@@ -65,7 +59,6 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
     return data.publicUrl;
   };
 
-  // 이미지 미리보기
   const prevImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files === null) return;
     const file = e.target.files[0];
@@ -88,7 +81,6 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
           .from('profiles')
           .remove([uploadedFilePath]);
 
-        // 상태 초기화
         setImgUrl('');
         setImgPreview(null);
         setUploadedImgUrl(null);
@@ -98,19 +90,14 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
         if (fileInput) {
           fileInput.value = '';
         }
-
-        console.log('이미지가 성공적으로 삭제되었습니다.');
       } catch (error) {
         console.error('이미지 삭제 중 오류 발생:', error);
       }
-    } else {
-      console.log('삭제할 이미지가 없습니다.');
     }
   };
 
   const onSubmit = async (data: StepData) => {
     try {
-      // Supabase에서 닉네임 중복 체크
       const { data: existingUsers, error: queryError } = await supabase
         .from('users')
         .select('nickname')
@@ -151,7 +138,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
             placeholder="프로필이미지"
             className="mb-2 mr-6"
             onChange={prevImg}
-            name='"profile_image'
+            name="profile_image"
           />
           <Avatar.Avatar className="border-gray-400 shadow-sm">
             {imgPreview ? (
@@ -171,7 +158,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
       </div>
       <div className="grid gap-2">
         <div className="flex items-center">
-          <Label htmlFor="email" className="mr-2 text-base font-semibold">
+          <Label htmlFor="nickname" className="mr-2 text-base font-semibold">
             닉네임
           </Label>
           {error && <span className="text-sm text-red-500">{error}</span>}
@@ -181,19 +168,13 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
         <Input
           type="text"
           id="nickname"
-          placeholder="닉네임"
+          placeholder="닉네임 (2글자 이상)"
           {...register('nickname', {
             required: '닉네임을 입력해주세요',
-            pattern: {
-              value: /^[a-zA-Z0-9]+$/,
-              message: '닉네임은 영어와 숫자만 입력 가능합니다.',
-            },
+            minLength: { value: 2, message: '닉네임은 2글자 이상이어야 합니다' },
           })}
           className="mb-2"
         />
-      </div>
-      <div className="grid gap-2">
-        <TextInput type="text" name="bio" id="bio" placeholder="자기소개" text="자기소개" />
       </div>
       <div className="flex justify-between">
         <SignUpBtn text="이전" type="button" onClick={backStep} />

@@ -2,12 +2,13 @@ import { LoginType } from './types';
 import { createClient } from '@/config/supabase/client';
 
 export async function userLogIn(loginData: LoginType): Promise<string | null> {
-  const { email, user_password } = loginData;
+  const { user_id, user_password } = loginData;
   try {
     const supabase = createClient();
+    const fakeEmail = `${user_id}@paw-sns.local`;
 
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: fakeEmail,
       password: user_password,
     });
 

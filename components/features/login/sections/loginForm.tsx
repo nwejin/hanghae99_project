@@ -2,7 +2,6 @@
 
 import TextInput from '../ui/textInput';
 import LoginBtn from '../ui/loginBtn';
-import InputLabel from '../ui/inputLabel';
 import { useToast } from '@/components/common/ui/use-toast';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,13 +9,11 @@ import { loginSchema } from '@/schemas/user';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { userAuth } from '@/lib/userAuth';
 import { userLogIn } from '@/lib/login';
 import { LoginType } from '@/lib/login';
 
 export default function LoginForm() {
   const { toast } = useToast();
-  // const { login, error, loading } = userAuth();
   const router = useRouter();
 
   const [error, setError] = useState('');
@@ -26,7 +23,6 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginType) => {
-    // const { email, user_password } = data;
     const userLogin = await userLogIn(data);
 
     if (!userLogin) {
@@ -35,16 +31,19 @@ export default function LoginForm() {
       });
       router.push('/');
     } else {
-      // setError(userLogin);
       switch (userLogin) {
         case 'auth/invalid-credential':
-          setError('이메일/비밀번호를 확인해주세요');
+          setError('아이디/비밀번호를 확인해주세요');
+          break;
         case 'auth/user-not-found':
           setError('가입 정보가 없습니다.');
+          break;
         case 'auth/wrong-password':
           setError('비밀번호를 확인해주세요');
+          break;
         case 'auth/too-many-requests':
           setError('잠시 후 다시 시도해주세요');
+          break;
         default:
           setError('로그인에 실패했습니다. 다시 시도해주세요.');
       }
@@ -56,7 +55,7 @@ export default function LoginForm() {
       <FormProvider {...resolveForm}>
         <form onSubmit={resolveForm.handleSubmit(onSubmit)} className="grid gap-4">
           <div className="grid gap-2">
-            <TextInput type="text" name="email" id="email" placeholder="pet@example.com" text="이메일" />
+            <TextInput type="text" name="user_id" id="user_id" placeholder="아이디를 입력해주세요" text="아이디" />
           </div>
           <div className="grid gap-2">
             <TextInput type="password" name="user_password" id="user_password" placeholder="비밀번호" text="비밀번호" />
