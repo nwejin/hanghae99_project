@@ -47,6 +47,17 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        paw: {
+          orange: '#FF8C42',
+          cream: '#FFFFFF',
+          'cream-dark': '#F9F9F9',
+          brown: '#4A3728',
+          sub: '#A08B7A',
+          border: '#F3E8DD',
+          inactive: '#C4B5A8',
+          like: '#FF6B6B',
+          tag: '#F0F0F0',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

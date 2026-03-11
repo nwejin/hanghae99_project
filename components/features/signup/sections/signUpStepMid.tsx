@@ -2,16 +2,10 @@
 
 import { useFormContext } from 'react-hook-form';
 import SignUpBtn from '../ui/signUpBtn';
-
-import { Avatar } from '@/components/common';
-import { RotateCcw } from 'lucide-react';
-
+import { RotateCcw, Camera } from 'lucide-react';
 import { createClient } from '@/config/supabase/client';
 import { useState } from 'react';
 import { convertToWebP } from '@/shared/convertWebp';
-
-import { Input } from '@/components/common';
-import { Label } from '@/components/common';
 
 interface FormProps {
   nextStep: (data: StepData) => void;
@@ -107,12 +101,10 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
 
       if (!existingUsers || existingUsers.length === 0) {
         const profileImageUrl = uploadedImgUrl ? uploadedImgUrl : defaultImg;
-
         const profileData = {
           ...data,
           profile_image: profileImageUrl,
         };
-
         nextStep(profileData);
       } else {
         setError('중복된 닉네임입니다!');
@@ -124,48 +116,58 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-      <div className="grid gap-2">
-        <div className="flex items-center">
-          <Label htmlFor="profile_image" className="mr-2 text-base font-semibold">
-            프로필 이미지
-          </Label>
-        </div>
-        <div className="flex">
-          <Input
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      {/* 프로필 이미지 */}
+      <div>
+        <label className="mb-2 block text-xs font-semibold text-paw-sub">프로필 이미지</label>
+        <div className="flex items-center gap-4">
+          <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full border-2 border-paw-border bg-paw-cream-dark">
+            <img
+              src={imgPreview ? imgUrl : defaultImg}
+              alt="프로필"
+              className="h-full w-full object-cover"
+            />
+            <label
+              htmlFor="profile_image"
+              className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 opacity-0 transition-opacity hover:opacity-100"
+            >
+              <Camera size={16} className="text-white" />
+            </label>
+          </div>
+          <div className="flex flex-1 items-center gap-2">
+            <label
+              htmlFor="profile_image"
+              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-orange"
+            >
+              사진 선택
+            </label>
+            {imgPreview && (
+              <button onClick={resetImg} type="button" className="text-paw-sub hover:text-red-400">
+                <RotateCcw size={14} />
+              </button>
+            )}
+          </div>
+          <input
             type="file"
             id="profile_image"
-            placeholder="프로필이미지"
-            className="mb-2 mr-6"
+            className="hidden"
             onChange={prevImg}
             name="profile_image"
+            accept="image/*"
           />
-          <Avatar.Avatar className="border-gray-400 shadow-sm">
-            {imgPreview ? (
-              <Avatar.AvatarImage src={imgUrl} alt="Image preview" />
-            ) : (
-              <Avatar.AvatarImage src={defaultImg} alt="Default avatar" />
-            )}
-          </Avatar.Avatar>
-          {imgPreview ? (
-            <button onClick={resetImg} type="button">
-              <RotateCcw className="white ml-3 h-4" size={18} color={'#333'} />
-            </button>
-          ) : (
-            <></>
-          )}
         </div>
       </div>
-      <div className="grid gap-2">
-        <div className="flex items-center">
-          <Label htmlFor="nickname" className="mr-2 text-base font-semibold">
-            닉네임
-          </Label>
-          {error && <span className="text-sm text-red-500">{error}</span>}
-          {errors['nickname'] && <span className="text-sm text-red-500">{errors['nickname']?.message as string}</span>}
-        </div>
 
-        <Input
+      {/* 닉네임 */}
+      <div>
+        <div className="mb-1 flex items-center gap-2">
+          <label htmlFor="nickname" className="text-xs font-semibold text-paw-sub">
+            닉네임
+          </label>
+          {error && <span className="text-xs text-red-500">{error}</span>}
+          {errors['nickname'] && <span className="text-xs text-red-500">{errors['nickname']?.message as string}</span>}
+        </div>
+        <input
           type="text"
           id="nickname"
           placeholder="닉네임 (2글자 이상)"
@@ -173,10 +175,11 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
             required: '닉네임을 입력해주세요',
             minLength: { value: 2, message: '닉네임은 2글자 이상이어야 합니다' },
           })}
-          className="mb-2"
+          className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
         />
       </div>
-      <div className="flex justify-between">
+
+      <div className="flex justify-between pt-2">
         <SignUpBtn text="이전" type="button" onClick={backStep} />
         <SignUpBtn text="다음" type="submit" />
       </div>

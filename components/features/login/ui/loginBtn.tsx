@@ -1,9 +1,10 @@
-import { Button } from '@/components/common';
-
 export default function LoginBtn() {
   return (
-    <>
-      <Button className="w-full">로그인</Button>
-    </>
+    <button
+      type="submit"
+      className="w-full rounded-full bg-paw-orange py-3 text-sm font-semibold text-white transition-colors hover:bg-paw-orange/90"
+    >
+      로그인
+    </button>
   );
 }

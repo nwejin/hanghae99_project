@@ -79,11 +79,6 @@ export default function ModalForm({ formRef }: ModalFormProps) {
       setError('imgUrls', { type: 'manual', message: '이미지를 최소 1개 이상 업로드해야 합니다.' });
       return;
     }
-    if (!data.tags || data.tags.length === 0) {
-      setError('tags', { type: 'manual', message: '태그를 최소 1개 이상 입력해주세요.' });
-      return;
-    }
-
     try {
       const imgUrls = await uploadImages(data.imgUrls as unknown as string[]);
 

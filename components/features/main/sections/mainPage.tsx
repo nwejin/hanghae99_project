@@ -1,81 +1,71 @@
 'use client';
-import UserPostCard from './userPostCard';
-import { useEffect, useState, useRef } from 'react';
-import { TotalPostType } from '@/lib/post';
-// import { getPost } from '@/lib/post';
-import { Spinner } from '@/components/common';
 
-// import { useGetPost } from '@/lib/post';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { Fragment } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { Calendar, ArrowUpDown, RefreshCw } from 'lucide-react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { PostSkeleton } from '@/components/common';
-import { PostEnd, PostLoading } from '../ui';
+import { PostLoading } from '../ui';
+import PostThumbnail from './userPostCard';
+import DetailPage from './detailPage';
 
 export default function MainPage() {
   const PAGE_SIZE = 5;
-  const INITIAL_FETCH_COUNT = 5; // 초기 5페이지
+  const INITIAL_FETCH_COUNT = 5;
 
-  // 데이터 요청 함수
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [ascending, setAscending] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<{ post: any; user: any } | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await queryClient.invalidateQueries({ queryKey: ['POST_KEY'] });
+    setTimeout(() => setRefreshing(false), 500);
+  }, [queryClient]);
+
   const fetchProjects = async ({ pageParam = 1 }: { pageParam?: number }) => {
     const pageSize = pageParam === 1 ? INITIAL_FETCH_COUNT : PAGE_SIZE;
     const res = await fetch(`/api/post?page=${pageParam}&pageSize=${pageSize}`);
-
-    if (!res.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await res.json();
-    return data;
+    if (!res.ok) throw new Error('Network response was not ok');
+    return res.json();
   };
 
   const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } = useInfiniteQuery({
     queryKey: ['POST_KEY'],
     queryFn: fetchProjects,
     initialPageParam: 1,
-    // cursur가 없을때 사용
     getNextPageParam: (lastPage, allPages, lastPageParam) => {
-      if (lastPage.length === 0) {
-        return undefined;
-      }
+      if (lastPage.length === 0) return undefined;
       return lastPageParam + 1;
     },
     getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
-      if (firstPageParam <= 1) {
-        return undefined;
-      }
+      if (firstPageParam <= 1) return undefined;
       return firstPageParam - 1;
     },
   });
 
-  //사용자가 특정 화면에 진입 확인
   const observer = useRef<IntersectionObserver | null>(null);
-
-  // 무한 스크롤 트리거
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // 추가 데이터를 가져오는 중이거나, loadMoreRef가 아직 설정되지 않았다면 아무 작업도 하지 않고 종료
     if (isFetchingNextPage || !loadMoreRef.current) return;
 
-    // 대상 요소가 뷰포트에 진입하면 다음 페이지 데이터 호출
     const observerCallback: IntersectionObserverCallback = (entries) => {
-      // 요소가 화면에 보이고, 다음 페이지가 존재하며, 현재 추가 데이터를 가져오는 중이 아니라면 fetchNextPage() 호출
       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     };
 
-    // IntersectionObserver를 초기화하고, 특정 요소가 뷰포트와의 거리가 100px 이내로 들어오면 observerCallback 호출
     observer.current = new IntersectionObserver(observerCallback, {
-      rootMargin: '100px', // 100px부터 감지
+      rootMargin: '100px',
     });
 
-    // loadMoreRef.current가 설정되었다면 해당 요소에 대해 IntersectionObserver 시작
     if (loadMoreRef.current) {
       observer.current.observe(loadMoreRef.current);
     }
 
-    // 클린업 함수: 컴포넌트가 언마운트되거나, loadMoreRef.current가 변경될 때 이전 관찰을 중지
     return () => {
       if (observer.current && loadMoreRef.current) {
         observer.current.unobserve(loadMoreRef.current);
@@ -83,28 +73,118 @@ export default function MainPage() {
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  if (status === 'error') return <p>Error: {error.message}</p>;
+  // 모든 게시물 평탄화 + 필터 + 날짜별 그룹핑
+  const groupedPosts = useMemo(() => {
+    if (!data?.pages) return [];
 
-  // const userId = userStore((state) => state.userId);
-  // console.log(userId);
+    const allPosts = data.pages.flatMap((page) =>
+      page.map((item: { post: any; user: any }) => item)
+    );
+
+    // 날짜 필터링
+    const filtered = allPosts.filter((item: { post: any }) => {
+      const date = item.post.photoDate || item.post.created_at?.split('T')[0] || '';
+      if (startDate && date < startDate) return false;
+      if (endDate && date > endDate) return false;
+      return true;
+    });
+
+    // 날짜별 그룹핑
+    const groups: Record<string, { post: any; user: any }[]> = {};
+    filtered.forEach((item: { post: any; user: any }) => {
+      const date = item.post.photoDate || item.post.created_at?.split('T')[0] || '날짜 없음';
+      if (!groups[date]) groups[date] = [];
+      groups[date].push(item);
+    });
+
+    // 날짜 정렬
+    const sortedKeys = Object.keys(groups).sort((a, b) =>
+      ascending ? a.localeCompare(b) : b.localeCompare(a)
+    );
+
+    return sortedKeys.map((date) => ({
+      date,
+      items: groups[date],
+    }));
+  }, [data, startDate, endDate, ascending]);
+
+  if (status === 'error') return <p>Error: {error.message}</p>;
 
   return (
     <>
-      <div className="grid grid-cols-3 grid-flow-dense gap-1">
-        {data?.pages &&
-          data.pages.map((page, i) => (
-            <Fragment key={i}>
-              {page.map((item: { post: any; user: any }) => (
-                <UserPostCard key={item.post.id} post={item.post} user={item.user} />
-              ))}
-            </Fragment>
-          ))}
+      {/* 새로고침 버튼 + 필터 바 */}
+      <div className="sticky top-0 z-10 border-b border-paw-border bg-white px-4 py-2.5">
+        <div className="flex items-center gap-2">
+          <div className="flex flex-1 items-center gap-1.5">
+            <Calendar size={14} className="flex-shrink-0 text-paw-sub" />
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+            />
+            <span className="text-xs text-paw-sub">~</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+            />
+          </div>
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="flex flex-shrink-0 items-center justify-center rounded-lg border border-paw-border p-1.5 text-paw-sub transition-colors hover:text-paw-orange disabled:opacity-50"
+          >
+            <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
+          </button>
+          <button
+            onClick={() => setAscending(!ascending)}
+            className="flex flex-shrink-0 items-center gap-0.5 rounded-lg border border-paw-border px-2 py-1.5 text-[11px] text-paw-sub transition-colors hover:text-paw-orange"
+          >
+            <ArrowUpDown size={12} />
+            {ascending ? '오래된순' : '최신순'}
+          </button>
+        </div>
       </div>
+
+      {/* 날짜별 그룹 + 3열 그리드 */}
+      <div className="px-1 py-2">
+        {groupedPosts.map((group) => (
+          <div key={group.date} className="mb-4">
+            <div className="flex items-center gap-1.5 px-3 py-2">
+              <Calendar size={13} className="text-paw-orange" />
+              <span className="text-xs font-semibold text-paw-brown">
+                {group.date === '날짜 없음' ? group.date : group.date.replace(/-/g, '.')}
+              </span>
+              <span className="text-[10px] text-paw-sub">({group.items.length})</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1 px-1">
+              {group.items.map((item) => (
+                <PostThumbnail
+                  key={item.post.id}
+                  post={item.post}
+                  user={item.user}
+                  onSelect={() => setSelectedPost(item)}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div ref={loadMoreRef}>
         {isFetchingNextPage && <PostLoading />}
-        {!hasNextPage && !isFetching && <PostEnd />}
       </div>
       <div>{isFetching && !isFetchingNextPage ? <PostSkeleton /> : null}</div>
+
+      {selectedPost && (
+        <DetailPage
+          modal={() => setSelectedPost(null)}
+          post={selectedPost.post}
+          user={selectedPost.user}
+        />
+      )}
     </>
   );
 }

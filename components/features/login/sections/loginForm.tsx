@@ -51,19 +51,17 @@ export default function LoginForm() {
   };
 
   return (
-    <>
-      <FormProvider {...resolveForm}>
-        <form onSubmit={resolveForm.handleSubmit(onSubmit)} className="grid gap-4">
-          <div className="grid gap-2">
-            <TextInput type="text" name="user_id" id="user_id" placeholder="아이디를 입력해주세요" text="아이디" />
-          </div>
-          <div className="grid gap-2">
-            <TextInput type="password" name="user_password" id="user_password" placeholder="비밀번호" text="비밀번호" />
-          </div>
+    <FormProvider {...resolveForm}>
+      <form onSubmit={resolveForm.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <TextInput type="text" name="user_id" id="user_id" placeholder="아이디를 입력해주세요" text="아이디" />
+        <TextInput type="password" name="user_password" id="user_password" placeholder="비밀번호" text="비밀번호" />
+        <div className="pt-2">
           <LoginBtn />
-          <span className="min-h-[20px] text-sm text-red-500">{error ? error : ''}</span>
-        </form>
-      </FormProvider>
-    </>
+        </div>
+        {error && (
+          <p className="text-center text-xs text-red-500">{error}</p>
+        )}
+      </form>
+    </FormProvider>
   );
 }
