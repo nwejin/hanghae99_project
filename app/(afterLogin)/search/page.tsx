@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { TotalPostType } from '@/lib/post';
 import UserPostCard from '@/components/features/main/sections/userPostCard';
+import DetailPage from '@/components/features/main/sections/detailPage';
 
 type SearchType = 'nickname' | 'tag';
 
@@ -23,6 +24,7 @@ export default function SearchPage() {
   const [postResults, setPostResults] = useState<TotalPostType[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<TotalPostType | null>(null);
 
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
@@ -141,13 +143,27 @@ export default function SearchPage() {
 
         {/* 태그 검색 결과 */}
         {searchType === 'tag' && postResults.length > 0 && (
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-3 gap-1">
             {postResults.map((item) => (
-              <UserPostCard key={item.post.id} post={item.post} user={item.user} />
+              <UserPostCard
+                key={item.post.id}
+                post={item.post}
+                user={item.user}
+                onSelect={() => setSelectedPost(item)}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* 상세보기 모달 */}
+      {selectedPost && (
+        <DetailPage
+          post={selectedPost.post}
+          user={selectedPost.user}
+          modal={() => setSelectedPost(null)}
+        />
+      )}
     </div>
   );
 }

@@ -60,7 +60,7 @@ export async function GET() {
     if (error) throw error;
 
     // actor_id들로 유저 정보 일괄 조회
-    const actorIds = [...new Set((notifications || []).map((n) => n.actor_id))];
+    const actorIds = Array.from(new Set((notifications || []).map((n) => n.actor_id)));
     let actorMap: Record<string, { nickname: string; profile_image: string | null }> = {};
 
     if (actorIds.length > 0) {

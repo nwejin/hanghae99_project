@@ -74,7 +74,7 @@ export default function UserPost({ post, user }: TotalPostType) {
             <ImgCarousel imgUrls={post.imgUrls} />
           </Card.CardContent>
           <Card.CardFooter className="grid gap-2 p-2 pb-4">
-            <Buttons postId={post.id} userId={userId} modal={modalControl} />
+            <Buttons postId={post.id} userId={userId} onCommentClick={modalControl} />
             <div className="w-full px-2 text-sm">
               {likeInfo.recentLikeUser ? (
                 <>
