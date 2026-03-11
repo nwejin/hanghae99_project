@@ -3,6 +3,8 @@ export type PostType = {
   userId: string;
   contents: string;
   imgUrls: string[];
+  tags: string[];
+  photoDate: string;
   created_at: string;
   status: boolean;
 };

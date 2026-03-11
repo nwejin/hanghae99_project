@@ -45,6 +45,8 @@ export async function GET(req: Request) {
           userId: post.user_id,
           contents: post.contents,
           imgUrls: post.img_urls,
+          tags: post.tags || [],
+          photoDate: post.photo_date || '',
           created_at: post.created_at,
           status: true,
         })),

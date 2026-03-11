@@ -1,6 +1,3 @@
-import { Button } from '@/components/common';
-import { MoveRight, MoveLeft } from 'lucide-react';
-
 type ButtonType = 'button' | 'submit' | 'reset';
 interface SignUpBtnProps {
   text: string;
@@ -9,11 +6,18 @@ interface SignUpBtnProps {
 }
 
 export default function SignUpBtn({ text, onClick, type }: SignUpBtnProps) {
+  const isBack = text === '이전';
   return (
-    <>
-      <Button type={type} className="h-6 w-20" onClick={onClick}>
-        {text}
-      </Button>
-    </>
+    <button
+      type={type}
+      onClick={onClick}
+      className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${
+        isBack
+          ? 'border border-paw-border text-paw-sub hover:text-paw-brown'
+          : 'bg-paw-orange text-white hover:bg-paw-orange/90'
+      }`}
+    >
+      {text}
+    </button>
   );
 }

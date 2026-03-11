@@ -1,28 +1,37 @@
 'use client';
 
-import { Home, Search, SquarePen, User, LogIn, LogOut } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Home, Search, SquarePen, Bell, User } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { useModalStore } from '@/store/modalStore';
 import { useToast } from '@/components/common/ui/use-toast';
 import { Button } from '@/components/common';
+import { useCurrentUser } from '@/lib/useCurrentUser';
+import { getUnreadCount, markAllAsRead } from '@/lib/notification';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
   const pathname = usePathname();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { openModal } = useModalStore();
+  const router = useRouter();
+  const { nickname, isLoggedIn } = useCurrentUser();
   const { toast } = useToast();
+  const [unreadCount, setUnreadCount] = useState(0);
 
+  // 알림 뱃지: 30초마다 읽지 않은 알림 수 조회
   useEffect(() => {
-    const userDataString = sessionStorage.getItem('user');
-    setIsLoggedIn(!!userDataString);
-  }, []);
+    if (!isLoggedIn) return;
+
+    const fetchUnread = () => {
+      getUnreadCount().then(setUnreadCount).catch(() => {});
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [isLoggedIn]);
 
   const handleNewPost = () => {
-    const auth = sessionStorage.getItem('user');
-    if (!auth) {
+    if (!isLoggedIn) {
       toast({
         title: '로그인이 필요합니다.',
         action: (
@@ -32,52 +41,79 @@ export default function Footer() {
         ),
       });
     } else {
-      openModal();
+      router.push('/newpost');
     }
   };
 
+  const handleProfile = () => {
+    if (isLoggedIn) {
+      router.push(`/user/${nickname}`);
+    } else {
+      router.push('/login');
+    }
+  };
+
+  const handleNotification = async () => {
+    if (!isLoggedIn) {
+      toast({
+        title: '로그인이 필요합니다.',
+        action: (
+          <Button>
+            <Link href="/login">로그인</Link>
+          </Button>
+        ),
+      });
+      return;
+    }
+    // 알림 읽음 처리 + 페이지 이동
+    await markAllAsRead();
+    setUnreadCount(0);
+    router.push('/notification');
+  };
+
   const tabs = [
-    { icon: Home, label: '홈', active: pathname === '/' },
-    { icon: Search, label: '검색', active: pathname === '/search' },
-    { icon: SquarePen, label: '글 작성', active: false, onClick: handleNewPost },
-    { icon: User, label: '프로필', active: pathname.includes('/user') },
-    {
-      icon: isLoggedIn ? LogOut : LogIn,
-      label: isLoggedIn ? '로그아웃' : '로그인',
-      active: pathname === '/login',
-    },
+    { icon: Home, label: '홈', active: pathname === '/', href: '/' },
+    { icon: Search, label: '검색', active: pathname === '/search', href: '/search' },
+    { icon: SquarePen, label: '글작성', active: pathname === '/newpost', onClick: handleNewPost },
+    { icon: Bell, label: '알림', active: pathname === '/notification', onClick: handleNotification, badge: unreadCount },
+    { icon: User, label: '내정보', active: pathname.includes('/user') || pathname.includes('/accounts'), onClick: handleProfile },
   ];
 
   return (
-    <footer className="sticky bottom-0 z-20 flex h-[60px] bg-white dark:bg-zinc-900">
-      {tabs.map(({ icon: Icon, label, active, onClick }, index) => (
-        <button
-          key={label}
-          onClick={onClick}
-          className={cn(
-            'flex h-full w-full flex-col items-center justify-center border-t border-gray-200 shadow-[inset_0_2px_3px_0_rgba(0,0,0,0.06)] transition-all duration-200 dark:border-zinc-700',
-            index < tabs.length - 1 && 'border-r',
-            active
-              ? 'bg-primary text-white shadow-[inset_0_2px_3px_0_rgba(0,0,0,0.15)]'
-              : 'text-gray-400 opacity-60 hover:opacity-100'
-          )}>
+    <footer className="sticky bottom-0 z-20 flex h-[56px] border-t border-paw-border bg-white">
+      {tabs.map(({ icon: Icon, label, active, href, onClick, badge }) => {
+        const content = (
           <div
             className={cn(
-              'transition-transform duration-200',
-              active && '-translate-y-1.5',
-              active ? 'text-white' : ''
+              'flex h-full w-full flex-col items-center justify-center gap-0.5 transition-all duration-200',
+              active ? 'text-paw-orange' : 'text-paw-inactive hover:text-paw-sub'
             )}>
-            <Icon size={22} />
+            <div className="relative">
+              <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+              {badge !== undefined && badge > 0 && (
+                <span className="absolute -right-1.5 -top-1 flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                  {badge > 99 ? '99+' : badge}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-medium">{label}</span>
           </div>
-          <span
-            className={cn(
-              'text-[10px] font-bold transition-all duration-200',
-              active ? '-translate-y-1.5 opacity-100' : 'hidden'
-            )}>
-            {label}
-          </span>
-        </button>
-      ))}
+        );
+
+        if (onClick) {
+          return (
+            <button key={label} onClick={onClick} className="flex-1">
+              {content}
+            </button>
+          );
+        }
+
+        return (
+          <Link key={label} href={href || '/'} className="flex-1">
+            {content}
+          </Link>
+        );
+      })}
     </footer>
   );
 }

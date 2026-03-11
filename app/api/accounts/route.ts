@@ -1,6 +1,64 @@
 import { createClient } from '@/config/supabase/server';
 import { NextResponse } from 'next/server';
 
+export async function PUT(req: Request) {
+  try {
+    const supabase = createClient();
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+
+    if (!authUser) {
+      return NextResponse.json({ error: '인증되지 않은 사용자' }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { nickname, bio, newPassword, petName, petSpecies, petSubSpecies } = body;
+
+    // 사용자 정보 업데이트
+    const updateData: Record<string, string> = {};
+    if (nickname !== undefined) updateData.nickname = nickname;
+    if (bio !== undefined) updateData.bio = bio;
+
+    if (Object.keys(updateData).length > 0) {
+      const { error: updateError } = await supabase
+        .from('users')
+        .update(updateData)
+        .eq('id', authUser.id);
+
+      if (updateError) {
+        return NextResponse.json({ error: '프로필 업데이트 실패' }, { status: 500 });
+      }
+    }
+
+    // 비밀번호 변경
+    if (newPassword) {
+      const { error: pwError } = await supabase.auth.updateUser({ password: newPassword });
+      if (pwError) {
+        return NextResponse.json({ error: '비밀번호 변경 실패: ' + pwError.message }, { status: 400 });
+      }
+    }
+
+    // 반려동물 정보 업데이트
+    if (petName !== undefined || petSpecies !== undefined || petSubSpecies !== undefined) {
+      const petUpdate: Record<string, string> = {};
+      if (petName !== undefined) petUpdate.pet_name = petName;
+      if (petSpecies !== undefined) petUpdate.pet_species = petSpecies;
+      if (petSubSpecies !== undefined) petUpdate.pet_sub_species = petSubSpecies;
+
+      if (Object.keys(petUpdate).length > 0) {
+        await supabase
+          .from('pets')
+          .update(petUpdate)
+          .eq('user_id', authUser.id);
+      }
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error('계정 업데이트 오류:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);

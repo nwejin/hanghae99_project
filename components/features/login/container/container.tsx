@@ -1,18 +1,20 @@
-import { Card, LinkButton } from '@/components/common';
-
 import { LogoHeader } from '@/components/common';
 import LoginForm from '../sections/loginForm';
+import Link from 'next/link';
 
 export function Container() {
   return (
-    <div className="h-[35rem] w-full items-center justify-center rounded-3xl pb-8 pt-8 sm:w-[30rem]">
-      <LogoHeader />
-      <Card.CardContent className="flex h-[20rem] flex-col justify-evenly gap-y-2">
-        <LoginForm />
-      </Card.CardContent>
-      <Card.CardFooter className="flex flex-col gap-y-2 pb-4">
-        <LinkButton href="/signup" text="회원가입" />
-      </Card.CardFooter>
+    <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+      <div className="mb-8 flex justify-center">
+        <LogoHeader />
+      </div>
+      <LoginForm />
+      <div className="mt-6 text-center">
+        <span className="text-sm text-paw-sub">계정이 없으신가요? </span>
+        <Link href="/signup" className="text-sm font-semibold text-paw-orange transition-colors hover:text-paw-orange/80">
+          회원가입
+        </Link>
+      </div>
     </div>
   );
 }

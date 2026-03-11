@@ -3,8 +3,6 @@
 import TextInput from '../ui/textInput';
 import SignUpBtn from '../ui/signUpBtn';
 import { useFormContext } from 'react-hook-form';
-import { Input } from '@/components/common';
-import { Label } from '@/components/common';
 import { useState } from 'react';
 import { createClient } from '@/config/supabase/client';
 
@@ -52,31 +50,32 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
-      <div className="grid gap-2">
-        <div className="flex items-center">
-          <Label htmlFor="user_id" className="mr-2 text-base font-semibold">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <div>
+        <div className="mb-1 flex items-center gap-2">
+          <label htmlFor="user_id" className="text-xs font-semibold text-paw-sub">
             아이디
-          </Label>
-          {error && <span className="text-sm text-red-500">{error}</span>}
-          {errors['user_id'] && <span className="text-sm text-red-500">{errors['user_id']?.message as string}</span>}
+          </label>
+          {error && <span className="text-xs text-red-500">{error}</span>}
+          {errors['user_id'] && <span className="text-xs text-red-500">{errors['user_id']?.message as string}</span>}
         </div>
-
-        <Input type="text" id="user_id" placeholder="아이디를 입력해주세요" {...register('user_id')} className="mb-2" />
-      </div>
-      <div className="grid gap-2">
-        <TextInput type="password" name="user_pw" id="user_pw" placeholder="비밀번호" text="비밀번호" />
-      </div>
-      <div className="grid gap-2">
-        <TextInput
-          type="password"
-          name="password_verify"
-          id="password_verify"
-          placeholder="비밀번호 확인"
-          text="비밀번호 확인"
+        <input
+          type="text"
+          id="user_id"
+          placeholder="아이디를 입력해주세요"
+          {...register('user_id')}
+          className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
         />
       </div>
-      <div className="flex justify-end">
+      <TextInput type="password" name="user_pw" id="user_pw" placeholder="비밀번호" text="비밀번호" />
+      <TextInput
+        type="password"
+        name="password_verify"
+        id="password_verify"
+        placeholder="비밀번호 확인"
+        text="비밀번호 확인"
+      />
+      <div className="flex justify-end pt-2">
         <SignUpBtn text="다음" type="submit" />
       </div>
     </form>

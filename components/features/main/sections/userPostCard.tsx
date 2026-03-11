@@ -1,56 +1,46 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import { TotalPostType } from '@/lib/post';
-import DetailPage from './detailPage';
+import { Images } from 'lucide-react';
 
-// post.id를 seed로 일관된 랜덤 크기 생성
-function getGridSpan(id: string) {
-  const hash = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const mod = hash % 10;
-
-  // 60% → 1x1, 20% → 2x1, 10% → 1x2, 10% → 2x2
-  if (mod < 6) return { col: 1, row: 1 };
-  if (mod < 8) return { col: 2, row: 1 };
-  if (mod < 9) return { col: 1, row: 2 };
-  return { col: 2, row: 2 };
+interface PostThumbnailProps {
+  post: {
+    id: string;
+    imgUrls: string[];
+    [key: string]: any;
+  };
+  user: {
+    nickname: string;
+    profile_image: string;
+    [key: string]: any;
+  };
+  onSelect: () => void;
 }
 
-export default function UserPostCard({ post, user }: TotalPostType) {
-  const [isOpen, setIsOpen] = useState(false);
-  const { col, row } = getGridSpan(post.id);
-  const thumbnail = post.imgUrls[0];
-
+export default function PostThumbnail({ post, user, onSelect }: PostThumbnailProps) {
   return (
-    <>
-      <div
-        className="relative cursor-pointer overflow-hidden aspect-square border border-gray-200 shadow-sm"
-        style={{ gridColumn: `span ${col}`, gridRow: `span ${row}` }}
-        onClick={() => setIsOpen(true)}
-      >
-        {thumbnail ? (
-          <Image
-            src={thumbnail}
-            alt="게시글 이미지"
-            fill
-            className="object-cover transition-transform duration-300 hover:scale-105"
-            sizes="(max-width: 640px) 33vw, 200px"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gray-100 text-sm text-gray-400">
-            이미지 없음
-          </div>
-        )}
-
-        {post.imgUrls.length > 1 && (
-          <div className="absolute right-2 top-2 rounded bg-black/50 px-1.5 py-0.5 text-xs text-white">
-            +{post.imgUrls.length - 1}
-          </div>
-        )}
-      </div>
-
-      {isOpen && <DetailPage modal={() => setIsOpen(false)} post={post} user={user} />}
-    </>
+    <button
+      className="relative aspect-square overflow-hidden rounded-md border border-gray-100"
+      onClick={onSelect}
+    >
+      {post.imgUrls?.[0] ? (
+        <Image
+          src={post.imgUrls[0]}
+          fill
+          alt="게시물"
+          className="object-cover transition-transform duration-200 hover:scale-105"
+          sizes="(max-width: 576px) 33vw, 192px"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-paw-cream-dark text-xs text-paw-inactive">
+          이미지 없음
+        </div>
+      )}
+      {post.imgUrls?.length > 1 && (
+        <div className="absolute right-1.5 top-1.5 rounded bg-black/40 p-0.5">
+          <Images size={14} className="text-white" />
+        </div>
+      )}
+    </button>
   );
 }

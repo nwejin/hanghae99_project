@@ -1,13 +1,10 @@
 'use client';
 
 import { Carousel } from '@/components/common';
-import { Card } from '@/components/common';
-import { Label } from '@/components/common';
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { RefreshCcw } from 'lucide-react';
-import { BadgePlus } from 'lucide-react';
+import { RefreshCcw, ImagePlus } from 'lucide-react';
 
 import { useFormContext } from 'react-hook-form';
 
@@ -23,15 +20,12 @@ export default function ImgCarousel() {
 
   const checkImg = async (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
     if (e.target.files) {
-      // const filesArray = Array.from(e.target.files);
-      // const urls = filesArray.map((file) => URL.createObjectURL(file));
-
       const filesArray = Array.from(e.target.files);
       const urls: string[] = [];
 
       for (const file of filesArray) {
         try {
-          const webpBlob = await convertToWebP(file); // 이미지를 WebP로 변환
+          const webpBlob = await convertToWebP(file);
           if (webpBlob) {
             const webpUrl = URL.createObjectURL(webpBlob);
             urls.push(webpUrl);
@@ -43,14 +37,11 @@ export default function ImgCarousel() {
       }
 
       if (index !== undefined) {
-        // 기존 이미지를 업데이트
         const updatedPreviews = [...imgPreviews];
         updatedPreviews[index] = urls[0];
-
         setImgPreviews(updatedPreviews);
         setValue('imgUrls', updatedPreviews);
       } else {
-        // 새 이미지를 추가
         if (imgPreviews.length + urls.length <= MAX_IMAGES) {
           const updatedPreviews = [...imgPreviews, ...urls];
           setImgPreviews(updatedPreviews);
@@ -63,59 +54,71 @@ export default function ImgCarousel() {
   };
 
   return (
-    <>
+    <div className="rounded-2xl border border-paw-border bg-white p-4">
+      <label className="mb-2 block text-xs font-semibold text-paw-sub">
+        사진 ({imgPreviews.length}/{MAX_IMAGES})
+      </label>
       <Carousel.Carousel className="w-full">
         <Carousel.CarouselContent>
           {imgPreviews.length === 0 ? (
             <Carousel.CarouselItem key="placeholder">
-              <div className="p-1">
-                <Card.Card className="felx items-center justify-center">
-                  <Card.CardContent className="flex aspect-square items-center justify-center rounded-sm border-2 border-dashed border-gray-300 p-1">
-                    <Label htmlFor="addFile" className="cursor-pointer">
-                      <BadgePlus color="gray" />
-                    </Label>
-                    <input type="file" multiple onChange={checkImg} className="hidden" id="addFile" />
-                  </Card.CardContent>
-                </Card.Card>
-              </div>
+              <label
+                htmlFor="addFile"
+                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-paw-border bg-paw-cream-dark transition-colors hover:border-paw-orange"
+              >
+                <ImagePlus size={32} className="text-paw-inactive" />
+                <span className="text-xs text-paw-sub">사진 추가</span>
+              </label>
+              <input type="file" multiple onChange={checkImg} className="hidden" id="addFile" accept="image/*" />
             </Carousel.CarouselItem>
           ) : (
             imgPreviews.map((imgUrl, index) => (
               <Carousel.CarouselItem key={index}>
-                <div className="group relative p-1">
-                  <Card.Card>
-                    <Card.CardContent className="relative flex aspect-[4/3] items-center justify-center p-1">
-                      <Image
-                        src={imgUrl}
-                        alt={`Image ${index}`}
-                        objectFit="cover"
-                        className="left-0 top-0 h-full w-full rounded-sm object-cover"
-                        width={512}
-                        height={512}
+                <div className="group relative">
+                  <div className="relative aspect-square overflow-hidden rounded-xl">
+                    <Image
+                      src={imgUrl}
+                      alt={`사진 ${index + 1}`}
+                      className="h-full w-full object-cover"
+                      width={512}
+                      height={512}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/30 opacity-0 transition-opacity group-hover:opacity-100">
+                      <label
+                        htmlFor={`refreshFile-${index}`}
+                        className="flex cursor-pointer flex-col items-center gap-1 text-white"
+                      >
+                        <RefreshCcw size={20} />
+                        <span className="text-[10px]">변경</span>
+                      </label>
+                      <input
+                        type="file"
+                        onChange={(e) => checkImg(e, index)}
+                        className="hidden"
+                        id={`refreshFile-${index}`}
+                        accept="image/*"
                       />
-                      {/* 새로고침  */}
-                      <div className="absolute inset-0 flex items-center justify-center rounded-sm bg-black bg-opacity-30 opacity-0 transition-opacity group-hover:opacity-100">
-                        <label
-                          htmlFor={`refreshFile-${index}`}
-                          className="flex cursor-pointer flex-col items-center text-white">
-                          <RefreshCcw size={24} />
-                        </label>
-                        <input
-                          type="file"
-                          onChange={(e) => checkImg(e, index)}
-                          className="hidden"
-                          id={`refreshFile-${index}`}
-                        />
-                      </div>
-                    </Card.CardContent>
-                  </Card.Card>
+                    </div>
+                  </div>
                 </div>
               </Carousel.CarouselItem>
             ))
           )}
         </Carousel.CarouselContent>
-        {imgPreviews.length === 0 ? '' : <CarouselBtn />}
+        {imgPreviews.length > 0 && <CarouselBtn />}
       </Carousel.Carousel>
-    </>
+      {imgPreviews.length > 0 && imgPreviews.length < MAX_IMAGES && (
+        <label
+          htmlFor="addMoreFile"
+          className="mt-2 flex cursor-pointer items-center justify-center gap-1 rounded-xl border border-dashed border-paw-border py-2 text-xs text-paw-sub transition-colors hover:border-paw-orange hover:text-paw-orange"
+        >
+          <ImagePlus size={14} />
+          사진 추가
+        </label>
+      )}
+      {imgPreviews.length > 0 && imgPreviews.length < MAX_IMAGES && (
+        <input type="file" multiple onChange={checkImg} className="hidden" id="addMoreFile" accept="image/*" />
+      )}
+    </div>
   );
 }

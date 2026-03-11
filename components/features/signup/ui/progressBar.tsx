@@ -1,5 +1,3 @@
-import { Progress } from '@/components/common';
-
 interface stepProps {
   step: number;
 }
@@ -7,8 +5,11 @@ interface stepProps {
 export default function ProgressBar({ step }: stepProps) {
   const stepValue = step * 33.3;
   return (
-    <>
-      <Progress value={stepValue} className="mb-2 h-2" />
-    </>
+    <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-paw-cream-dark">
+      <div
+        className="h-full rounded-full bg-paw-orange transition-all duration-300"
+        style={{ width: `${stepValue}%` }}
+      />
+    </div>
   );
 }

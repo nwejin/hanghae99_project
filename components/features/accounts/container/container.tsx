@@ -1,35 +1,34 @@
 'use client';
 
-import { Card } from '@/components/common';
-import { Avatar } from '@/components/common';
-import { Input } from '@/components/common';
-import { Textarea } from '@/components/common';
-import { Button } from '@/components/common';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Camera, Lock, PawPrint, LogOut, Eye, EyeOff, Loader2, Check } from 'lucide-react';
 import { Select } from '@/components/common';
 import { petCategoryData } from '@/shared/petCategory';
-import { Eye } from 'lucide-react';
-
-//SelectTrigger, SelectContent, SelectItem, SelectValue
+import { useCurrentUser } from '@/lib/useCurrentUser';
+import { userLogOut } from '@/lib/login';
 
 export function Container() {
-  const [email, setEmail] = useState('');
+  const router = useRouter();
+  const currentUser = useCurrentUser();
+
   const [nickname, setNickname] = useState('');
   const [bio, setBio] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const [profileImg, setProfileImg] = useState('');
-
   const [petImg, setPetImg] = useState('');
   const [petName, setPetName] = useState('');
-
-  const [petSpecies, setPetSpecies] = useState<string | undefined>('');
-  const [petSubSpecies, setPetSubSpecies] = useState<string | undefined>('');
+  const [petSpecies, setPetSpecies] = useState('');
+  const [petSubSpecies, setPetSubSpecies] = useState('');
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const [isView, setIsView] = useState<'password' | 'text'>('password');
 
   useEffect(() => {
     async function fetchData() {
@@ -38,165 +37,279 @@ export function Container() {
         if (userDataString) {
           const parsedUserData = JSON.parse(userDataString);
           const userId = parsedUserData.userId;
-          // setNickname(userId);
           const response = await fetch(`/api/accounts?userId=${userId}`);
           const data = await response.json();
-          // console.log(data);
-          // console.log(data.pets[0]);
 
           if (response.ok) {
             setEmail(data.user.email || '');
             setNickname(data.user.nickname || '');
             setBio(data.user.bio || '');
-            setPassword(data.user.password);
             setProfileImg(data.user.profile_image || '');
 
-            // 반려동물
-            setPetImg(data.pets[0].pet_image);
-            setPetName(data.pets[0].petName || '');
-            setPetSpecies(data.pets[0].petSpecies || '');
-            setPetSubSpecies(data.pets[0].petSubSpecies || '');
-          } else {
-            setError(data.error || 'Error fetching data');
+            if (data.pets?.[0]) {
+              setPetImg(data.pets[0].pet_image || '');
+              setPetName(data.pets[0].petName || data.pets[0].pet_name || '');
+              setPetSpecies(data.pets[0].petSpecies || data.pets[0].pet_species || '');
+              setPetSubSpecies(data.pets[0].petSubSpecies || data.pets[0].pet_sub_species || '');
+            }
           }
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setError('Error fetching data');
+      } catch {
+        setError('데이터를 불러올 수 없습니다');
       } finally {
         setLoading(false);
       }
     }
-
     fetchData();
   }, []);
 
-  const handleSpeciesChange = (species: any) => {
-    setPetSpecies(species);
-    setPetSubSpecies(''); // 중분류 초기화
+  const handleSave = async () => {
+    if (newPassword && newPassword !== confirmPassword) {
+      setError('비밀번호가 일치하지 않습니다');
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/accounts', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nickname,
+          bio,
+          newPassword: newPassword || undefined,
+          petName,
+          petSpecies,
+          petSubSpecies,
+        }),
+      });
+
+      if (response.ok) {
+        // sessionStorage 업데이트
+        const userDataString = sessionStorage.getItem('user');
+        if (userDataString) {
+          const parsed = JSON.parse(userDataString);
+          parsed.nickName = nickname;
+          sessionStorage.setItem('user', JSON.stringify(parsed));
+        }
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        const data = await response.json();
+        setError(data.error || '저장에 실패했습니다');
+      }
+    } catch {
+      setError('저장 중 오류가 발생했습니다');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const handleLogout = async () => {
+    try {
+      await userLogOut();
+      sessionStorage.removeItem('user');
+      router.push('/login');
+    } catch {
+      setError('로그아웃에 실패했습니다');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-paw-orange" />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <Card.Card className="h-[50rem]">
-        <Card.CardHeader>
-          <Card.CardTitle className="border-b pb-6 text-xl">계정 설정</Card.CardTitle>
-        </Card.CardHeader>
-        <Card.CardContent className="grid w-full grid-cols-6 gap-4 p-6">
-          <Card.Card className="col-span-3 rounded-md bg-white p-3 shadow-md">
-            <Card.CardHeader className="mb-4 p-0">
-              <Card.CardTitle className="border-b pb-3 text-lg">프로필 설정</Card.CardTitle>
-            </Card.CardHeader>
-            <Card.CardContent>
-              <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-7 items-center gap-6">
-                  <div className="col-span-2 flex items-center justify-center">
-                    <Avatar.Avatar className="h-16 w-16">
-                      <Avatar.AvatarImage src={profileImg} alt="User Profile Image" />
-                      <Avatar.AvatarFallback>user</Avatar.AvatarFallback>
-                    </Avatar.Avatar>
-                  </div>
-                  <div className="col-span-5">
-                    <div className="items-center">
-                      <label className="w-14 text-sm font-semibold">닉네임</label>
-                      <Input value={nickname} onChange={(e) => setNickname(e.target.value)} />
-                    </div>
-                    <div className="items-center">
-                      <label className="text-sm font-semibold">자기소개</label>
-                      <Input value={bio} onChange={(e) => setBio(e.target.value)} />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-semibold">이메일</label>
-                  <Input value={email} disabled className="" />
-                </div>
-                <div>
-                  <label className="text-sm font-semibold">비밀번호</label>
-                  <div className="flex">
-                    <Input type={isView} value={password} onChange={(e) => setPassword(e.target.value)} />
-                    <button
-                      onMouseDown={() => setIsView('text')}
-                      onMouseUp={() => setIsView('password')}
-                      onMouseLeave={() => setIsView('password')}>
-                      <Eye />
-                    </button>
-                  </div>
-                </div>
+    <div className="px-4 py-6">
+      <h1 className="mb-6 text-lg font-bold text-paw-brown">계정 설정</h1>
 
-                <div>
-                  <label className="text-sm font-semibold">비밀번호 확인</label>
-                  <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
+      {/* 프로필 이미지 */}
+      <div className="flex justify-center">
+        <div className="relative">
+          <div className="h-24 w-24 overflow-hidden rounded-full border-4 border-paw-border bg-paw-cream-dark">
+            {profileImg ? (
+              <img src={profileImg} alt="프로필" className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-paw-sub">
+                {nickname?.charAt(0)}
               </div>
-            </Card.CardContent>
-            <Card.CardFooter className="flex justify-end bg-white p-6">
-              <Button>저장하기</Button>
-            </Card.CardFooter>
-          </Card.Card>
+            )}
+          </div>
+          <div className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-paw-orange text-white">
+            <Camera size={14} />
+          </div>
+        </div>
+      </div>
 
-          <Card.Card className="col-span-3 rounded-md bg-white p-6 shadow-md">
-            <Card.CardHeader className="mb-4 p-0">
-              <Card.CardTitle className="border-b pb-3 text-lg">반려동물 설정</Card.CardTitle>
-            </Card.CardHeader>
-            <Card.CardContent>
-              <div className="flex flex-col gap-4">
-                <div className="grid grid-cols-7 items-center gap-6">
-                  <div className="col-span-2 flex items-center justify-center">
-                    <Avatar.Avatar className="h-16 w-16">
-                      <Avatar.AvatarImage src={petImg} alt="User Profile Image" />
-                      <Avatar.AvatarFallback>U</Avatar.AvatarFallback>
-                    </Avatar.Avatar>
-                  </div>
-                  <div className="col-span-5">
-                    <div className="items-center">
-                      <label className="w-14 text-sm font-semibold">이름</label>
-                      <Input value={petName} onChange={(e) => setNickname(e.target.value)} />
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label className="w-14 text-sm font-semibold">대분류</label>
-                  <Select.Select
-                    value={petSpecies}
-                    onValueChange={(value) => handleSpeciesChange(value as keyof typeof petCategoryData)}>
-                    <Select.SelectTrigger>
-                      <Select.SelectValue placeholder="대분류" />
-                    </Select.SelectTrigger>
-                    <Select.SelectContent>
-                      <Select.SelectItem value="dog">강아지</Select.SelectItem>
-                      <Select.SelectItem value="cat">고양이</Select.SelectItem>
-                      <Select.SelectItem value="other">기타</Select.SelectItem>
-                    </Select.SelectContent>
-                  </Select.Select>
-                </div>
-                <div>
-                  <label className="w-14 text-sm font-semibold">소분류</label>
-                  <Select.Select value={petSubSpecies} onValueChange={(value) => setPetSubSpecies(value)}>
-                    <Select.SelectTrigger>
-                      <Select.SelectValue placeholder="중분류" />
-                    </Select.SelectTrigger>
-                    <Select.SelectContent>
-                      {petSpecies &&
-                        petCategoryData[petSpecies as keyof typeof petCategoryData]?.map((subspecies) => (
-                          <Select.SelectItem key={subspecies.value} value={subspecies.value}>
-                            {subspecies.label}
-                          </Select.SelectItem>
-                        ))}
-                    </Select.SelectContent>
-                  </Select.Select>
-                </div>
-              </div>
-            </Card.CardContent>
-            <Card.CardFooter className="flex justify-end bg-white p-6">
-              <Button>저장하기</Button>
-            </Card.CardFooter>
-          </Card.Card>
-        </Card.CardContent>
-      </Card.Card>
-    </>
+      {/* 프로필 정보 */}
+      <div className="mt-6 space-y-4">
+        <div className="rounded-2xl border border-paw-border bg-white p-4">
+          <label className="mb-1 block text-xs font-semibold text-paw-sub">닉네임</label>
+          <input
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+          />
+        </div>
+
+        <div className="rounded-2xl border border-paw-border bg-white p-4">
+          <label className="mb-1 block text-xs font-semibold text-paw-sub">자기소개</label>
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={2}
+            className="w-full resize-none rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+          />
+        </div>
+
+        <div className="rounded-2xl border border-paw-border bg-white p-4">
+          <label className="mb-1 block text-xs font-semibold text-paw-sub">이메일</label>
+          <input
+            type="text"
+            value={email}
+            disabled
+            className="w-full rounded-xl border border-paw-border bg-gray-50 px-3 py-2.5 text-sm text-paw-inactive"
+          />
+        </div>
+      </div>
+
+      {/* 비밀번호 변경 */}
+      <div className="mt-6">
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-paw-brown">
+          <Lock size={16} />
+          비밀번호 변경
+        </div>
+        <div className="space-y-3 rounded-2xl border border-paw-border bg-white p-4">
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-paw-sub">새 비밀번호</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="8자 이상"
+                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 pr-10 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-paw-sub">
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-paw-sub">비밀번호 확인</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+            />
+            {newPassword && confirmPassword && newPassword !== confirmPassword && (
+              <p className="mt-1 text-xs text-paw-like">비밀번호가 일치하지 않습니다</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 반려동물 정보 */}
+      <div className="mt-6">
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-paw-brown">
+          <PawPrint size={16} />
+          반려동물 정보
+        </div>
+        <div className="space-y-3 rounded-2xl border border-paw-border bg-white p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-paw-cream-dark">
+              {petImg ? (
+                <img src={petImg} alt="반려동물" className="h-full w-full object-cover" />
+              ) : (
+                <PawPrint size={20} className="text-paw-orange" />
+              )}
+            </div>
+            <div className="flex-1">
+              <label className="mb-1 block text-xs font-semibold text-paw-sub">이름</label>
+              <input
+                type="text"
+                value={petName}
+                onChange={(e) => setPetName(e.target.value)}
+                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-paw-sub">대분류</label>
+            <Select.Select value={petSpecies} onValueChange={(value) => { setPetSpecies(value); setPetSubSpecies(''); }}>
+              <Select.SelectTrigger className="rounded-xl border-paw-border bg-paw-cream text-sm">
+                <Select.SelectValue placeholder="선택" />
+              </Select.SelectTrigger>
+              <Select.SelectContent>
+                <Select.SelectItem value="dog">강아지</Select.SelectItem>
+                <Select.SelectItem value="cat">고양이</Select.SelectItem>
+                <Select.SelectItem value="other">기타</Select.SelectItem>
+              </Select.SelectContent>
+            </Select.Select>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-paw-sub">소분류</label>
+            <Select.Select value={petSubSpecies} onValueChange={(value) => setPetSubSpecies(value)}>
+              <Select.SelectTrigger className="rounded-xl border-paw-border bg-paw-cream text-sm">
+                <Select.SelectValue placeholder="선택" />
+              </Select.SelectTrigger>
+              <Select.SelectContent>
+                {petSpecies &&
+                  petCategoryData[petSpecies as keyof typeof petCategoryData]?.map((sub) => (
+                    <Select.SelectItem key={sub.value} value={sub.value}>
+                      {sub.label}
+                    </Select.SelectItem>
+                  ))}
+              </Select.SelectContent>
+            </Select.Select>
+          </div>
+        </div>
+      </div>
+
+      {/* 에러 메시지 */}
+      {error && (
+        <p className="mt-4 text-center text-sm text-paw-like">{error}</p>
+      )}
+
+      {/* 저장 버튼 */}
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-paw-orange py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60">
+        {saving ? (
+          <Loader2 size={18} className="animate-spin" />
+        ) : saved ? (
+          <>
+            <Check size={18} />
+            저장 완료
+          </>
+        ) : (
+          '저장하기'
+        )}
+      </button>
+
+      {/* 로그아웃 */}
+      <button
+        onClick={handleLogout}
+        className="mt-4 flex w-full items-center justify-center gap-2 py-3 text-sm font-medium text-red-400 transition-colors hover:text-red-500">
+        <LogOut size={16} />
+        로그아웃
+      </button>
+    </div>
   );
 }

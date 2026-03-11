@@ -1,18 +1,16 @@
 'use client';
 
-import { Button } from '@/components/common';
-import { Heart, Send, MessageCircle } from 'lucide-react';
-// import { addLike, removeLike, isLiked } from '@/lib/postLike';
+import { Heart, MessageCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { addLike, deleteLike, getLike } from '@/lib/like';
 
 interface ButtonsProps {
   postId: string;
   userId: string | null;
-  modal?: () => void;
+  onCommentClick?: () => void;
 }
 
-export default function Buttons({ postId, userId, modal }: ButtonsProps) {
+export default function Buttons({ postId, userId, onCommentClick }: ButtonsProps) {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -21,51 +19,39 @@ export default function Buttons({ postId, userId, modal }: ButtonsProps) {
         const likedStatus = await getLike(postId, userId);
         setLiked(likedStatus.isLiked);
       };
-
       fetchLikeStatus();
     }
   }, [postId, userId]);
 
-  const likeData = { postId };
-
   const handleLike = async () => {
-    if (!userId) {
-      return;
-    }
-
-    // 좋아요 클릭시 먼저 ui 변경
+    if (!userId) return;
     const likeUpdate = !liked;
     setLiked(likeUpdate);
-
     try {
       if (likeUpdate) {
-        await addLike(likeData);
+        await addLike({ postId });
       } else {
-        await deleteLike(likeData);
+        await deleteLike({ postId });
       }
-    } catch (error) {
-      // 서버 요청 실패시 원상태로
+    } catch {
       setLiked(liked);
-      console.error('좋아요 업데이트 실패:', error);
     }
   };
 
   return (
-    <>
-      <div className="flex w-full items-center">
-        <Button variant="ghost" size="icon" onClick={handleLike}>
-          <Heart className="h-4 w-4" fill={liked ? 'red' : 'white'} strokeWidth={liked ? 0 : 2} />
-          <span className="sr-only">Like</span>
-        </Button>
-        <Button variant="ghost" size="icon" onClick={modal}>
-          <MessageCircle className="h-4 w-4" />
-          <span className="sr-only">Comment</span>
-        </Button>
-        <Button variant="ghost" size="icon">
-          <Send className="h-4 w-4" />
-          <span className="sr-only">Share</span>
-        </Button>
-      </div>
-    </>
+    <div className="flex items-center gap-3 px-1 py-2">
+      <button onClick={handleLike} className="transition-transform active:scale-125">
+        <Heart
+          size={22}
+          className={liked ? 'fill-paw-like text-paw-like' : 'text-paw-brown'}
+          strokeWidth={liked ? 0 : 1.8}
+        />
+      </button>
+      {onCommentClick && (
+        <button onClick={onCommentClick} className="transition-transform active:scale-110">
+          <MessageCircle size={22} className="text-paw-brown" strokeWidth={1.8} />
+        </button>
+      )}
+    </div>
   );
 }
