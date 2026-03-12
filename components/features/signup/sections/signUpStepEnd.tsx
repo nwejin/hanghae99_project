@@ -141,7 +141,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
             className="hidden"
             onChange={prevImg}
             name="pet_image"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/gif"
           />
         </div>
       </div>

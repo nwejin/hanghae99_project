@@ -38,6 +38,8 @@ export const convertToWebP = async (image: File): Promise<Blob | undefined> => {
             0.8
           );
         };
+
+        img.onerror = () => reject(new Error('Failed to load image'));
       };
 
       fileReader.onerror = () => {

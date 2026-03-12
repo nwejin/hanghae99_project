@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/config/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 // 게시글 데이터 불러오기
 export async function GET(req: Request) {
   try {

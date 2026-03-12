@@ -153,7 +153,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
             className="hidden"
             onChange={prevImg}
             name="profile_image"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/gif"
           />
         </div>
       </div>
