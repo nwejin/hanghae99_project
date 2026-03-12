@@ -7,6 +7,7 @@ import SignUpStepEnd from './signUpStepEnd';
 import ProgressBar from '../ui/progressBar';
 import { createClient } from '@/config/supabase/client';
 import { useRouter } from 'next/navigation';
+import { userLogIn } from '@/lib/login';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -89,7 +90,14 @@ export default function SignUpForm() {
         }
       }
 
-      router.push('/login');
+      if (userData.user_id && userData.user_pw) {
+        await userLogIn({
+          user_id: userData.user_id,
+          user_password: userData.user_pw,
+        });
+      }
+
+      router.push('/');
       toast({
         title: '회원가입이 완료되었습니다.',
       });

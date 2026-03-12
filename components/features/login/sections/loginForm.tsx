@@ -31,22 +31,7 @@ export default function LoginForm() {
       });
       router.push('/');
     } else {
-      switch (userLogin) {
-        case 'auth/invalid-credential':
-          setError('아이디/비밀번호를 확인해주세요');
-          break;
-        case 'auth/user-not-found':
-          setError('가입 정보가 없습니다.');
-          break;
-        case 'auth/wrong-password':
-          setError('비밀번호를 확인해주세요');
-          break;
-        case 'auth/too-many-requests':
-          setError('잠시 후 다시 시도해주세요');
-          break;
-        default:
-          setError('로그인에 실패했습니다. 다시 시도해주세요.');
-      }
+      setError('아이디 또는 비밀번호를 확인해주세요.');
     }
   };
 

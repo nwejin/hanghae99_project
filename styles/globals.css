@@ -70,10 +70,20 @@
   * {
     @apply border-border;
     font-family: 'Pretendard-Regular';
+    touch-action: pan-x pan-y;
+  }
+  html {
+    overflow: hidden;
+    overscroll-behavior: none;
   }
   body {
     @apply bg-background text-foreground;
     color: #4A3728;
+    overflow: hidden;
+    overscroll-behavior: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
   }
 
   /* 스크롤바 숨기기 */
