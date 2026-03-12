@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export function Container() {
   return (
-    <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+    <div className="w-full max-w-md p-8">
       <div className="mb-8 flex justify-center">
         <LogoHeader />
       </div>

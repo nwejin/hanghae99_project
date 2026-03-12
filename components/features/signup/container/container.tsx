@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export function Container() {
   return (
-    <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+    <div className="w-full max-w-md p-8">
       <div className="mb-6 flex items-end justify-center gap-1">
         <Image src={dog_img} alt="dog" width={80} />
         <Image src={cat_img} alt="cat" width={80} />
