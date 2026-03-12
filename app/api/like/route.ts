@@ -1,6 +1,8 @@
 import { createClient } from '@/config/supabase/server';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 // 좋아요
 export async function POST(req: Request) {
   try {

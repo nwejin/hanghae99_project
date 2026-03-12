@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { SignUpContiner } from '@/components/features';
 
 export default function SignUpPage() {

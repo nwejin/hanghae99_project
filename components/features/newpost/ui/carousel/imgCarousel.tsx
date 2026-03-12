@@ -69,7 +69,7 @@ export default function ImgCarousel() {
                 <ImagePlus size={32} className="text-paw-inactive" />
                 <span className="text-xs text-paw-sub">사진 추가</span>
               </label>
-              <input type="file" multiple onChange={checkImg} className="hidden" id="addFile" accept="image/*" />
+              <input type="file" multiple onChange={checkImg} className="hidden" id="addFile" accept="image/jpeg,image/png,image/webp,image/gif" />
             </Carousel.CarouselItem>
           ) : (
             imgPreviews.map((imgUrl, index) => (
@@ -96,7 +96,7 @@ export default function ImgCarousel() {
                         onChange={(e) => checkImg(e, index)}
                         className="hidden"
                         id={`refreshFile-${index}`}
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp,image/gif"
                       />
                     </div>
                   </div>
@@ -117,7 +117,7 @@ export default function ImgCarousel() {
         </label>
       )}
       {imgPreviews.length > 0 && imgPreviews.length < MAX_IMAGES && (
-        <input type="file" multiple onChange={checkImg} className="hidden" id="addMoreFile" accept="image/*" />
+        <input type="file" multiple onChange={checkImg} className="hidden" id="addMoreFile" accept="image/jpeg,image/png,image/webp,image/gif" />
       )}
     </div>
   );
