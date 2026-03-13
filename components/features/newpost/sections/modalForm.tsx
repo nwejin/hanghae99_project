@@ -6,6 +6,7 @@ import { useModalStore } from '@/store/modalStore';
 
 import { useForm, FormProvider } from 'react-hook-form';
 import { createClient } from '@/config/supabase/client';
+import { useToast } from '@/components/common/ui/use-toast';
 
 import ImgCarousel from '../ui/carousel/imgCarousel';
 import Contents from '../ui/contents';
@@ -19,6 +20,7 @@ interface ModalFormProps {
 
 export default function ModalForm({ formRef }: ModalFormProps) {
   const { closeModal } = useModalStore();
+  const { toast } = useToast();
 
   const methods = useForm<PostFormData>({
     defaultValues: {
@@ -46,12 +48,13 @@ export default function ModalForm({ formRef }: ModalFormProps) {
           .then((res) => res.blob())
           .then(async (blob) => {
             const timestamp = new Date().getTime();
+            const ext = blob.type === 'image/jpeg' ? 'jpg' : 'webp';
             const fileName = `${timestamp}_${url.split('/').pop()}`;
-            const filePath = `images/${fileName}.webp`;
+            const filePath = `images/${fileName}.${ext}`;
 
             const { error } = await supabase.storage
               .from('posts')
-              .upload(filePath, blob, { contentType: 'image/webp' });
+              .upload(filePath, blob, { contentType: blob.type });
 
             if (error) throw error;
 
@@ -89,6 +92,9 @@ export default function ModalForm({ formRef }: ModalFormProps) {
       createPost(postData);
     } catch (error) {
       console.error('게시글 추가 에러', error);
+      toast({
+        title: '게시글 작성에 실패했습니다! 다시한번 시도해주세요 🙏',
+      });
     }
   };
 
