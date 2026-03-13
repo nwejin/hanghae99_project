@@ -28,11 +28,22 @@ export const convertToWebP = async (image: File): Promise<Blob | undefined> => {
 
           canvas.toBlob(
             (webpBlob) => {
-              if (!webpBlob) {
-                reject(new Error('Failed to create WebP Blob'));
+              if (webpBlob) {
+                resolve(webpBlob);
                 return;
               }
-              resolve(webpBlob);
+              // WebP 변환 실패 시 JPEG fallback
+              canvas.toBlob(
+                (jpegBlob) => {
+                  if (!jpegBlob) {
+                    reject(new Error('Failed to create image Blob'));
+                    return;
+                  }
+                  resolve(jpegBlob);
+                },
+                'image/jpeg',
+                0.85
+              );
             },
             'image/webp',
             0.8
