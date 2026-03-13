@@ -73,17 +73,14 @@
     touch-action: pan-x pan-y;
   }
   html {
-    overflow: hidden;
-    overscroll-behavior: none;
+    overscroll-behavior-y: contain;
   }
   body {
     @apply bg-background text-foreground;
     color: #4A3728;
-    overflow: hidden;
-    overscroll-behavior: none;
-    position: fixed;
+    overscroll-behavior-y: contain;
     width: 100%;
-    height: 100%;
+    min-height: 100dvh;
   }
 
   /* 스크롤바 숨기기 */
@@ -93,5 +90,9 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  a, button {
+    touch-action: auto;
   }
 }

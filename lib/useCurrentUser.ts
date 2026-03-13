@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createClient } from '@/config/supabase/client';
 
 interface CurrentUser {
   userId: string;
@@ -20,20 +21,30 @@ export function useCurrentUser(): CurrentUser {
   const [user, setUser] = useState<CurrentUser>(defaultUser);
 
   useEffect(() => {
-    const userDataString = sessionStorage.getItem('user');
-    if (userDataString) {
-      try {
-        const parsed = JSON.parse(userDataString);
-        setUser({
-          userId: parsed.userId || '',
-          nickname: parsed.nickName || '',
-          profileImg: parsed.profileImg || null,
-          isLoggedIn: true,
-        });
-      } catch {
+    const supabase = createClient();
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        sessionStorage.removeItem('user');
         setUser(defaultUser);
+        return;
       }
-    }
+
+      const userDataString = sessionStorage.getItem('user');
+      if (userDataString) {
+        try {
+          const parsed = JSON.parse(userDataString);
+          setUser({
+            userId: parsed.userId || '',
+            nickname: parsed.nickName || '',
+            profileImg: parsed.profileImg || null,
+            isLoggedIn: true,
+          });
+        } catch {
+          setUser(defaultUser);
+        }
+      }
+    });
   }, []);
 
   return user;
