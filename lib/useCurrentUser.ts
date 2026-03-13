@@ -43,6 +43,22 @@ export function useCurrentUser(): CurrentUser {
         } catch {
           setUser(defaultUser);
         }
+      } else {
+        // 세션은 있는데 sessionStorage가 없으면 서버에서 복구
+        fetch('/api/login', { credentials: 'include' })
+          .then((res) => (res.ok ? res.json() : null))
+          .then((profile) => {
+            if (profile) {
+              sessionStorage.setItem('user', JSON.stringify(profile));
+              setUser({
+                userId: profile.userId || '',
+                nickname: profile.nickName || '',
+                profileImg: profile.profileImg || null,
+                isLoggedIn: true,
+              });
+            }
+          })
+          .catch(() => setUser(defaultUser));
       }
     });
   }, []);

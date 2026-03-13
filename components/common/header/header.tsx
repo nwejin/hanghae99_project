@@ -9,13 +9,15 @@ export default function Header() {
   const { nickname, profileImg, isLoggedIn } = useCurrentUser();
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-paw-border bg-white px-4">
+    <header className="flex h-[60px] shrink-0 items-center justify-between border-b border-paw-border bg-white px-4 py-1">
       <Link href="/">
         <Image src={text_logo} alt="멍냥터 로고" width={120} height={30} />
       </Link>
 
       {isLoggedIn ? (
-        <Link href={`/user/${nickname}`} className="h-8 w-8 overflow-hidden rounded-full border-2 border-paw-border bg-paw-cream-dark">
+        <Link
+          href={`/user/${nickname}`}
+          className="h-8 w-8 overflow-hidden rounded-full border-2 border-paw-border bg-paw-cream-dark">
           {profileImg ? (
             <img src={profileImg} alt="프로필" className="h-full w-full object-cover" />
           ) : (
