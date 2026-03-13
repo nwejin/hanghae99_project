@@ -80,7 +80,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="sticky bottom-0 z-20 flex h-[56px] border-t border-paw-border bg-white">
+    <footer className="sticky bottom-0 z-[99] flex h-[56px] border-t border-paw-border bg-white">
       {tabs.map(({ icon: Icon, label, active, href, onClick, badge }) => {
         const content = (
           <div
