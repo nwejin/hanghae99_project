@@ -47,6 +47,7 @@ export default function ModalForm({ formRef }: ModalFormProps) {
         fetch(url)
           .then((res) => res.blob())
           .then(async (blob) => {
+            alert(`디버그: blob.type=${blob.type}, size=${blob.size}`);
             const timestamp = new Date().getTime();
             const ext = blob.type === 'image/jpeg' ? 'jpg' : 'webp';
             const fileName = `${timestamp}_${url.split('/').pop()}`;
@@ -56,7 +57,10 @@ export default function ModalForm({ formRef }: ModalFormProps) {
               .from('posts')
               .upload(filePath, blob, { contentType: blob.type });
 
-            if (error) throw error;
+            if (error) {
+              alert(`업로드 에러: ${error.message}`);
+              throw error;
+            }
 
             const { data } = supabase.storage
               .from('posts')
