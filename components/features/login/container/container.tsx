@@ -13,7 +13,7 @@ export function Container() {
         <span className="text-sm text-paw-sub">계정이 없으신가요? </span>
         <Link
           href="/signup"
-          className="text-sm font-semibold text-paw-orange transition-colors hover:text-paw-orange/80">
+          className="text-sm font-semibold text-paw-main transition-colors hover:text-paw-main/80">
           회원가입
         </Link>
       </div>

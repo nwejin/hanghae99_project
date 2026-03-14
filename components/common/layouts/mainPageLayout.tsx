@@ -86,7 +86,7 @@ export function MainPageLayout({ children }: { children: React.ReactNode }) {
             {pullDistance > 0 && (
               <Loader2
                 size={20}
-                className={`text-paw-orange ${refreshing ? 'animate-spin' : ''}`}
+                className={`text-paw-main ${refreshing ? 'animate-spin' : ''}`}
                 style={{
                   opacity: Math.min(pullDistance / THRESHOLD, 1),
                   transform: `rotate(${pullDistance * 3}deg)`,

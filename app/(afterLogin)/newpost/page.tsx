@@ -106,7 +106,7 @@ export default function NewPostPage() {
             <Input
               type="date"
               {...register('photoDate', { required: '날짜를 선택해주세요.' })}
-              className="w-full appearance-none rounded-xl border-paw-border bg-paw-cream-dark text-sm text-paw-brown focus:ring-paw-orange"
+              className="w-full appearance-none rounded-xl border-paw-border bg-paw-cream-dark text-sm text-paw-brown focus:ring-paw-main"
             />
           </div>
 
@@ -129,7 +129,7 @@ export default function NewPostPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-paw-orange py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-paw-main py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60"
           >
             {submitting ? (
               <Loader2 size={18} className="animate-spin" />

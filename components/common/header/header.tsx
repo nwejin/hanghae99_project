@@ -27,7 +27,7 @@ export default function Header() {
           )}
         </Link>
       ) : (
-        <Link href="/login" className="text-sm font-semibold text-paw-orange">
+        <Link href="/login" className="text-sm font-semibold text-paw-main">
           로그인
         </Link>
       )}

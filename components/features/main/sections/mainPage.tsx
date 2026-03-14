@@ -121,26 +121,26 @@ export default function MainPage() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
             />
             <span className="text-xs text-paw-sub">~</span>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
             />
           </div>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex flex-shrink-0 items-center justify-center rounded-lg border border-paw-border p-1.5 text-paw-sub transition-colors hover:text-paw-orange disabled:opacity-50"
+            className="flex flex-shrink-0 items-center justify-center rounded-lg border border-paw-border p-1.5 text-paw-sub transition-colors hover:text-paw-main disabled:opacity-50"
           >
             <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
           </button>
           <button
             onClick={() => setAscending(!ascending)}
-            className="flex flex-shrink-0 items-center gap-0.5 rounded-lg border border-paw-border px-2 py-1.5 text-[11px] text-paw-sub transition-colors hover:text-paw-orange"
+            className="flex flex-shrink-0 items-center gap-0.5 rounded-lg border border-paw-border px-2 py-1.5 text-[11px] text-paw-sub transition-colors hover:text-paw-main"
           >
             <ArrowUpDown size={12} />
             {ascending ? '오래된순' : '최신순'}
@@ -153,7 +153,7 @@ export default function MainPage() {
         {groupedPosts.map((group) => (
           <div key={group.date} className="mb-4">
             <div className="flex items-center gap-1.5 px-3 py-2">
-              <Calendar size={13} className="text-paw-orange" />
+              <Calendar size={13} className="text-paw-main" />
               <span className="text-xs font-semibold text-paw-brown">
                 {group.date === '날짜 없음' ? group.date : group.date.replace(/-/g, '.')}
               </span>

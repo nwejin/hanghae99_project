@@ -137,7 +137,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
           <div className="flex flex-1 items-center gap-2">
             <label
               htmlFor="profile_image"
-              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-orange"
+              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-main"
             >
               사진 선택
             </label>
@@ -175,7 +175,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
             required: '닉네임을 입력해주세요',
             minLength: { value: 2, message: '닉네임은 2글자 이상이어야 합니다' },
           })}
-          className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+          className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
         />
       </div>
 

@@ -53,7 +53,7 @@ export default function Contents() {
             <span
               key={index}
               onClick={() => removeTag(index)}
-              className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-paw-orange/10 px-2.5 py-1 text-xs font-semibold text-paw-orange transition-colors hover:bg-paw-orange/20"
+              className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-paw-main/10 px-2.5 py-1 text-xs font-semibold text-paw-main transition-colors hover:bg-paw-main/20"
             >
               #{tag}
               <X size={12} />
@@ -67,7 +67,7 @@ export default function Contents() {
         maxLength={10}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+        className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
       />
     </div>
   );

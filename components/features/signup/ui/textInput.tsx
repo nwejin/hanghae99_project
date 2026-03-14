@@ -21,7 +21,7 @@ export default function TextInput({ type, name, id, placeholder, text }: TextInp
         id={id}
         placeholder={placeholder}
         {...register(name)}
-        className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+        className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
       />
     </div>
   );

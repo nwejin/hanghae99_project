@@ -11,8 +11,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: '멍냥터',
-  description: '반려동물을 위한 SNS',
+  title: '청군이네',
+  description: '하루하루 기록되는 청군이의 일상',
 };
 
 export default function RootLayout({

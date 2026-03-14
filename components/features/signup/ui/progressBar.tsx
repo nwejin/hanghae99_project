@@ -7,7 +7,7 @@ export default function ProgressBar({ step }: stepProps) {
   return (
     <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-paw-cream-dark">
       <div
-        className="h-full rounded-full bg-paw-orange transition-all duration-300"
+        className="h-full rounded-full bg-paw-main transition-all duration-300"
         style={{ width: `${stepValue}%` }}
       />
     </div>

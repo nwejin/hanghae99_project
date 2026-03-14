@@ -114,7 +114,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
           <div className="flex flex-1 items-center gap-2">
             <label
               htmlFor="pet_image"
-              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-orange">
+              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-main">
               사진 선택
             </label>
             {imgPreview && (

@@ -75,7 +75,7 @@ export function Container() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-paw-orange" />
+        <Loader2 className="h-8 w-8 animate-spin text-paw-main" />
       </div>
     );
   }
@@ -106,7 +106,7 @@ export function Container() {
           <div className="mt-3 flex items-center gap-2">
             <h1 className="text-lg font-bold text-paw-brown">{userData.nickname}</h1>
             {isOwnProfile && (
-              <Link href={`/accounts/${currentUser.userId}`} className="text-paw-sub transition-colors hover:text-paw-orange">
+              <Link href={`/accounts/${currentUser.userId}`} className="text-paw-sub transition-colors hover:text-paw-main">
                 <Settings size={18} />
               </Link>
             )}
@@ -137,7 +137,7 @@ export function Container() {
                   {pet.pet_image ? (
                     <img src={pet.pet_image} alt={pet.petName} className="h-full w-full object-cover" />
                   ) : (
-                    <PawPrint size={20} className="text-paw-orange" />
+                    <PawPrint size={20} className="text-paw-main" />
                   )}
                 </div>
                 <div>
@@ -170,7 +170,7 @@ export function Container() {
             {groupedPosts.map((group) => (
               <div key={group.date} className="mb-4">
                 <div className="flex items-center gap-1.5 py-2">
-                  <Calendar size={13} className="text-paw-orange" />
+                  <Calendar size={13} className="text-paw-main" />
                   <span className="text-xs font-semibold text-paw-brown">
                     {group.date === '날짜 없음' ? group.date : group.date.replace(/-/g, '.')}
                   </span>

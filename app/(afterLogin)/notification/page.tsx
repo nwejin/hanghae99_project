@@ -35,7 +35,7 @@ export default function NotificationPage() {
       case 'comment_like':
         return <Heart size={16} className="fill-paw-like text-paw-like" />;
       case 'comment':
-        return <MessageCircle size={16} className="text-paw-orange" />;
+        return <MessageCircle size={16} className="text-paw-main" />;
       default:
         return <Bell size={16} className="text-paw-sub" />;
     }
@@ -73,7 +73,7 @@ export default function NotificationPage() {
   if (loading) {
     return (
       <div className="flex h-40 items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-paw-orange border-t-transparent" />
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-paw-main border-t-transparent" />
       </div>
     );
   }

@@ -64,7 +64,7 @@ export default function SearchPage() {
             if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleSearch();
           }}
           placeholder={searchType === 'tag' ? '태그로 검색...' : '닉네임으로 검색...'}
-          className="w-full rounded-full border border-paw-border bg-white py-2.5 pl-10 pr-4 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-2 focus:ring-paw-orange"
+          className="w-full rounded-full border border-paw-border bg-white py-2.5 pl-10 pr-4 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-2 focus:ring-paw-main"
         />
       </div>
 
@@ -74,7 +74,7 @@ export default function SearchPage() {
           onClick={() => { setSearchType('tag'); setSearched(false); setUserResults([]); setPostResults([]); }}
           className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
             searchType === 'tag'
-              ? 'bg-paw-orange text-white'
+              ? 'bg-paw-main text-white'
               : 'border border-paw-border bg-white text-paw-sub'
           }`}>
           <Tag size={12} />
@@ -84,7 +84,7 @@ export default function SearchPage() {
           onClick={() => { setSearchType('nickname'); setSearched(false); setUserResults([]); setPostResults([]); }}
           className={`flex items-center gap-1 rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${
             searchType === 'nickname'
-              ? 'bg-paw-orange text-white'
+              ? 'bg-paw-main text-white'
               : 'border border-paw-border bg-white text-paw-sub'
           }`}>
           <User size={12} />
@@ -96,7 +96,7 @@ export default function SearchPage() {
       <div className="mt-4">
         {loading && (
           <div className="flex h-32 items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-paw-orange" />
+            <Loader2 className="h-6 w-6 animate-spin text-paw-main" />
           </div>
         )}
 

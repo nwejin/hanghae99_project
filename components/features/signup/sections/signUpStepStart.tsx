@@ -64,7 +64,7 @@ export default function SignUpStepStart({ nextStep }: FormProps) {
           id="user_id"
           placeholder="아이디를 입력해주세요"
           {...register('user_id')}
-          className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+          className="w-full rounded-xl border border-paw-border bg-paw-cream-dark px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
         />
       </div>
       <TextInput type="password" name="user_pw" id="user_pw" placeholder="비밀번호" text="비밀번호" />

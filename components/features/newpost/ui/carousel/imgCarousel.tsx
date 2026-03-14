@@ -71,7 +71,7 @@ export default function ImgCarousel() {
             <Carousel.CarouselItem key="placeholder">
               <label
                 htmlFor="addFile"
-                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-paw-border bg-paw-cream-dark transition-colors hover:border-paw-orange"
+                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-paw-border bg-paw-cream-dark transition-colors hover:border-paw-main"
               >
                 <ImagePlus size={32} className="text-paw-inactive" />
                 <span className="text-xs text-paw-sub">사진 추가</span>
@@ -117,7 +117,7 @@ export default function ImgCarousel() {
       {imgPreviews.length > 0 && imgPreviews.length < MAX_IMAGES && (
         <label
           htmlFor="addMoreFile"
-          className="mt-2 flex cursor-pointer items-center justify-center gap-1 rounded-xl border border-dashed border-paw-border py-2 text-xs text-paw-sub transition-colors hover:border-paw-orange hover:text-paw-orange"
+          className="mt-2 flex cursor-pointer items-center justify-center gap-1 rounded-xl border border-dashed border-paw-border py-2 text-xs text-paw-sub transition-colors hover:border-paw-main hover:text-paw-main"
         >
           <ImagePlus size={14} />
           사진 추가
