@@ -86,7 +86,7 @@ export default function Footer() {
           <div
             className={cn(
               'flex h-full w-full flex-col items-center justify-center gap-0.5 transition-all duration-200',
-              active ? 'text-paw-orange' : 'text-paw-inactive hover:text-paw-sub'
+              active ? 'text-paw-main' : 'text-paw-inactive hover:text-paw-sub'
             )}>
             <div className="relative">
               <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />

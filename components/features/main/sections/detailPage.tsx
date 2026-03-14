@@ -327,7 +327,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
             {post.tags?.map((tag, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-0.5 rounded-full bg-paw-tag px-2.5 py-0.5 text-xs font-medium text-paw-orange">
+                className="inline-flex items-center gap-0.5 rounded-full bg-paw-tag px-2.5 py-0.5 text-xs font-medium text-paw-main">
                 <Tag size={10} />
                 {tag}
               </span>
@@ -393,7 +393,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
           <input
             type="text"
             placeholder="댓글을 입력하세요..."
-            className="flex-1 rounded-full border border-paw-border bg-paw-cream-dark px-4 py-2 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+            className="flex-1 rounded-full border border-paw-border bg-paw-cream-dark px-4 py-2 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => {
@@ -405,7 +405,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
           {inputValue && (
             <button
               onClick={handleCommentSubmit}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-paw-orange text-white transition-transform active:scale-95">
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-paw-main text-white transition-transform active:scale-95">
               <Send size={16} />
             </button>
           )}

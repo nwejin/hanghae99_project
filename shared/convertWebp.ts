@@ -24,10 +24,11 @@ const canvasConvert = (source: File | Blob, useObjectUrl = false): Promise<Blob 
 
       canvas.toBlob(
         (webpBlob) => {
-          if (webpBlob) {
+          if (webpBlob && webpBlob.type === 'image/webp') {
             resolve(webpBlob);
             return;
           }
+          // WebP 미지원 또는 실패 시 JPEG fallback
           canvas.toBlob(
             (jpegBlob) => {
               if (!jpegBlob) {

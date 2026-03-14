@@ -36,15 +36,11 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
     const timestamp = new Date().getTime();
     const filePath = `${timestamp}_pet.webp`;
 
-    const { error } = await supabase.storage
-      .from('profiles')
-      .upload(filePath, file, { contentType: 'image/webp' });
+    const { error } = await supabase.storage.from('profiles').upload(filePath, file, { contentType: 'image/webp' });
 
     if (error) throw error;
 
-    const { data } = supabase.storage
-      .from('profiles')
-      .getPublicUrl(filePath);
+    const { data } = supabase.storage.from('profiles').getPublicUrl(filePath);
 
     setUploadedFilePath(filePath);
     return data.publicUrl;
@@ -62,15 +58,13 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
     setUploadedImgUrl(path);
   };
 
-  const defaultImg = '/default_pet.png';
+  const defaultImg = '/default_face.png';
 
   const resetImg = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (uploadedFilePath) {
       try {
-        await supabase.storage
-          .from('profiles')
-          .remove([uploadedFilePath]);
+        await supabase.storage.from('profiles').remove([uploadedFilePath]);
 
         setImgUrl('');
         setImgPreview(null);
@@ -110,23 +104,17 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
         <label className="mb-2 block text-xs font-semibold text-paw-sub">반려동물 이미지</label>
         <div className="flex items-center gap-4">
           <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full border-2 border-paw-border bg-paw-cream-dark">
-            <img
-              src={imgPreview ? imgUrl : defaultImg}
-              alt="반려동물"
-              className="h-full w-full object-cover"
-            />
+            <img src={imgPreview ? imgUrl : defaultImg} alt="반려동물" className="h-full w-full object-cover" />
             <label
               htmlFor="pet_image"
-              className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 opacity-0 transition-opacity hover:opacity-100"
-            >
+              className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 opacity-0 transition-opacity hover:opacity-100">
               <Camera size={16} className="text-white" />
             </label>
           </div>
           <div className="flex flex-1 items-center gap-2">
             <label
               htmlFor="pet_image"
-              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-orange"
-            >
+              className="cursor-pointer rounded-xl border border-paw-border px-3 py-2 text-xs text-paw-sub transition-colors hover:text-paw-main">
               사진 선택
             </label>
             {imgPreview && (
@@ -146,13 +134,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
         </div>
       </div>
 
-      <TextInput
-        type="text"
-        name="petName"
-        id="petName"
-        placeholder="친구의 이름을 알려주세요!"
-        text="반려동물 이름"
-      />
+      <TextInput type="text" name="petName" id="petName" placeholder="친구의 이름을 알려주세요!" text="반려동물 이름" />
 
       {/* 반려동물 종류 */}
       <div>
@@ -166,8 +148,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
                 onValueChange={(value) => {
                   field.onChange(value);
                   handleSpeciesChange(value as keyof typeof petCategoryData);
-                }}
-              >
+                }}>
                 <Select.SelectTrigger className="rounded-xl border-paw-border bg-paw-cream-dark text-sm">
                   <Select.SelectValue placeholder="대분류" />
                 </Select.SelectTrigger>

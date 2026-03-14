@@ -122,7 +122,7 @@ export function Container() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-paw-orange" />
+        <Loader2 className="h-8 w-8 animate-spin text-paw-main" />
       </div>
     );
   }
@@ -143,7 +143,7 @@ export function Container() {
               </div>
             )}
           </div>
-          <div className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-paw-orange text-white">
+          <div className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-paw-main text-white">
             <Camera size={14} />
           </div>
         </div>
@@ -157,7 +157,7 @@ export function Container() {
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+            className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
           />
         </div>
 
@@ -167,7 +167,7 @@ export function Container() {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={2}
-            className="w-full resize-none rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+            className="w-full resize-none rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
           />
         </div>
 
@@ -197,7 +197,7 @@ export function Container() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="8자 이상"
-                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 pr-10 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 pr-10 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
               />
               <button
                 type="button"
@@ -213,7 +213,7 @@ export function Container() {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-orange"
+              className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown placeholder:text-paw-inactive focus:outline-none focus:ring-1 focus:ring-paw-main"
             />
             {newPassword && confirmPassword && newPassword !== confirmPassword && (
               <p className="mt-1 text-xs text-paw-like">비밀번호가 일치하지 않습니다</p>
@@ -234,7 +234,7 @@ export function Container() {
               {petImg ? (
                 <img src={petImg} alt="반려동물" className="h-full w-full object-cover" />
               ) : (
-                <PawPrint size={20} className="text-paw-orange" />
+                <PawPrint size={20} className="text-paw-main" />
               )}
             </div>
             <div className="flex-1">
@@ -243,7 +243,7 @@ export function Container() {
                 type="text"
                 value={petName}
                 onChange={(e) => setPetName(e.target.value)}
-                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-orange"
+                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
               />
             </div>
           </div>
@@ -290,7 +290,7 @@ export function Container() {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-paw-orange py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60">
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-paw-main py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60">
         {saving ? (
           <Loader2 size={18} className="animate-spin" />
         ) : saved ? (

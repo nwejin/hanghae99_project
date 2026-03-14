@@ -2,16 +2,16 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import text_logo from '@/public/text_logo.png';
+import text_logo from '@/public/logo_s.png';
 import { useCurrentUser } from '@/lib/useCurrentUser';
 
 export default function Header() {
   const { nickname, profileImg, isLoggedIn } = useCurrentUser();
 
   return (
-    <header className="flex h-[60px] shrink-0 items-center justify-between border-b border-paw-border bg-white px-4 py-1">
+    <header className="flex h-[60px] shrink-0 items-center justify-between border-b border-paw-border bg-white px-4">
       <Link href="/">
-        <Image src={text_logo} alt="멍냥터 로고" width={120} height={30} />
+        <Image src={text_logo} alt="멍냥터 로고" width={120} />
       </Link>
 
       {isLoggedIn ? (
@@ -27,7 +27,7 @@ export default function Header() {
           )}
         </Link>
       ) : (
-        <Link href="/login" className="text-sm font-semibold text-paw-orange">
+        <Link href="/login" className="text-sm font-semibold text-paw-main">
           로그인
         </Link>
       )}

@@ -14,7 +14,7 @@ export default function SignUpBtn({ text, onClick, type }: SignUpBtnProps) {
       className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${
         isBack
           ? 'border border-paw-border text-paw-sub hover:text-paw-brown'
-          : 'bg-paw-orange text-white hover:bg-paw-orange/90'
+          : 'bg-paw-main text-white hover:bg-paw-main/90'
       }`}
     >
       {text}
