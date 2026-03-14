@@ -23,7 +23,8 @@ export const useCreatePost = (options: UseMutationOptions<void, ApiError, PostFo
     },
     onError: (error) => {
       toast({
-        title: `작성중 오류가 발생했습니다. ${error.message} `,
+        title: '게시글 작성에 실패했습니다! 다시한번 시도해주세요 🙏',
+        variant: 'destructive',
       });
       console.error('Failed to Create Post', error);
     },

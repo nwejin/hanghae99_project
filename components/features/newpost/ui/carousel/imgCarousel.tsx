@@ -10,9 +10,11 @@ import { useFormContext } from 'react-hook-form';
 
 import CarouselBtn from './carouselBtn';
 import { convertToWebP } from '@/shared';
+import { useToast } from '@/components/common/ui/use-toast';
 
 export default function ImgCarousel() {
   const { setValue } = useFormContext();
+  const { toast } = useToast();
 
   const [imgPreviews, setImgPreviews] = useState<string[]>([]);
 
@@ -32,6 +34,11 @@ export default function ImgCarousel() {
           }
         } catch (error) {
           console.error('이미지 변환 에러:', error);
+          toast({
+            title: '이미지 업로드 실패',
+            description: error instanceof Error ? error.message : '지원하지 않는 이미지 형식입니다. JPEG, PNG, WebP로 변환 후 업로드해주세요.',
+            variant: 'destructive',
+          });
           return;
         }
       }
@@ -69,7 +76,7 @@ export default function ImgCarousel() {
                 <ImagePlus size={32} className="text-paw-inactive" />
                 <span className="text-xs text-paw-sub">사진 추가</span>
               </label>
-              <input type="file" multiple onChange={checkImg} className="hidden" id="addFile" accept="image/jpeg,image/png,image/webp,image/gif" />
+              <input type="file" multiple onChange={checkImg} className="hidden" id="addFile" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.heic,.heif" />
             </Carousel.CarouselItem>
           ) : (
             imgPreviews.map((imgUrl, index) => (
@@ -96,7 +103,7 @@ export default function ImgCarousel() {
                         onChange={(e) => checkImg(e, index)}
                         className="hidden"
                         id={`refreshFile-${index}`}
-                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.heic,.heif"
                       />
                     </div>
                   </div>
@@ -117,7 +124,7 @@ export default function ImgCarousel() {
         </label>
       )}
       {imgPreviews.length > 0 && imgPreviews.length < MAX_IMAGES && (
-        <input type="file" multiple onChange={checkImg} className="hidden" id="addMoreFile" accept="image/jpeg,image/png,image/webp,image/gif" />
+        <input type="file" multiple onChange={checkImg} className="hidden" id="addMoreFile" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.heic,.heif" />
       )}
     </div>
   );
