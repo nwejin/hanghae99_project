@@ -74,13 +74,15 @@
   }
   html {
     overscroll-behavior-y: contain;
+    height: 100%;
   }
   body {
     @apply bg-background text-foreground;
     color: #4A3728;
     overscroll-behavior-y: contain;
+    overflow: hidden;
     width: 100%;
-    min-height: 100dvh;
+    height: 100dvh;
   }
 
   /* 스크롤바 숨기기 */

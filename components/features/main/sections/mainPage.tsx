@@ -114,7 +114,7 @@ export default function MainPage() {
     <>
       {/* 새로고침 버튼 + 필터 바 */}
       <div className="sticky top-0 z-10 border-b border-paw-border bg-white px-4 py-2.5">
-        <div className="flex items-center gap-2">
+        <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto">
           <div className="flex flex-1 items-center gap-1.5">
             <Calendar size={14} className="flex-shrink-0 text-paw-sub" />
             <input

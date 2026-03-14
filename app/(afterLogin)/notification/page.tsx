@@ -44,13 +44,29 @@ export default function NotificationPage() {
   const getMessage = (type: string, actorName: string) => {
     switch (type) {
       case 'like':
-        return <><strong>{actorName}</strong>님이 게시물을 좋아합니다.</>;
+        return (
+          <>
+            <strong>{actorName}</strong>님이 게시물을 좋아합니다.
+          </>
+        );
       case 'comment':
-        return <><strong>{actorName}</strong>님이 댓글을 남겼습니다.</>;
+        return (
+          <>
+            <strong>{actorName}</strong>님이 댓글을 남겼습니다.
+          </>
+        );
       case 'comment_like':
-        return <><strong>{actorName}</strong>님이 댓글을 좋아합니다.</>;
+        return (
+          <>
+            <strong>{actorName}</strong>님이 댓글을 좋아합니다.
+          </>
+        );
       default:
-        return <><strong>{actorName}</strong>님의 활동</>;
+        return (
+          <>
+            <strong>{actorName}</strong>님의 활동
+          </>
+        );
     }
   };
 
@@ -64,8 +80,6 @@ export default function NotificationPage() {
 
   return (
     <div className="px-4 py-4">
-      <h2 className="mb-4 text-sm font-semibold text-paw-brown">알림</h2>
-
       {notifications.length === 0 && (
         <div className="flex h-40 flex-col items-center justify-center text-paw-inactive">
           <Bell size={32} strokeWidth={1.2} />
@@ -80,8 +94,7 @@ export default function NotificationPage() {
             href={noti.post_id ? '/' : '#'}
             className={`flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-paw-cream-dark ${
               !noti.is_read ? 'bg-paw-cream-dark' : ''
-            }`}
-          >
+            }`}>
             {/* 프로필 이미지 */}
             <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-full border border-paw-border">
               {noti.actor?.profile_image ? (
@@ -91,16 +104,12 @@ export default function NotificationPage() {
                   {noti.actor?.nickname?.charAt(0)}
                 </div>
               )}
-              <div className="absolute -bottom-0.5 -right-0.5 rounded-full bg-white p-0.5">
-                {getIcon(noti.type)}
-              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 rounded-full bg-white p-0.5">{getIcon(noti.type)}</div>
             </div>
 
             {/* 내용 */}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-paw-brown">
-                {getMessage(noti.type, noti.actor?.nickname || '알 수 없음')}
-              </p>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm text-paw-brown">{getMessage(noti.type, noti.actor?.nickname || '알 수 없음')}</p>
               <span className="text-[10px] text-paw-inactive">{timeCheck(noti.created_at)}</span>
             </div>
           </Link>

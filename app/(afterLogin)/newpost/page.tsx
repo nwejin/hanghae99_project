@@ -1,12 +1,12 @@
 'use client';
 
-import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { createClient } from '@/config/supabase/client';
 import { Input } from '@/components/common';
+import { useToast } from '@/components/common/ui/use-toast';
 import { PostFormData, useCreatePost } from '@/lib/post';
 import ImgCarousel from '@/components/features/newpost/ui/carousel/imgCarousel';
 import Contents from '@/components/features/newpost/ui/contents';
@@ -16,6 +16,7 @@ export default function NewPostPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const methods = useForm<PostFormData>({
     defaultValues: {
@@ -43,12 +44,13 @@ export default function NewPostPage() {
           .then((res) => res.blob())
           .then(async (blob) => {
             const timestamp = new Date().getTime();
+            const ext = blob.type === 'image/jpeg' ? 'jpg' : 'webp';
             const fileName = `${timestamp}_${url.split('/').pop()}`;
-            const filePath = `images/${fileName}.webp`;
+            const filePath = `images/${fileName}.${ext}`;
 
             const { error } = await supabase.storage
               .from('posts')
-              .upload(filePath, blob, { contentType: 'image/webp' });
+              .upload(filePath, blob, { contentType: blob.type });
 
             if (error) throw error;
 
@@ -83,12 +85,16 @@ export default function NewPostPage() {
       createPost(postData);
     } catch (error) {
       console.error('게시글 추가 에러', error);
+      toast({
+        title: '게시글 작성에 실패했습니다! 다시한번 시도해주세요 🙏',
+        variant: 'destructive',
+      });
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 pb-20">
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
           {/* 이미지 업로드 */}
@@ -100,7 +106,7 @@ export default function NewPostPage() {
             <Input
               type="date"
               {...register('photoDate', { required: '날짜를 선택해주세요.' })}
-              className="rounded-xl border-paw-border bg-paw-cream-dark text-sm text-paw-brown focus:ring-paw-orange"
+              className="w-full appearance-none rounded-xl border-paw-border bg-paw-cream-dark text-sm text-paw-brown focus:ring-paw-orange"
             />
           </div>
 
