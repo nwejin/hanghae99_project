@@ -220,12 +220,12 @@ export default function DetailPage({ modal, post, user }: detailProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[100] flex items-end justify-center">
       <div ref={overlayRef} className="absolute inset-0 bg-black/50" onClick={handleClose} />
 
       <div
         ref={panelRef}
-        className="relative z-10 flex h-[calc(100vh-56px)] w-full max-w-xl flex-col overflow-hidden rounded-t-2xl bg-white"
+        className="relative z-10 flex h-full w-full max-w-xl flex-col overflow-hidden bg-white"
       >
         {/* 상단 바 */}
         <div className="flex items-center justify-between border-b border-paw-border px-4 py-3">
@@ -247,7 +247,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
         </div>
 
         {/* 스크롤 가능한 콘텐츠 */}
-        <ScrollArea className="flex-1">
+        <div className="min-h-0 flex-1 overflow-y-auto">
           {/* 유저 정보 */}
           <div className="flex items-center gap-2.5 px-4 py-3">
             <Link href={`/user/${user.nickname}`} onClick={handleClose} className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full border border-paw-border">
@@ -385,11 +385,10 @@ export default function DetailPage({ modal, post, user }: detailProps) {
               );
             })}
           </div>
-          <ScrollBar orientation="vertical" />
-        </ScrollArea>
+        </div>
 
         {/* 댓글 입력 (하단 고정) */}
-        <div className="flex items-center gap-2 border-t border-paw-border bg-white px-4 py-3">
+        <div className="flex flex-shrink-0 items-center gap-2 border-t border-paw-border bg-white px-4 py-3">
           <input
             type="text"
             placeholder="댓글을 입력하세요..."
