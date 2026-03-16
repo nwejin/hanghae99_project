@@ -7,7 +7,7 @@ import { ScrollArea, ScrollBar } from '@/components/common';
 import { Separator } from '@/components/common';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useGetComment, useCreatePost } from '@/lib/comment';
+import { useGetComment, useCreatePost, useDeleteComment } from '@/lib/comment';
 import { useCurrentUser } from '@/lib/useCurrentUser';
 import { addLike, deleteLike, getLike } from '@/lib/like';
 import { addCommentLike, deleteCommentLike, getCommentLike } from '@/lib/commentLike';
@@ -58,6 +58,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
 
   const { data: comments, refetch } = useGetComment(post.id);
   const createPost = useCreatePost();
+  const deleteCommentMutation = useDeleteComment();
 
   // 댓글 좋아요 초기 로드
   useEffect(() => {
@@ -109,6 +110,14 @@ export default function DetailPage({ modal, post, user }: detailProps) {
         [commentId]: { liked: isLiked, count: current?.count || 0 },
       }));
     }
+  };
+
+  const handleCommentDelete = (commentId: string) => {
+    if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
+    deleteCommentMutation.mutate(
+      { postId: post.id, commentId },
+      { onSuccess: () => refetch() }
+    );
   };
 
   const handleCommentSubmit = async () => {
@@ -363,9 +372,18 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                       </div>
                       <p className="mt-0.5 text-sm text-paw-brown">{comment.comment}</p>
                     </div>
+                    <div className="flex flex-shrink-0 items-center gap-1.5 self-center">
+                    {userId === comment.userId && (
+                      <button
+                        onClick={() => handleCommentDelete(comment.id)}
+                        className="text-paw-inactive transition-colors hover:text-red-400"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleCommentLike(comment.id, comment.userId)}
-                      className="flex flex-shrink-0 flex-col items-center gap-0.5 self-center"
+                      className="flex flex-col items-center gap-0.5"
                     >
                       <Heart
                         size={14}
@@ -380,6 +398,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                         <span className="text-[9px] text-paw-inactive">{cl?.count}</span>
                       )}
                     </button>
+                    </div>
                   </div>
                 </div>
               );

@@ -120,6 +120,7 @@ export default function MainPage() {
             <input
               type="date"
               value={startDate}
+              max={endDate || undefined}
               onChange={(e) => setStartDate(e.target.value)}
               className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
             />
@@ -127,6 +128,7 @@ export default function MainPage() {
             <input
               type="date"
               value={endDate}
+              min={startDate || undefined}
               onChange={(e) => setEndDate(e.target.value)}
               className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
             />

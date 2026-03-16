@@ -15,6 +15,11 @@ export interface CommentDataType {
   comment: string;
 }
 
+export interface DeleteCommentType {
+  postId: string;
+  commentId: string;
+}
+
 export interface ProfileType {
   profileImage: string;
   nickname: string;
