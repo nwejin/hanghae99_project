@@ -42,6 +42,38 @@ export async function GET(req: Request, { params }: { params: { postId: string }
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    const supabase = createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
+    }
+
+    const { commentId } = await req.json();
+
+    if (!commentId) {
+      return NextResponse.json({ message: 'commentId가 필요합니다.' }, { status: 400 });
+    }
+
+    const { error } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', commentId)
+      .eq('user_id', user.id);
+
+    if (error) throw error;
+
+    return NextResponse.json({ message: '댓글 삭제 완료' }, { status: 200 });
+  } catch (error) {
+    console.error('댓글 삭제 에러', error);
+    return NextResponse.json({ message: '서버 에러' }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request, { params }: { params: { postId: string } }) {
   try {
     const supabase = createClient();

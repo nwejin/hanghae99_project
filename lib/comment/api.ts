@@ -1,4 +1,4 @@
-import { CommentDataType, CommentType } from './types';
+import { CommentDataType, CommentType, DeleteCommentType } from './types';
 
 export async function getComment(postId: string): Promise<CommentType[]> {
   try {
@@ -13,6 +13,25 @@ export async function getComment(postId: string): Promise<CommentType[]> {
   } catch (error) {
     console.error('댓글 조회 fetch 오류', error);
     return [];
+  }
+}
+
+export async function deleteComment({ postId, commentId }: DeleteCommentType): Promise<void> {
+  try {
+    const response = await fetch(`/api/comment/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ commentId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('댓글 삭제 오류');
+    }
+  } catch (error) {
+    console.error('댓글 삭제 fetch 오류', error);
+    throw error;
   }
 }
 
