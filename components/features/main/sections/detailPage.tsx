@@ -1,15 +1,18 @@
 'use client';
 
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { ChevronLeft, Heart, MessageCircle, Calendar, Tag, Send, Trash2, X } from 'lucide-react';
+import { ChevronLeft, Heart, MessageCircle, Calendar, Tag, Send, Trash2, X, Bookmark } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ScrollArea, ScrollBar } from '@/components/common';
 import { Separator } from '@/components/common';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BLUR_DATA_URL } from '@/shared/imageConstants';
 import { useGetComment, useCreatePost, useDeleteComment } from '@/lib/comment';
 import { useCurrentUser } from '@/lib/useCurrentUser';
 import { addLike, deleteLike, getLike } from '@/lib/like';
+import { addBookmark, deleteBookmark, getBookmark } from '@/lib/bookmark';
+import { CommentSkeleton } from '@/components/common';
 import { addCommentLike, deleteCommentLike, getCommentLike } from '@/lib/commentLike';
 import { createNotification } from '@/lib/notification';
 import { timeCheck } from '@/shared/timeUtils';
@@ -31,6 +34,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
   const [inputValue, setInputValue] = useState('');
   const { userId } = useCurrentUser();
   const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -142,6 +146,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
   useEffect(() => {
     if (userId) {
       getLike(post.id, userId).then((res) => setLiked(res.isLiked));
+      getBookmark(post.id, userId).then((res) => setBookmarked(res.isBookmarked));
     }
   }, [post.id, userId]);
 
@@ -163,6 +168,21 @@ export default function DetailPage({ modal, post, user }: detailProps) {
       }
     } catch {
       setLiked(liked);
+    }
+  };
+
+  const handleBookmark = async () => {
+    if (!userId) return;
+    const bookmarkUpdate = !bookmarked;
+    setBookmarked(bookmarkUpdate);
+    try {
+      if (bookmarkUpdate) {
+        await addBookmark({ postId: post.id });
+      } else {
+        await deleteBookmark({ postId: post.id });
+      }
+    } catch {
+      setBookmarked(bookmarked);
     }
   };
 
@@ -293,6 +313,9 @@ export default function DetailPage({ modal, post, user }: detailProps) {
                           alt={`사진 ${index + 1}`}
                           className="object-cover"
                           sizes="(max-width: 576px) 100vw, 576px"
+                          priority={index === 0}
+                          placeholder="blur"
+                          blurDataURL={BLUR_DATA_URL}
                         />
                       </div>
                     </Carousel.CarouselItem>
@@ -308,7 +331,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
             </div>
           )}
 
-          {/* 좋아요/댓글 버튼 */}
+          {/* 좋아요/댓글/북마크 버튼 */}
           <div className="flex items-center gap-3 px-4 py-2">
             <button onClick={handleLike} className="transition-transform active:scale-125">
               <Heart
@@ -318,6 +341,13 @@ export default function DetailPage({ modal, post, user }: detailProps) {
               />
             </button>
             <MessageCircle size={24} className="text-paw-brown" strokeWidth={1.8} />
+            <button onClick={handleBookmark} className="ml-auto transition-transform active:scale-125">
+              <Bookmark
+                size={24}
+                className={bookmarked ? 'fill-paw-main text-paw-main' : 'text-paw-brown'}
+                strokeWidth={bookmarked ? 0 : 1.8}
+              />
+            </button>
           </div>
 
           {/* 본문 */}
@@ -348,6 +378,7 @@ export default function DetailPage({ modal, post, user }: detailProps) {
           {/* 댓글 목록 */}
           <div className="px-4 py-3">
             <p className="mb-3 text-xs font-semibold text-paw-sub">댓글</p>
+            {!comments && <CommentSkeleton />}
             {comments?.length === 0 && (
               <p className="py-4 text-center text-xs text-paw-inactive">아직 댓글이 없어요</p>
             )}

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { Images } from 'lucide-react';
+import { BLUR_DATA_URL } from '@/shared/imageConstants';
 
 interface PostThumbnailProps {
   post: {
@@ -30,6 +31,8 @@ export default function PostThumbnail({ post, user, onSelect }: PostThumbnailPro
           alt="게시물"
           className="object-cover transition-transform duration-200 hover:scale-105"
           sizes="(max-width: 576px) 33vw, 192px"
+          placeholder="blur"
+          blurDataURL={BLUR_DATA_URL}
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-paw-cream-dark text-xs text-paw-inactive">
