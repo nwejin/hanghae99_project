@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { Calendar, ArrowUpDown, RefreshCw } from 'lucide-react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { PostSkeleton } from '@/components/common';
+import { PostSkeleton, FeedSkeleton } from '@/components/common';
 import { PostLoading } from '../ui';
 import PostThumbnail from './userPostCard';
 import DetailPage from './detailPage';
@@ -108,6 +108,7 @@ export default function MainPage() {
     }));
   }, [data, startDate, endDate, ascending]);
 
+  if (status === 'pending') return <FeedSkeleton />;
   if (status === 'error') return <p>Error: {error.message}</p>;
 
   return (

@@ -3,6 +3,7 @@
 import { useFormContext } from 'react-hook-form';
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { RECOMMENDED_TAGS } from '@/shared/recommendedTags';
 
 export default function Contents() {
   const { setValue } = useFormContext();
@@ -35,6 +36,18 @@ export default function Contents() {
     }
   };
 
+  const handleTagToggle = (tag: string) => {
+    if (tags.includes(tag)) {
+      const updated = tags.filter((t) => t !== tag);
+      setTags(updated);
+      setValue('tags', updated);
+    } else {
+      const updated = [...tags, tag];
+      setTags(updated);
+      setValue('tags', updated);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -47,6 +60,30 @@ export default function Contents() {
 
   return (
     <div className="w-full">
+      {/* 추천 태그 */}
+      <div className="mb-3">
+        <p className="mb-1.5 text-xs font-medium text-paw-sub">추천 태그</p>
+        <div className="flex flex-wrap gap-1.5">
+          {RECOMMENDED_TAGS.map((tag) => {
+            const isSelected = tags.includes(tag);
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => handleTagToggle(tag)}
+                className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                  isSelected
+                    ? 'bg-paw-main text-white'
+                    : 'bg-paw-cream-dark text-paw-sub hover:bg-paw-main/10 hover:text-paw-main'
+                }`}
+              >
+                #{tag}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {tags.length > 0 && (
         <div className="mb-2 flex flex-wrap gap-1.5">
           {tags.map((tag, index) => (
