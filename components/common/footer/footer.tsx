@@ -22,7 +22,9 @@ export default function Footer() {
     if (!isLoggedIn) return;
 
     const fetchUnread = () => {
-      getUnreadCount().then(setUnreadCount).catch(() => {});
+      getUnreadCount()
+        .then(setUnreadCount)
+        .catch(() => {});
     };
 
     fetchUnread();
@@ -75,18 +77,29 @@ export default function Footer() {
     { icon: Home, label: '홈', active: pathname === '/', href: '/' },
     { icon: Search, label: '검색', active: pathname === '/search', href: '/search' },
     { icon: SquarePen, label: '글작성', active: pathname === '/newpost', onClick: handleNewPost },
-    { icon: Bell, label: '알림', active: pathname === '/notification', onClick: handleNotification, badge: unreadCount },
-    { icon: User, label: '내정보', active: pathname.includes('/user') || pathname.includes('/accounts'), onClick: handleProfile },
+    {
+      icon: Bell,
+      label: '알림',
+      active: pathname === '/notification',
+      onClick: handleNotification,
+      badge: unreadCount,
+    },
+    {
+      icon: User,
+      label: '내정보',
+      active: pathname.includes('/user') || pathname.includes('/accounts'),
+      onClick: handleProfile,
+    },
   ];
 
   return (
-    <footer className="sticky bottom-0 z-[99] flex h-[56px] border-t border-paw-border bg-white">
+    <footer className="sticky bottom-0 z-[99] flex h-[56px] border-t-2 border-paw-cream bg-paw-cream-dark">
       {tabs.map(({ icon: Icon, label, active, href, onClick, badge }) => {
         const content = (
           <div
             className={cn(
-              'flex h-full w-full flex-col items-center justify-center gap-0.5 transition-all duration-200',
-              active ? 'text-paw-main' : 'text-paw-inactive hover:text-paw-sub'
+              'flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-md text-paw-cream transition-all duration-200',
+              active ? 'bg-paw-main' : 'text-paw-inactive hover:text-paw-main'
             )}>
             <div className="relative">
               <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
@@ -96,7 +109,7 @@ export default function Footer() {
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-medium">{label}</span>
+            <span className="text-[10px] font-extrabold">{label}</span>
           </div>
         );
 

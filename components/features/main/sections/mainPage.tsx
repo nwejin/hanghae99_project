@@ -77,9 +77,7 @@ export default function MainPage() {
   const groupedPosts = useMemo(() => {
     if (!data?.pages) return [];
 
-    const allPosts = data.pages.flatMap((page) =>
-      page.map((item: { post: any; user: any }) => item)
-    );
+    const allPosts = data.pages.flatMap((page) => page.map((item: { post: any; user: any }) => item));
 
     // 날짜 필터링
     const filtered = allPosts.filter((item: { post: any }) => {
@@ -98,9 +96,7 @@ export default function MainPage() {
     });
 
     // 날짜 정렬
-    const sortedKeys = Object.keys(groups).sort((a, b) =>
-      ascending ? a.localeCompare(b) : b.localeCompare(a)
-    );
+    const sortedKeys = Object.keys(groups).sort((a, b) => (ascending ? a.localeCompare(b) : b.localeCompare(a)));
 
     return sortedKeys.map((date) => ({
       date,
@@ -114,7 +110,7 @@ export default function MainPage() {
   return (
     <>
       {/* 새로고침 버튼 + 필터 바 */}
-      <div className="sticky top-0 z-10 border-b border-paw-border bg-white px-4 py-2.5">
+      <div className="sticky top-0 z-10 border-b-2 border-paw-cream-dark bg-white px-4 py-2.5">
         <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto">
           <div className="flex flex-1 items-center gap-1.5">
             <Calendar size={14} className="flex-shrink-0 text-paw-sub" />
@@ -123,7 +119,7 @@ export default function MainPage() {
               value={startDate}
               max={endDate || undefined}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
+              className="w-full min-w-0 rounded-lg border border-paw-cream-dark bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
             />
             <span className="text-xs text-paw-sub">~</span>
             <input
@@ -131,21 +127,21 @@ export default function MainPage() {
               value={endDate}
               min={startDate || undefined}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full min-w-0 rounded-lg border border-paw-border bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
+              className="w-full min-w-0 rounded-lg border border-paw-cream-dark bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
             />
           </div>
+
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex flex-shrink-0 items-center justify-center rounded-lg border border-paw-border p-1.5 text-paw-sub transition-colors hover:text-paw-main disabled:opacity-50"
-          >
-            <RefreshCw size={12} className={refreshing ? 'animate-spin' : ''} />
+            className="flex flex-shrink-0 items-center justify-center rounded-lg border-2 border-paw-sub bg-paw-brown p-1.5 text-paw-sub transition-colors hover:text-paw-main disabled:opacity-50">
+            <RefreshCw size={12} className={refreshing ? 'animate-spin text-paw-cream' : 'text-paw-cream'} />
           </button>
+
           <button
             onClick={() => setAscending(!ascending)}
-            className="flex flex-shrink-0 items-center gap-0.5 rounded-lg border border-paw-border px-2 py-1.5 text-[11px] text-paw-sub transition-colors hover:text-paw-main"
-          >
-            <ArrowUpDown size={12} />
+            className="flex flex-shrink-0 items-center gap-0.5 rounded-lg border-2 border-paw-main bg-paw-main px-2 py-1.5 text-[11px] text-paw-cream transition-colors hover:opacity-90">
+            <ArrowUpDown size={13} />
             {ascending ? '오래된순' : '최신순'}
           </button>
         </div>
@@ -176,17 +172,11 @@ export default function MainPage() {
         ))}
       </div>
 
-      <div ref={loadMoreRef}>
-        {isFetchingNextPage && <PostLoading />}
-      </div>
+      <div ref={loadMoreRef}>{isFetchingNextPage && <PostLoading />}</div>
       <div>{isFetching && !isFetchingNextPage ? <PostSkeleton /> : null}</div>
 
       {selectedPost && (
-        <DetailPage
-          modal={() => setSelectedPost(null)}
-          post={selectedPost.post}
-          user={selectedPost.user}
-        />
+        <DetailPage modal={() => setSelectedPost(null)} post={selectedPost.post} user={selectedPost.user} />
       )}
     </>
   );
