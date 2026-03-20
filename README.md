@@ -1,6 +1,7 @@
 <div align="center">
   <br />
-  <img src="https://github.com/user-attachments/assets/bbd42328-9caf-4f01-b32f-732e89334ffb" alt="멍냥터"  height="100px" />
+  <img width="300" height="150" alt="Group 68" src="https://github.com/user-attachments/assets/210c606a-66c9-4743-9c67-30c700b84ab0" />
+
   <br />
 </div>
 
@@ -14,14 +15,9 @@
 | 프로젝트 명 | 멍냥터 |
 | --- | --- |
 | 개발 기간 | 2024.08.07 ~ 2024.09.04 (28일) |
-| 배포 주소 |[배포 링크 🌎](https://hanghae99-project.vercel.app/) |
+| 배포 주소 |[배포 링크 🌎](https://cheonggun-house.vercel.app/) |
 
 </div>
-
-<!--
-| 테스트 계정 email | admin@naver.com |
-| 테스트 계정 password | 55good@@ |
--->
 
 ## ⚙️ 기술 스택
 
@@ -79,68 +75,6 @@
 
 ### [유저 정보 수정]
 > 사용자의 회원 정보 / 반려동물 정보를 관리하는 페이지입니다. ( /accounts/[nickname] )
-
-
-
-## 🔥 성능 최적화
-
-|                                              웹 성능 최적화 전 (24.09.06 기준)                                              |                                     웹 성능 최적화 후 (24.00.00 기준)                                    |
-| :---------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------: |
-| <img src="https://github.com/user-attachments/assets/f38c9028-e095-4766-a64c-d12fbfff38d1" alt="9/6_lighthouse" alt="웹 성능 최적화 전 분석 이미지" width="500px" /> | <img src="https://github.com/user-attachments/assets/f38c9028-e095-4766-a64c-d12fbfff38d1" alt="9/6_lighthouse" alt="웹 성능 최적화 후 분석 이미지" width="500px" /> |
-
-|           항목           | 웹 성능 최적화 전 | 웹 성능 최적화 후 |
-| :----------------------: | :---------------: | :---------------: |
-|    Performance Score     |        80         |        00         |
-|  First Contentful Paint  |       0.2s        |       0s        |
-|       Speed Index        |       3.3s        |       0s        |
-|   Total Blocking Time    |       90ms       |        0ms        |
-| Largest Contentful Paint |       2.2s        |       0s        |
-| Cumulative Layout Shift  |       0.06      |       00       |
-
-- 기존 img 태그 
-피드백) 이미지 최적화 부분을 고민해서 진행하기 next/image는 내장 라이브러리라서 다른걸로 최적화 해보기
-피드백) 개선사항은 이미지 말고 점수로만 기록해도 괜찮다
-
-webp변환을 위해 이미지 업로드시 변환 작업 수행 및 이후 기존 img 태그를 next/image를 사용하여 로딩 시간 감소
-
-기존 PNG
-webp변환 후
-
-png시 
-
-  <img src="https://github.com/user-attachments/assets/1a6cfbfd-903e-49fb-9420-b886382d314b" alt="기존"  height="100px" />
-
-
-
-> 위의 작업들을 통해 Performance Score 62점 → 88점으로 개선, Speed Index 속도 3.5초 → 1.3초로 개선
-
-
-## 🎯 트러블 슈팅
-
-피드백) 단순한 에러 해결은 작성하지 말고 실제로 어떠한 부분을 적용할때 발생했던 에러
-피드백) ex) 메인페이지에서 게시글을 작성했을때 작성한 게시글이 바로 업데이트되지 않아서 새로고침을 해야하는 문제 발생 -> 작성하는 동시에 바로 화면에 보여졌으면 좋겠음 -> 파이어베이스를 사용하니까 getDoc을 onSnapshot으로 변경해서 게시글이 추가되면 실시간 반영되게 -> 리액트쿼리 invalidateQueries로 쿼리키로 데이터를 불러오게 해서 해당 문제 처리
-
-## 💭 기술적 의사결정
-
-피드백) 기술스택에서 해당 기술을 사용한 이유
-피드백) 예를들어 리액트 쿼리를 왜 사용했는지 등... 구체적으로 써보기
-피드백) 리액트 훅폼이나 조드를 어떤 이유에서 사용했는지.. 등
-피드백) 비교군이 있으면 두개를 비교해서 ~~한 이유때문에 이걸 사용했다 등
-피드백) 낙관적 업데이트를 왜 구현했는지 이유 
-
-## ⚙️ 와이어프레임 / 유저 플로우 차트
-피드백) 와이어프레임은 지워도 괜찮을듯 
-
-> 디자인 툴 : Figma
-> 
-> 각 페이지 별 구조 설계 및 유저 플로우
-
-<img src="https://github.com/user-attachments/assets/3c3ec36b-1844-42a2-9cdf-6ca0f72e97d9" alt="와이어프레임" style="width: 700px" />
-
-> 디자인 툴 : miro
-> 
-> 각 페이지 별 구조 설계 및 유저 플로우
-<img src="https://github.com/user-attachments/assets/0d94bbb2-4ca3-49b7-a34e-f18379561d42" alt="와이어프레임" style="width: 700px" />
 
 
 
