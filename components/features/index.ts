@@ -4,3 +4,4 @@ export * from './main';
 export * from './newpost';
 export * from './signup';
 export * from './profile';
+export * from './admin';
