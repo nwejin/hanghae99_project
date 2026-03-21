@@ -41,16 +41,21 @@
 
 #### DataBase
 <div>
-   <img src="https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white">
+   <img src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white">
+   <img src="https://img.shields.io/badge/cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white">
 </div>
-
-
 
 #### Deployment | Package Management
 <div>
  <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
    <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
 </div>
+
+#### AI Agent
+<div>
+ <img src="https://img.shields.io/badge/claude-D97757?style=for-the-badge&logo=claude&logoColor=white">
+</div>
+
 
 ## 💻 주요 기능
 
