@@ -61,6 +61,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: '인증되지 않은 사용자입니다.' }, { status: 401 });
     }
 
+    // 게시글 작성 권한 확인 (admin, approved만 가능)
+    const { data: userData } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (!userData || userData.role === 'viewer') {
+      return NextResponse.json({ message: '게시글 작성 권한이 없습니다.' }, { status: 403 });
+    }
+
     const data = await req.json();
 
     const { data: postData, error } = await supabase

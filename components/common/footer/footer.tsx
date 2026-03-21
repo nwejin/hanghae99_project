@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 export default function Footer() {
   const pathname = usePathname();
   const router = useRouter();
-  const { nickname, isLoggedIn } = useCurrentUser();
+  const { nickname, isLoggedIn, role } = useCurrentUser();
   const { toast } = useToast();
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -42,6 +42,8 @@ export default function Footer() {
           </Button>
         ),
       });
+    } else if (role === 'viewer') {
+      toast({ title: '게시글 작성 권한이 없습니다.' });
     } else {
       router.push('/newpost');
     }

@@ -58,6 +58,7 @@ export async function GET(req: Request) {
       email: userData.email || null,
       nickName: userData.nickname || null,
       profileImg: userData.profile_image || null,
+      role: userData.role || 'viewer',
       petInfo: pets && pets.length > 0 ? pets[0] : null,
     };
 
