@@ -5,9 +5,9 @@ import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { BLUR_DATA_URL } from '@/shared/imageConstants';
 import Link from 'next/link';
-import { Settings, PawPrint, ImageIcon, Calendar, Images, LogOut, Bookmark } from 'lucide-react';
+import { Settings, ImageIcon, Calendar, Images, LogOut, Bookmark } from 'lucide-react';
 import { ProfileSkeleton } from '@/components/common';
-import { PostType, PetType, getProfile } from '@/lib/profile';
+import { PostType, getProfile } from '@/lib/profile';
 import { getBookmarkPosts, BookmarkPostType } from '@/lib/bookmark';
 import { useCurrentUser } from '@/lib/useCurrentUser';
 import { userLogOut } from '@/lib/login';
@@ -26,7 +26,6 @@ export function Container() {
     bio: '',
     nickname: '',
   });
-  const [petData, setPetData] = useState<PetType[]>([]);
   const [posts, setPosts] = useState<PostType[]>([]);
   const [selectedPost, setSelectedPost] = useState<{ post: any; user: any } | null>(null);
   const [activeTab, setActiveTab] = useState<'posts' | 'bookmarks'>('posts');
@@ -41,7 +40,6 @@ export function Container() {
         const data = await getProfile(String(nicknameParam));
         if (data) {
           setUserData(data.user);
-          setPetData(data.pets || []);
           setPosts(data.posts || []);
         }
       } catch {
@@ -148,30 +146,6 @@ export function Container() {
             </button>
           )}
         </div>
-
-        {/* 반려동물 카드 */}
-        {petData.length > 0 && (
-          <div className="mt-5 flex flex-col gap-2">
-            {petData.map((pet) => (
-              <div key={pet.id} className="flex items-center gap-3 rounded-2xl border border-paw-border bg-white px-4 py-3">
-                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-paw-cream-dark">
-                  {pet.pet_image ? (
-                    <img src={pet.pet_image} alt={pet.petName} className="h-full w-full object-cover" />
-                  ) : (
-                    <PawPrint size={20} className="text-paw-main" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-paw-brown">{pet.petName}</p>
-                  <p className="text-xs text-paw-sub">
-                    {pet.petSpecies}
-                    {pet.petSubSpecies && ` · ${pet.petSubSpecies}`}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* 탭 버튼 */}
         <div className="mt-5 flex items-center gap-4 border-b border-paw-border">

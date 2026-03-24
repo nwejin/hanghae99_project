@@ -3,7 +3,7 @@ interface stepProps {
 }
 
 export default function ProgressBar({ step }: stepProps) {
-  const stepValue = step * 33.3;
+  const stepValue = step * 50;
   return (
     <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-paw-cream-dark">
       <div

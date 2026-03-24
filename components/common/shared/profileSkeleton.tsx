@@ -11,11 +11,6 @@ export function ProfileSkeleton() {
         <Skeleton className="mt-1.5 h-4 w-40" />
       </div>
 
-      {/* 펫 카드 */}
-      <div className="mt-5 flex flex-col gap-2">
-        <Skeleton className="h-[72px] w-full rounded-2xl" />
-      </div>
-
       {/* 게시물 수 */}
       <div className="mt-5 flex items-center gap-1.5">
         <Skeleton className="h-4 w-4" />

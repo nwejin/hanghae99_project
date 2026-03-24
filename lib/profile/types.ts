@@ -17,16 +17,7 @@ export type UserType = {
   profile_image: string;
 };
 
-export type PetType = {
-  id: string;
-  petName: string;
-  petSpecies: string;
-  petSubSpecies: string;
-  pet_image: string;
-};
-
 export type TotalProfileType = {
-  pets: PetType[];
   user: UserType;
   posts: PostType[];
 };

@@ -13,7 +13,7 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
-    const { nickname, bio, newPassword, petName, petSpecies, petSubSpecies } = body;
+    const { nickname, bio, newPassword } = body;
 
     // 사용자 정보 업데이트
     const updateData: Record<string, string> = {};
@@ -39,21 +39,6 @@ export async function PUT(req: Request) {
       }
     }
 
-    // 반려동물 정보 업데이트
-    if (petName !== undefined || petSpecies !== undefined || petSubSpecies !== undefined) {
-      const petUpdate: Record<string, string> = {};
-      if (petName !== undefined) petUpdate.pet_name = petName;
-      if (petSpecies !== undefined) petUpdate.pet_species = petSpecies;
-      if (petSubSpecies !== undefined) petUpdate.pet_sub_species = petSubSpecies;
-
-      if (Object.keys(petUpdate).length > 0) {
-        await supabase
-          .from('pets')
-          .update(petUpdate)
-          .eq('user_id', authUser.id);
-      }
-    }
-
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error('계정 업데이트 오류:', error);
@@ -68,10 +53,10 @@ export async function GET(req: Request) {
 
     const supabase = createClient();
 
-    // 유저 정보 + 펫 정보를 한 번에 조회
+    // 유저 정보 조회
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('*, pets(*)')
+      .select('*')
       .eq('id', String(userId))
       .single();
 
@@ -79,13 +64,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const { pets, ...user } = userData;
-
     return NextResponse.json(
-      {
-        user,
-        pets: pets || [],
-      },
+      { user: userData },
       { status: 200 }
     );
   } catch (error) {

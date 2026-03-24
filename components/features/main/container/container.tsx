@@ -1,4 +1,3 @@
-import MainPageSide from '../sections/mainPageSide';
 import MainPage from '../sections/mainPage';
 
 export function Container() {

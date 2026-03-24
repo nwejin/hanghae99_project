@@ -39,13 +39,6 @@ export const midSchema = z.object({
     .max(10, { message: '닉네임은 10자리 이하로 입력해주세요' }),
 });
 
-export const endSchema = z.object({
-  //end
-  // pet_image: z.string().optional(),
-  petName: z.string().min(1, { message: '반려동물 이름을 입력해주세요' }),
-  petSpecies: z.string().min(1, { message: '반려동물의 종을 입력해주세요' }),
-});
-
 export const loginSchema = z.object({
   user_id: z.string().min(4, { message: '아이디를 입력해주세요' }),
   user_password: z.string().min(8, { message: '비밀번호는 8자 이상입니다.' }),

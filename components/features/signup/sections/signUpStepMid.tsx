@@ -169,7 +169,7 @@ export default function SignUpStepMid({ nextStep, backStep }: FormProps) {
 
       <div className="flex justify-between pt-2">
         <SignUpBtn text="이전" type="button" onClick={backStep} />
-        <SignUpBtn text="다음" type="submit" />
+        <SignUpBtn text="회원가입" type="submit" />
       </div>
     </form>
   );

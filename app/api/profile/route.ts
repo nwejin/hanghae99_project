@@ -25,12 +25,6 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: '유저 정보가 없습니다.' }, { status: 404 });
     }
 
-    // 반려동물 정보 조회
-    const { data: petsData } = await supabase
-      .from('pets')
-      .select('*')
-      .eq('user_id', userData.id);
-
     // 유저의 게시물 조회
     const { data: postsData } = await supabase
       .from('posts')
@@ -41,7 +35,6 @@ export async function GET(req: Request) {
     return NextResponse.json(
       {
         user: userData,
-        pets: petsData || [],
         posts: (postsData || []).map((post) => ({
           id: post.id,
           userId: post.user_id,

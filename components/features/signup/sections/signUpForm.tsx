@@ -3,7 +3,6 @@ import { useToast } from '@/components/common';
 import { useForm, FormProvider } from 'react-hook-form';
 import SignUpStepStart from './signUpStepStart';
 import SignUpStepMid from './signUpStepMid';
-import SignUpStepEnd from './signUpStepEnd';
 import ProgressBar from '../ui/progressBar';
 import { createClient } from '@/config/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -20,10 +19,6 @@ interface FormData {
   password_verify: string;
   profile_image?: string;
   nickname: string;
-  pet_image?: string;
-  petName: string;
-  petSpecies: string;
-  petSubSpecies: string;
 }
 
 export default function SignUpForm() {
@@ -77,17 +72,6 @@ export default function SignUpForm() {
 
         if (userError) throw userError;
 
-        if (userData.petName && userData.petSpecies) {
-          const { error: petError } = await supabase.from('pets').insert({
-            user_id: user_uid,
-            pet_name: userData.petName,
-            pet_species: userData.petSpecies,
-            pet_sub_species: userData.petSubSpecies || '',
-            pet_image: userData.pet_image || '',
-          });
-
-          if (petError) throw petError;
-        }
       }
 
       if (userData.user_id && userData.user_pw) {
@@ -111,8 +95,7 @@ export default function SignUpForm() {
       <ProgressBar step={isStep} />
       <FormProvider {...methods}>
         {isStep === 1 && <SignUpStepStart nextStep={nextStep} />}
-        {isStep === 2 && <SignUpStepMid nextStep={nextStep} backStep={backStep} />}
-        {isStep === 3 && <SignUpStepEnd backStep={backStep} onSubmit={userSubmit} />}
+        {isStep === 2 && <SignUpStepMid nextStep={userSubmit} backStep={backStep} />}
       </FormProvider>
     </>
   );

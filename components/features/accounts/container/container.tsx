@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Lock, PawPrint, LogOut, Eye, EyeOff, Loader2, Check } from 'lucide-react';
-import { Select } from '@/components/common';
-import { petCategoryData } from '@/shared/petCategory';
+import { Camera, Lock, LogOut, Eye, EyeOff, Loader2, Check } from 'lucide-react';
 import { useCurrentUser } from '@/lib/useCurrentUser';
 import { userLogOut } from '@/lib/login';
 
@@ -20,11 +18,6 @@ export function Container() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [profileImg, setProfileImg] = useState('');
-  const [petImg, setPetImg] = useState('');
-  const [petName, setPetName] = useState('');
-  const [petSpecies, setPetSpecies] = useState('');
-  const [petSubSpecies, setPetSubSpecies] = useState('');
-
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -45,13 +38,6 @@ export function Container() {
             setNickname(data.user.nickname || '');
             setBio(data.user.bio || '');
             setProfileImg(data.user.profile_image || '');
-
-            if (data.pets?.[0]) {
-              setPetImg(data.pets[0].pet_image || '');
-              setPetName(data.pets[0].petName || data.pets[0].pet_name || '');
-              setPetSpecies(data.pets[0].petSpecies || data.pets[0].pet_species || '');
-              setPetSubSpecies(data.pets[0].petSubSpecies || data.pets[0].pet_sub_species || '');
-            }
           }
         }
       } catch {
@@ -80,9 +66,6 @@ export function Container() {
           nickname,
           bio,
           newPassword: newPassword || undefined,
-          petName,
-          petSpecies,
-          petSubSpecies,
         }),
       });
 
@@ -218,65 +201,6 @@ export function Container() {
             {newPassword && confirmPassword && newPassword !== confirmPassword && (
               <p className="mt-1 text-xs text-paw-like">비밀번호가 일치하지 않습니다</p>
             )}
-          </div>
-        </div>
-      </div>
-
-      {/* 반려동물 정보 */}
-      <div className="mt-6">
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-paw-brown">
-          <PawPrint size={16} />
-          반려동물 정보
-        </div>
-        <div className="space-y-3 rounded-2xl border border-paw-border bg-white p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-paw-cream-dark">
-              {petImg ? (
-                <img src={petImg} alt="반려동물" className="h-full w-full object-cover" />
-              ) : (
-                <PawPrint size={20} className="text-paw-main" />
-              )}
-            </div>
-            <div className="flex-1">
-              <label className="mb-1 block text-xs font-semibold text-paw-sub">이름</label>
-              <input
-                type="text"
-                value={petName}
-                onChange={(e) => setPetName(e.target.value)}
-                className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-xs font-semibold text-paw-sub">대분류</label>
-            <Select.Select value={petSpecies} onValueChange={(value) => { setPetSpecies(value); setPetSubSpecies(''); }}>
-              <Select.SelectTrigger className="rounded-xl border-paw-border bg-paw-cream text-sm">
-                <Select.SelectValue placeholder="선택" />
-              </Select.SelectTrigger>
-              <Select.SelectContent>
-                <Select.SelectItem value="dog">강아지</Select.SelectItem>
-                <Select.SelectItem value="cat">고양이</Select.SelectItem>
-                <Select.SelectItem value="other">기타</Select.SelectItem>
-              </Select.SelectContent>
-            </Select.Select>
-          </div>
-
-          <div>
-            <label className="mb-1 block text-xs font-semibold text-paw-sub">소분류</label>
-            <Select.Select value={petSubSpecies} onValueChange={(value) => setPetSubSpecies(value)}>
-              <Select.SelectTrigger className="rounded-xl border-paw-border bg-paw-cream text-sm">
-                <Select.SelectValue placeholder="선택" />
-              </Select.SelectTrigger>
-              <Select.SelectContent>
-                {petSpecies &&
-                  petCategoryData[petSpecies as keyof typeof petCategoryData]?.map((sub) => (
-                    <Select.SelectItem key={sub.value} value={sub.value}>
-                      {sub.label}
-                    </Select.SelectItem>
-                  ))}
-              </Select.SelectContent>
-            </Select.Select>
           </div>
         </div>
       </div>
