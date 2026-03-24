@@ -58,7 +58,7 @@ export default function SignUpStepEnd({ backStep, onSubmit }: FormProps) {
     setUploadedImgUrl(path);
   };
 
-  const defaultImg = '/default_face.png';
+  const defaultImg = '/image/default_face.png';
 
   const resetImg = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

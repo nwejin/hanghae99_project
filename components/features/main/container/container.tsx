@@ -5,8 +5,6 @@ export function Container() {
   return (
     <div className="w-full">
       <MainPage />
-
-      {/* <MainPageSide /> */}
     </div>
   );
 }

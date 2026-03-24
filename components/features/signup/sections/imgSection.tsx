@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@/components/common';
-import { cat_img, dog_img } from '@/public';
+import { cat_img, dog_img } from '@/public/image';
 import Image from 'next/image';
 
 export default function ImgSection() {

@@ -35,7 +35,7 @@ export default function MainPageSide() {
   //   return null;
   // }
 
-  const defaultImg = '/default_user.png';
+  const defaultImg = '/image/default_user.png';
 
   return (
     <div className="hidden md:block">

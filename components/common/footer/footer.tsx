@@ -95,12 +95,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="sticky bottom-0 z-[99] flex h-[56px] border-t-2 border-paw-cream bg-paw-cream-dark">
+    <footer className="sticky bottom-0 z-[99] flex h-[60px] border-t-2 border-paw-cream">
       {tabs.map(({ icon: Icon, label, active, href, onClick, badge }) => {
         const content = (
           <div
             className={cn(
-              'flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-md text-paw-cream transition-all duration-200',
+              'btn-app flex h-full w-full flex-col items-center justify-center gap-0.5 rounded-t-xl text-paw-cream transition-all duration-200',
               active ? 'bg-paw-main' : 'text-paw-inactive hover:text-paw-main'
             )}>
             <div className="relative">
@@ -111,7 +111,7 @@ export default function Footer() {
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-extrabold">{label}</span>
+            <span className="chunggun-text text-[10px]">{label}</span>
           </div>
         );
 
