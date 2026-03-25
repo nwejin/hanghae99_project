@@ -119,7 +119,7 @@ export default function MainPage() {
               value={startDate}
               max={endDate || undefined}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full min-w-0 rounded-lg border border-paw-cream-dark bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
+              className="w-full min-w-0 rounded-lg border border-paw-cream-dark bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none"
             />
             <span className="text-xs text-paw-sub">~</span>
             <input
@@ -127,20 +127,20 @@ export default function MainPage() {
               value={endDate}
               min={startDate || undefined}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full min-w-0 rounded-lg border border-paw-cream-dark bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
+              className="w-full min-w-0 rounded-lg border border-paw-cream-dark bg-paw-cream-dark px-2 py-1.5 text-xs text-paw-brown"
             />
           </div>
 
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex flex-shrink-0 items-center justify-center rounded-lg border-2 border-paw-sub bg-paw-brown p-1.5 text-paw-sub transition-colors hover:text-paw-main disabled:opacity-50">
+            className="btn-app flex flex-shrink-0 items-center justify-center rounded-lg bg-red-500 p-1.5 text-paw-sub transition-colors hover:text-paw-main disabled:opacity-50">
             <RefreshCw size={12} className={refreshing ? 'animate-spin text-paw-cream' : 'text-paw-cream'} />
           </button>
 
           <button
             onClick={() => setAscending(!ascending)}
-            className="flex flex-shrink-0 items-center gap-0.5 rounded-lg border-2 border-paw-main bg-paw-main px-2 py-1.5 text-[11px] text-paw-cream transition-colors hover:opacity-90">
+            className="btn-app flex flex-shrink-0 items-center gap-0.5 rounded-lg bg-paw-main px-2 py-1.5 text-[11px] text-paw-cream">
             <ArrowUpDown size={13} />
             {ascending ? '오래된순' : '최신순'}
           </button>

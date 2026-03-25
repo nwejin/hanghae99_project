@@ -1,6 +1,6 @@
 import SignUpForm from '../sections/signUpForm';
 import Image from 'next/image';
-import { logo_s } from '@/public';
+import { logo_s } from '@/public/image';
 import Link from 'next/link';
 
 export function Container() {
@@ -13,9 +13,7 @@ export function Container() {
       <SignUpForm />
       <div className="mt-6 text-center">
         <span className="text-sm text-paw-sub">이미 계정이 있으신가요? </span>
-        <Link
-          href="/login"
-          className="text-sm font-semibold text-paw-main transition-colors hover:text-paw-main/80">
+        <Link href="/login" className="text-sm font-semibold text-paw-main transition-colors hover:text-paw-main/80">
           로그인
         </Link>
       </div>

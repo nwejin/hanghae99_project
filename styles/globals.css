@@ -9,6 +9,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'RomanticGumi';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/GumiRomanceTTF.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 60 100% 98%;
@@ -72,10 +79,12 @@
     font-family: 'Pretendard-Regular';
     touch-action: pan-x pan-y;
   }
+
   html {
     overscroll-behavior-y: contain;
     height: 100%;
   }
+
   body {
     @apply bg-background text-foreground;
     color: #4F371E;
@@ -89,6 +98,7 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -96,5 +106,34 @@
 
   a, button {
     touch-action: auto;
+  }
+
+  .btn-app {
+    box-shadow:
+      0 -2px 2px 0 rgba(0, 0, 0, 0.5) inset,
+      0 2px 2px 0 rgba(255, 255, 255, 0.2) inset,
+      0 1px 1px 0 rgba(0, 0, 0, 0.25);
+  }
+  
+  @media (hover: hover) {
+    .btn-app:not(:disabled):hover {
+      filter: brightness(1.05);
+    }
+  }
+
+  .btn-app:not(:disabled):active {
+    filter: brightness(0.9);
+    box-shadow:
+      inset 0px 1px 1px 0px #ffffff55,
+      0px 1px 1px 0px #00000030,
+      inset 0px -1px 2px 0px #00000066;
+    transform: translateY(1px);
+  }
+
+  .chunggun-text {
+    font-family: 'RomanticGumi';
+    -webkit-text-stroke: 3px #00000060;
+    color: white;
+    paint-order: stroke fill;
   }
 }

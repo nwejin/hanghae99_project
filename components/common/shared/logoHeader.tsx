@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import text_logo from '@/public/logo_s.png';
+import text_logo from '@/public/image/logo_s.png';
 
 export function LogoHeader() {
   return (
