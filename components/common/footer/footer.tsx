@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Search, SquarePen, Bell, User } from 'lucide-react';
+import { Home, Search, SquarePen, Bell, MessageSquare } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/common/ui/use-toast';
@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 export default function Footer() {
   const pathname = usePathname();
   const router = useRouter();
-  const { nickname, isLoggedIn, role } = useCurrentUser();
+  const { isLoggedIn, role } = useCurrentUser();
   const { toast } = useToast();
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -49,14 +49,6 @@ export default function Footer() {
     }
   };
 
-  const handleProfile = () => {
-    if (isLoggedIn) {
-      router.push(`/user/${nickname}`);
-    } else {
-      router.push('/login');
-    }
-  };
-
   const handleNotification = async () => {
     if (!isLoggedIn) {
       toast({
@@ -87,10 +79,10 @@ export default function Footer() {
       badge: unreadCount,
     },
     {
-      icon: User,
-      label: '내정보',
-      active: pathname.includes('/user') || pathname.includes('/accounts'),
-      onClick: handleProfile,
+      icon: MessageSquare,
+      label: '게시판',
+      active: pathname === '/board',
+      href: '/board',
     },
   ];
 
