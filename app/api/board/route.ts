@@ -14,7 +14,7 @@ export async function GET() {
     if (error) throw error;
 
     // user_id 목록으로 유저 정보 일괄 조회
-    const userIds = [...new Set((boards || []).map((b) => b.user_id))];
+    const userIds = Array.from(new Set((boards || []).map((b) => b.user_id)));
     const { data: users } = await supabase
       .from('users')
       .select('id, nickname, profile_image')
