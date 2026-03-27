@@ -134,7 +134,7 @@ export default function MainPage() {
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="btn-app flex flex-shrink-0 items-center justify-center rounded-lg bg-red-500 p-1.5 text-paw-sub transition-colors hover:text-paw-main disabled:opacity-50">
+            className="btn-app flex flex-shrink-0 items-center justify-center rounded-lg bg-paw-main p-1.5 text-paw-cream transition-colors disabled:opacity-50">
             <RefreshCw size={12} className={refreshing ? 'animate-spin text-paw-cream' : 'text-paw-cream'} />
           </button>
 
