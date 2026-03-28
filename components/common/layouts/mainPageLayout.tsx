@@ -74,7 +74,7 @@ export function MainPageLayout({ children }: { children: React.ReactNode }) {
   }, [handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   return (
-    <div className="h-dvh bg-gray-100">
+    <div className="h-dvh bg-paw-olive">
       <div className="mx-auto flex h-full w-full max-w-xl flex-col bg-white shadow-xl max-sm:max-w-full max-sm:shadow-none">
         <Header />
         <div className="relative flex-1 overflow-hidden">

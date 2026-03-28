@@ -94,49 +94,53 @@ export default function NewPostPage() {
   };
 
   return (
-    <div className="px-4 py-6 pb-20">
+    <div className="flex h-full flex-col">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-          {/* 이미지 업로드 */}
-          <ImgCarousel />
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
+            {/* 이미지 업로드 */}
+            <ImgCarousel />
 
-          {/* 촬영 날짜 */}
-          <div className="rounded-2xl border border-paw-border bg-white p-4">
-            <label className="mb-1.5 block text-xs font-semibold text-paw-sub">촬영 날짜</label>
-            <Input
-              type="date"
-              {...register('photoDate', { required: '날짜를 선택해주세요.' })}
-              className="w-full appearance-none rounded-xl border-paw-border bg-paw-cream-dark text-sm text-paw-brown focus:ring-paw-main"
-            />
-          </div>
-
-          {/* 태그 */}
-          <div className="rounded-2xl border border-paw-border bg-white p-4">
-            <label className="mb-1.5 block text-xs font-semibold text-paw-sub">태그</label>
-            <Contents />
-          </div>
-
-          {/* 에러 메시지 */}
-          {(errors.tags || errors.imgUrls || errors.photoDate) && (
-            <div className="rounded-xl bg-red-50 px-3 py-2">
-              {errors.tags && <p className="text-xs text-red-500">{errors.tags.message}</p>}
-              {errors.imgUrls && <p className="text-xs text-red-500">{errors.imgUrls.message}</p>}
-              {errors.photoDate && <p className="text-xs text-red-500">{errors.photoDate.message}</p>}
+            {/* 촬영 날짜 */}
+            <div className="rounded-2xl border border-paw-border bg-white p-4">
+              <label className="mb-1.5 block text-xs font-semibold text-paw-sub">촬영 날짜</label>
+              <Input
+                type="date"
+                {...register('photoDate', { required: '날짜를 선택해주세요.' })}
+                className="w-full appearance-none rounded-xl border-paw-border bg-paw-cream-dark text-sm text-paw-brown focus:ring-paw-main"
+              />
             </div>
-          )}
 
-          {/* 작성 버튼 */}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-paw-main py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60"
-          >
-            {submitting ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              '작성하기'
+            {/* 태그 */}
+            <div className="rounded-2xl border border-paw-border bg-white p-4">
+              <label className="mb-1.5 block text-xs font-semibold text-paw-sub">태그</label>
+              <Contents />
+            </div>
+
+            {/* 에러 메시지 */}
+            {(errors.tags || errors.imgUrls || errors.photoDate) && (
+              <div className="rounded-xl bg-red-50 px-3 py-2">
+                {errors.tags && <p className="text-xs text-red-500">{errors.tags.message}</p>}
+                {errors.imgUrls && <p className="text-xs text-red-500">{errors.imgUrls.message}</p>}
+                {errors.photoDate && <p className="text-xs text-red-500">{errors.photoDate.message}</p>}
+              </div>
             )}
-          </button>
+          </div>
+
+          {/* 작성 버튼 - 하단 고정 */}
+          <div className="border-t border-paw-border bg-white px-4 py-3">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-paw-main py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60"
+            >
+              {submitting ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                '작성하기'
+              )}
+            </button>
+          </div>
         </form>
       </FormProvider>
     </div>

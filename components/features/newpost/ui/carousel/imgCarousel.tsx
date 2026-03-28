@@ -71,7 +71,7 @@ export default function ImgCarousel() {
             <Carousel.CarouselItem key="placeholder">
               <label
                 htmlFor="addFile"
-                className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-paw-border bg-paw-cream-dark transition-colors hover:border-paw-main"
+                className="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-paw-border bg-paw-cream-dark transition-colors hover:border-paw-main"
               >
                 <ImagePlus size={32} className="text-paw-inactive" />
                 <span className="text-xs text-paw-sub">사진 추가</span>
@@ -82,7 +82,7 @@ export default function ImgCarousel() {
             imgPreviews.map((imgUrl, index) => (
               <Carousel.CarouselItem key={index}>
                 <div className="group relative">
-                  <div className="relative aspect-square overflow-hidden rounded-xl">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
                     <Image
                       src={imgUrl}
                       alt={`사진 ${index + 1}`}
