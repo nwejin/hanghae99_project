@@ -19,6 +19,7 @@ export const userSchema = z
       .min(4, { message: '아이디는 4자리 이상이어야 합니다' })
       .max(20, { message: '아이디는 20자리 이하로 입력해주세요' })
       .regex(/^[a-zA-Z0-9]+$/, { message: '아이디는 영어와 숫자만 입력 가능합니다' }),
+    email: z.string().email({ message: '올바른 이메일 형식을 입력해주세요' }),
     user_pw: z
       .string()
       .min(8, { message: '비밀번호는 8자리 이상이어야합니다' })

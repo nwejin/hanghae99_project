@@ -17,6 +17,13 @@ export function Container() {
           회원가입
         </Link>
       </div>
+      <div className="mt-2 text-center">
+        <Link
+          href="/find-account"
+          className="text-xs text-paw-sub transition-colors hover:text-paw-main">
+          아이디 찾기 · 비밀번호 재설정
+        </Link>
+      </div>
     </div>
   );
 }
