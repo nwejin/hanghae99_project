@@ -15,6 +15,7 @@ import { userSchema } from '@/schemas/user';
 
 interface FormData {
   user_id: string;
+  email: string;
   user_pw: string;
   password_verify: string;
   profile_image?: string;
@@ -65,7 +66,7 @@ export default function SignUpForm() {
         const { error: userError } = await supabase.from('users').insert({
           id: user_uid,
           user_id: userData.user_id,
-          email: fakeEmail,
+          email: userData.email,
           nickname: userData.nickname,
           profile_image: userData.profile_image || '',
         });

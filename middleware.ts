@@ -17,8 +17,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // 로그인한 사용자가 /login, /signup으로 이동 불가
-  if (user && (pathname === '/login' || pathname === '/signup')) {
+  // 로그인한 사용자가 /login, /signup, /find-account로 이동 불가
+  if (user && (pathname === '/login' || pathname === '/signup' || pathname === '/find-account')) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
