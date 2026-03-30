@@ -1,5 +1,5 @@
 import { createClient } from '@/config/supabase/server';
-import { supabaseAdmin } from '@/config/supabase/admin';
+import { getSupabaseAdmin } from '@/config/supabase/admin';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: '인증이 만료되었습니다. 다시 시도해주세요' }, { status: 401 });
       }
 
-      const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      const { error } = await getSupabaseAdmin().auth.admin.updateUserById(userId, {
         password: newPassword,
       });
 
