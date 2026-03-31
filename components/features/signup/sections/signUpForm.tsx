@@ -50,7 +50,7 @@ export default function SignUpForm() {
   const userSubmit = async (data: Partial<FormData>) => {
     const userData = { ...formData, ...data };
     try {
-      if (userData.user_id && userData.user_pw) {
+      if (userData.user_id && userData.user_pw && userData.email) {
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: userData.email,
           password: userData.user_pw,
