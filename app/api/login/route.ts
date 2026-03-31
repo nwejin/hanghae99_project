@@ -1,13 +1,26 @@
 import { createClient } from '@/config/supabase/server';
+import { getSupabaseAdmin } from '@/config/supabase/admin';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
-    const supabase = createClient();
+    const { user_id, password } = await req.json();
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+    // user_id로 실제 이메일 조회
+    const adminSupabase = getSupabaseAdmin();
+    const { data: userData, error: userError } = await adminSupabase
+      .from('users')
+      .select('email')
+      .eq('user_id', user_id)
+      .single();
+
+    if (userError || !userData?.email) {
+      return NextResponse.json({ isLogged: false, message: '존재하지 않는 아이디입니다.' }, { status: 401 });
+    }
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email: userData.email,
       password,
     });
 
@@ -22,7 +35,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   try {
     const supabase = createClient();
 
