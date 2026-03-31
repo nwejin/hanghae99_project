@@ -1,4 +1,5 @@
 import { createClient } from '@/config/supabase/server';
+import { getSupabaseAdmin } from '@/config/supabase/admin';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -13,7 +14,7 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
-    const { nickname, bio, newPassword } = body;
+    const { nickname, bio, newPassword, newEmail } = body;
 
     // 사용자 정보 업데이트
     const updateData: Record<string, string> = {};
@@ -28,6 +29,42 @@ export async function PUT(req: Request) {
 
       if (updateError) {
         return NextResponse.json({ error: '프로필 업데이트 실패' }, { status: 500 });
+      }
+    }
+
+    // 이메일 변경
+    if (newEmail && newEmail !== authUser.email) {
+      const { data: userData } = await supabase
+        .from('users')
+        .select('email_changed_at')
+        .eq('id', authUser.id)
+        .single();
+
+      if (userData?.email_changed_at) {
+        const diffMs = Date.now() - new Date(userData.email_changed_at).getTime();
+        const remainMin = Math.ceil((30 * 60 * 1000 - diffMs) / 60000);
+        if (diffMs < 30 * 60 * 1000) {
+          return NextResponse.json(
+            { error: `이메일은 30분에 한 번만 변경할 수 있습니다. ${remainMin}분 후 다시 시도해주세요.` },
+            { status: 429 }
+          );
+        }
+      }
+
+      const adminSupabase = getSupabaseAdmin();
+      const { error: emailError } = await adminSupabase.auth.admin.updateUserById(
+        authUser.id,
+        { email: newEmail }
+      );
+      if (emailError) {
+        return NextResponse.json({ error: '이메일 변경 실패: ' + emailError.message }, { status: 400 });
+      }
+      const { error: emailTableError } = await adminSupabase
+        .from('users')
+        .update({ email: newEmail, email_changed_at: new Date().toISOString() })
+        .eq('id', authUser.id);
+      if (emailTableError) {
+        return NextResponse.json({ error: '이메일 테이블 업데이트 실패' }, { status: 500 });
       }
     }
 

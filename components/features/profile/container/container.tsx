@@ -125,22 +125,21 @@ export function Container() {
           <div className="mt-3 flex items-center gap-2">
             <h1 className="text-lg font-bold text-paw-brown">{userData.nickname}</h1>
             {isOwnProfile && (
-              <Link href={`/accounts/${currentUser.userId}`} className="text-paw-sub transition-colors hover:text-paw-main">
+              <Link
+                href={`/accounts/${currentUser.userId}`}
+                className="text-paw-sub transition-colors hover:text-paw-main">
                 <Settings size={18} />
               </Link>
             )}
           </div>
 
-          {userData.bio && (
-            <p className="mt-1 text-center text-sm text-paw-sub">{userData.bio}</p>
-          )}
+          {userData.bio && <p className="mt-1 text-center text-sm text-paw-sub">{userData.bio}</p>}
 
           {/* 로그아웃 버튼 (본인 프로필에서만) */}
           {isOwnProfile && (
             <button
               onClick={handleLogout}
-              className="mt-3 flex items-center gap-1 rounded-full border border-paw-border px-3 py-1.5 text-xs text-paw-sub transition-colors hover:text-red-400"
-            >
+              className="btn-app mt-3 flex items-center gap-1 rounded-full border bg-red-500 px-3 py-1.5 text-xs text-paw-cream transition-colors">
               <LogOut size={12} />
               로그아웃
             </button>
@@ -155,8 +154,7 @@ export function Container() {
               activeTab === 'posts'
                 ? 'border-paw-main font-semibold text-paw-brown'
                 : 'border-transparent text-paw-sub hover:text-paw-brown'
-            }`}
-          >
+            }`}>
             <ImageIcon size={14} />
             게시물 {posts.length}
           </button>
@@ -167,8 +165,7 @@ export function Container() {
                 activeTab === 'bookmarks'
                   ? 'border-paw-main font-semibold text-paw-brown'
                   : 'border-transparent text-paw-sub hover:text-paw-brown'
-              }`}
-            >
+              }`}>
               <Bookmark size={14} />
               북마크
             </button>
@@ -212,8 +209,7 @@ export function Container() {
                                 profile_image: userData.profile_image,
                               },
                             })
-                          }
-                        >
+                          }>
                           {post.imgUrls?.[0] ? (
                             <Image
                               src={post.imgUrls[0]}
@@ -273,8 +269,7 @@ export function Container() {
                             profile_image: '',
                           },
                         })
-                      }
-                    >
+                      }>
                       {post.imgUrls?.[0] ? (
                         <Image
                           src={post.imgUrls[0]}
@@ -305,11 +300,7 @@ export function Container() {
       </div>
 
       {selectedPost && (
-        <DetailPage
-          modal={() => setSelectedPost(null)}
-          post={selectedPost.post}
-          user={selectedPost.user}
-        />
+        <DetailPage modal={() => setSelectedPost(null)} post={selectedPost.post} user={selectedPost.user} />
       )}
     </>
   );
