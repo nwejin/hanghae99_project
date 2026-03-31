@@ -4,16 +4,17 @@ import { createClient } from '@/config/supabase/client';
 export async function userLogIn(loginData: LoginType): Promise<string | null> {
   const { user_id, user_password } = loginData;
   try {
-    const supabase = createClient();
-    const fakeEmail = `${user_id}@paw-sns.local`;
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: fakeEmail,
-      password: user_password,
+    const loginRes = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ user_id, password: user_password }),
     });
 
-    if (error) {
-      return error.message;
+    const loginJson = await loginRes.json();
+
+    if (!loginRes.ok) {
+      return loginJson.message || '로그인에 실패했습니다.';
     }
 
     // 사용자 정보 가져오기

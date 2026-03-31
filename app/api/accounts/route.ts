@@ -52,13 +52,6 @@ export async function PUT(req: Request) {
       }
 
       const adminSupabase = getSupabaseAdmin();
-      const { error: emailError } = await adminSupabase.auth.admin.updateUserById(
-        authUser.id,
-        { email: newEmail }
-      );
-      if (emailError) {
-        return NextResponse.json({ error: '이메일 변경 실패: ' + emailError.message }, { status: 400 });
-      }
       const { error: emailTableError } = await adminSupabase
         .from('users')
         .update({ email: newEmail, email_changed_at: new Date().toISOString() })

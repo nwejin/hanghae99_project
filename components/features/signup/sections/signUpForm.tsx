@@ -51,10 +51,8 @@ export default function SignUpForm() {
     const userData = { ...formData, ...data };
     try {
       if (userData.user_id && userData.user_pw) {
-        const fakeEmail = `${userData.user_id}@paw-sns.local`;
-
         const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: fakeEmail,
+          email: userData.email,
           password: userData.user_pw,
         });
 
