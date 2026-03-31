@@ -13,6 +13,7 @@ export function Container() {
   const [nickname, setNickname] = useState('');
   const [bio, setBio] = useState('');
   const [email, setEmail] = useState('');
+  const [originalEmail, setOriginalEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +22,7 @@ export function Container() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export function Container() {
 
           if (response.ok) {
             setEmail(data.user.email || '');
+            setOriginalEmail(data.user.email || '');
             setNickname(data.user.nickname || '');
             setBio(data.user.bio || '');
             setProfileImg(data.user.profile_image || '');
@@ -66,6 +69,7 @@ export function Container() {
           nickname,
           bio,
           newPassword: newPassword || undefined,
+          newEmail: email !== originalEmail ? email : undefined,
         }),
       });
 
@@ -76,6 +80,11 @@ export function Container() {
           const parsed = JSON.parse(userDataString);
           parsed.nickName = nickname;
           sessionStorage.setItem('user', JSON.stringify(parsed));
+        }
+        if (email !== originalEmail) {
+          setEmailSent(true);
+          setOriginalEmail(email);
+          setTimeout(() => setEmailSent(false), 5000);
         }
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
@@ -157,11 +166,16 @@ export function Container() {
         <div className="rounded-2xl border border-paw-border bg-white p-4">
           <label className="mb-1 block text-xs font-semibold text-paw-sub">이메일</label>
           <input
-            type="text"
+            type="email"
             value={email}
-            disabled
-            className="w-full rounded-xl border border-paw-border bg-gray-50 px-3 py-2.5 text-sm text-paw-inactive"
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-xl border border-paw-border bg-paw-cream px-3 py-2.5 text-sm text-paw-brown focus:outline-none focus:ring-1 focus:ring-paw-main"
           />
+          {emailSent && (
+            <p className="mt-1.5 text-xs text-paw-main">
+              입력한 이메일로 확인 링크를 보냈습니다. 링크를 클릭하면 변경이 완료됩니다.
+            </p>
+          )}
         </div>
       </div>
 
@@ -206,15 +220,13 @@ export function Container() {
       </div>
 
       {/* 에러 메시지 */}
-      {error && (
-        <p className="mt-4 text-center text-sm text-paw-like">{error}</p>
-      )}
+      {error && <p className="mt-4 text-center text-sm text-paw-like">{error}</p>}
 
       {/* 저장 버튼 */}
       <button
         onClick={handleSave}
         disabled={saving}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-paw-main py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60">
+        className="btn-app mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-paw-main py-3 text-sm font-semibold text-white transition-colors disabled:opacity-60">
         {saving ? (
           <Loader2 size={18} className="animate-spin" />
         ) : saved ? (
@@ -230,7 +242,7 @@ export function Container() {
       {/* 로그아웃 */}
       <button
         onClick={handleLogout}
-        className="mt-4 flex w-full items-center justify-center gap-2 py-3 text-sm font-medium text-red-400 transition-colors hover:text-red-500">
+        className="btn-app mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-red-500 py-3 text-sm font-medium text-paw-cream transition-colors">
         <LogOut size={16} />
         로그아웃
       </button>
