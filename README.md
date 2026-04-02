@@ -11,49 +11,9 @@
 > 가족 모두가 언제든 꺼내볼 수 있는 우리 가족 반려동물 SNS 🐾
 >
 > "오늘 청군이 뭐 했어?" 카톡 대신, 여기서 확인하세요!
-> [👉🏻 청군이네 바로가기](https://cheonggun-house.vercel.app/) 
+> [👉🏻 청군이네 바로가기](https://cheonggun-house.vercel.app/)
 
-## ⚙️ 기술 스택
-
-#### FrontEnd
-
-<div>
-  <img src="https://img.shields.io/badge/next.js-v14.2.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
-  <img src="https://img.shields.io/badge/typescript-v5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-  <img src="https://img.shields.io/badge/reactquery-v5.52.2-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
-</div>
-<div>
-  <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
-  <img src="https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white">
-  <img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=zustand&logoColor=%2361DAFB"/>
-</div>
-
-#### Style
-
-<div>
-  <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
-  <img src="https://img.shields.io/badge/shadcnui-000000?style=for-the-badge&logo=shadcnui&logoColor=white">
-</div>
-
-#### DataBase
-
-<div>
-   <img src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white">
-   <img src="https://img.shields.io/badge/cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white">
-</div>
-
-#### Deployment | Package Management
-
-<div>
- <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
-   <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
-</div>
-
-#### AI Agent
-
-<div>
- <img src="https://img.shields.io/badge/claude-D97757?style=for-the-badge&logo=claude&logoColor=white">
-</div>
+청군이네는 인증된 사용자만 게시글을 작성할 수 있습니다, 게시판을 통해 인증 요청을 보내주세요!
 
 ## 💻 주요 기능
 
@@ -100,6 +60,26 @@
 > approved: 게시글 작성 가능 / viewer: 조회만 가능
 
 
-## 이용 안내
-청군이 사진을 가진 사람만 게시글을 작성할 수 있습니다. 
-권한 요청 주세요!
+----
+
+
+<div>
+  <img src="https://img.shields.io/badge/next.js-v14.2.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
+  <img src="https://img.shields.io/badge/typescript-v5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img src="https://img.shields.io/badge/reactquery-v5.52.2-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
+  <img src="https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
+  <img src="https://img.shields.io/badge/zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white">
+ 
+</div>
+
+<div>
+   <img src="https://img.shields.io/badge/zustand-%2320232a.svg?style=for-the-badge&logo=zustand&logoColor=%2361DAFB"/>
+  <img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
+  <img src="https://img.shields.io/badge/shadcnui-000000?style=for-the-badge&logo=shadcnui&logoColor=white">
+  <img src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white">
+   <img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+   <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">
+  <img src="https://img.shields.io/badge/claude-D97757?style=for-the-badge&logo=claude&logoColor=white">
+</div>
+
+
