@@ -3,12 +3,14 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import Header from '../header/header';
 import Footer from '../footer/footer';
+import ChunggoonPanel from '../shared/chunggoonPanel';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export function MainPageLayout({ children }: { children: React.ReactNode }) {
   const mainRef = useRef<HTMLElement>(null);
   const router = useRouter();
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   // Pull-to-refresh
   const [pullDistance, setPullDistance] = useState(0);
@@ -76,8 +78,10 @@ export function MainPageLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-dvh bg-paw-olive">
       <div className="mx-auto flex h-full w-full max-w-xl flex-col bg-white shadow-xl max-sm:max-w-full max-sm:shadow-none">
-        <Header />
+        <Header onLogoClick={() => setIsPanelOpen((prev) => !prev)} />
         <div className="relative flex-1 overflow-hidden">
+          <ChunggoonPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
+
           {/* Pull-to-refresh 인디케이터 */}
           <div
             className="flex items-center justify-center transition-[height] duration-200"
