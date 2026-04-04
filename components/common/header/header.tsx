@@ -1,19 +1,49 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Settings } from 'lucide-react';
 import text_logo from '@/public/image/logo_s.png';
 import { useCurrentUser } from '@/lib/useCurrentUser';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 
-export default function Header() {
+interface Props {
+  onLogoClick: () => void;
+}
+
+export default function Header({ onLogoClick }: Props) {
   const { nickname, profileImg, isLoggedIn, role } = useCurrentUser();
+  const logoRef = useRef<HTMLImageElement>(null);
+  const idleAnim = useRef<gsap.core.Tween | null>(null);
+
+  useEffect(() => {
+    idleAnim.current = gsap.to(logoRef.current, {
+      scale: 1.07,
+      duration: 0.9,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
+
+    return () => {
+      idleAnim.current?.kill();
+    };
+  }, []);
+
+  const handleLogoClick = () => {
+    gsap.timeline()
+      .to(logoRef.current, { scale: 1.25, duration: 0.12, ease: 'power2.out' })
+      .to(logoRef.current, { scale: 0.92, duration: 0.1 })
+      .to(logoRef.current, { scale: 1.07, duration: 0.18, ease: 'back.out(2)' });
+    onLogoClick();
+  };
 
   return (
     <header className="flex h-[60px] shrink-0 items-center justify-between border-b-2 border-paw-cream bg-paw-cream-dark px-4">
-      <Link href="/">
-        <Image src={text_logo} alt="cheonggun_logo" width={120} />
-      </Link>
+      <button onClick={handleLogoClick} className="origin-left">
+        <Image ref={logoRef} src={text_logo} alt="cheonggun_logo" width={120} />
+      </button>
 
       {isLoggedIn ? (
         <div className="flex items-center gap-2">
