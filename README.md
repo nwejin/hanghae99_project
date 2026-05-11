@@ -60,9 +60,7 @@
 > 사용자 권한 관리 (approved ↔ viewer 토글)
 > approved: 게시글 작성 가능 / viewer: 조회만 가능
 
-
 ----
-
 
 <div>
   <img src="https://img.shields.io/badge/next.js-v14.2.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
