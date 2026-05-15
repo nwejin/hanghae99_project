@@ -3,15 +3,16 @@
   <img width="300" height="150" alt="Group 68" src="https://github.com/user-attachments/assets/210c606a-66c9-4743-9c67-30c700b84ab0" />
 
   <br />
+
+  > [👉🏻 청군이네 바로가기](https://cheonggun-house.vercel.app/)
 </div>
 
 ## 🧑🏻‍💻 프로젝트 소개
 
 > 14년째 함께하고 있는 청군이의 하루하루를 기록하고,
 > 가족 모두가 언제든 꺼내볼 수 있는 우리 가족 반려동물 SNS 🐾
->
 > "오늘 청군이 뭐 했어?" 카톡 대신, 여기서 확인하세요!
-> [👉🏻 청군이네 바로가기](https://cheonggun-house.vercel.app/)
+
 
 청군이네는 오로지 청군이만을 위한 공간으로 인증된 사용자만 게시글 작성이 가능합니다.
 혹시 청군이 사진을 올리고 싶은 경우에 회원가입 후 게시판을 통해 인증 요청을 보내주세요!
