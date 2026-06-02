@@ -4,7 +4,7 @@
 
   <br />
 
-  > [👉🏻 청군이네 바로가기](https://cheonggun-house.vercel.app/)
+[👉🏻 청군이네 바로가기](https://cheonggun-house.vercel.app/)
 </div>
 
 ## 🧑🏻‍💻 프로젝트 소개
